@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sychina.admin.infra.mapper.UserMapper">
+    <resultMap id="RM-UserTableModel" type="com.sychina.admin.web.model.UserTableModel">
+        <id column="id" jdbcType="CHAR" property="id"/>
+        <result column="login_name" jdbcType="VARCHAR" property="loginName"/>
+        <result column="full_name" jdbcType="VARCHAR" property="fullName"/>
+        <result column="sub_departments" jdbcType="CHAR" property="subDepartments"/>
+        <result column="role_id" jdbcType="INTEGER" property="roleId"/>
+        <result column="mobile" jdbcType="VARCHAR" property="mobile"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="password" jdbcType="CHAR" property="password"/>
+        <result column="type" jdbcType="CHAR" property="type"/>
+        <result column="role_name" jdbcType="VARCHAR" property="roleName"/>
+    </resultMap>
+
+    <resultMap id="RM-UserInfoModel" type="com.sychina.admin.web.model.UserInfoModel">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="login_name" jdbcType="VARCHAR" property="loginName"/>
+        <result column="full_name" jdbcType="VARCHAR" property="fullName"/>
+    </resultMap>
+
+    <sql id="CONDITION">
+        <where>
+            and u.role_id = r.id
+            <if test="name!=null and name !=''">
+                and (u.login_name like concat('%', #{name}, '%') or u.full_name like concat('%', #{name}, '%'))
+            </if>
+            <if test="roleId!=null and roleId !='' or roleId==0">
+                and u.role_id = #{roleId}
+            </if>
+        </where>
+    </sql>
+
+    <select id="findTable" resultMap="RM-UserTableModel">
+        select
+        u.*,
+        r.`name` as role_name
+        from admin_user u left join admin_role r on u.roleId = r.id
+        <include refid="CONDITION"/>
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        select count(1)
+        from admin_user u left join admin_role r on u.roleId = r.id
+        <include refid="CONDITION"/>
+    </select>
+
+    <select id="findByLoginName" resultMap="RM-UserTableModel">
+        select u.*, r.`name` as role_name
+        from admin_user u left join admin_role r on u.roleId = r.id
+        where
+        u.role_id = r.id and u.login_name = #{loginName}
+    </select>
+
+    <select id="loadUserInfo" resultMap="RM-UserInfoModel">
+        select *
+        from admin_user
+        where id = #{userId}
+    </select>
+</mapper>

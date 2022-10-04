@@ -1,0 +1,41 @@
+jwt:
+  secret: sychina-admin@@1234
+  prefix: sychina
+server:
+  shutdown: graceful
+  port: 7004
+  undertow:
+    max-parameters: 10485760
+    max-headers: 10485760
+    max-http-post-size: 10485760
+    threads:
+      io: 16
+      worker: 32
+
+#
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://172.247.185.18:16033/sy-china?useSSL=false&&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false
+    username: root
+    password: 20220916@root
+
+#
+mybatis-plus:
+  mapper-locations: classpath:mybatis/*.xml
+  type-aliases-package: com.sychina.admin.infra.domain
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+#
+knife4j:
+  setting:
+    swaggerModelName: API服务
+    description: API服务主要对外提供接口
+    version: 1.0.0
+
+#
+logging:
+  level:
+    com:
+      wesoft: debug
