@@ -1,4 +1,4 @@
-package com.sychina.admin.web.model;
+package com.sychina.admin.web.pojo;
 
 import lombok.Data;
 

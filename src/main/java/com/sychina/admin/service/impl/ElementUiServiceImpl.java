@@ -7,7 +7,8 @@ import com.sychina.admin.infra.domain.User;
 import com.sychina.admin.infra.mapper.MenuMapper;
 import com.sychina.admin.infra.mapper.RoleMapper;
 import com.sychina.admin.infra.mapper.UserMapper;
-import com.sychina.admin.web.model.SelectOption;
+import com.sychina.admin.web.pojo.SelectOption;
+import com.sychina.admin.web.pojo.models.response.ResultModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,49 +29,58 @@ public class ElementUiServiceImpl {
 
     private RoleServiceImpl roleServiceImpl;
 
-    public List<SelectOption> loadMenuList() {
+    /**
+     * @return
+     */
+    public ResultModel<List<SelectOption>> loadMenuList() {
 
         List<Menu> menus = menuMapper.selectList(new QueryWrapper<>());
-        List<SelectOption> selectOptions = new ArrayList<>();
+        List<SelectOption> menuSelect = new ArrayList<>();
 
         menus.forEach(menu -> {
             SelectOption selectOption = new SelectOption();
             selectOption.setLabel(menu.getName());
             selectOption.setValue(menu.getId() + "");
-            selectOptions.add(selectOption);
+            menuSelect.add(selectOption);
         });
 
-        return selectOptions;
+        return ResultModel.succeed(menuSelect);
     }
 
-    public List<SelectOption> fetchRoleOption() {
+    /**
+     * @return
+     */
+    public ResultModel<List<SelectOption>> fetchRoleOption() {
 
         List<Role> roles = roleMapper.selectList(new QueryWrapper<>());
-        List<SelectOption> selectOptions = new ArrayList<>();
+        List<SelectOption> roleSelect = new ArrayList<>();
 
         roles.forEach(role -> {
             SelectOption selectOption = new SelectOption();
             selectOption.setLabel(role.getName());
             selectOption.setValue(role.getId() + "");
-            selectOptions.add(selectOption);
+            roleSelect.add(selectOption);
         });
 
-        return selectOptions;
+        return ResultModel.succeed(roleSelect);
     }
 
-    public List<SelectOption> fetchUserOptions() {
+    /**
+     * @return
+     */
+    public ResultModel<List<SelectOption>> fetchUserOptions() {
 
         List<User> users = userMapper.selectList(new QueryWrapper<>());
-        List<SelectOption> selectOptions = new ArrayList<>();
+        List<SelectOption> userSelect = new ArrayList<>();
 
         users.forEach(user -> {
             SelectOption selectOption = new SelectOption();
             selectOption.setLabel(user.getFullName());
             selectOption.setValue(user.getId());
-            selectOptions.add(selectOption);
+            userSelect.add(selectOption);
         });
 
-        return selectOptions;
+        return ResultModel.succeed(userSelect);
     }
 
     @Autowired

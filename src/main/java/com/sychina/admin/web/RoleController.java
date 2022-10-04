@@ -1,8 +1,9 @@
 package com.sychina.admin.web;
 
 import com.sychina.admin.service.impl.RoleServiceImpl;
-import com.sychina.admin.web.model.RoleModel;
-import com.sychina.admin.web.model.RoleTableModel;
+import com.sychina.admin.web.pojo.models.RoleTableModel;
+import com.sychina.admin.web.pojo.models.response.ResultModel;
+import com.sychina.admin.web.pojo.params.RoleParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,25 +24,25 @@ public class RoleController {
 
     @PostMapping("/addRole")
     @ApiOperation("新增角色")
-    public String addRole(@Validated RoleModel roleModel) {
-        return roleServiceImpl.addRole(roleModel);
+    public ResultModel addRole(@Validated RoleParam roleParam) {
+        return roleServiceImpl.addRole(roleParam);
     }
 
     @PostMapping("/editRole")
     @ApiOperation("编辑角色")
-    public String editRole(@Validated RoleModel roleModel) {
-        return roleServiceImpl.editRole(roleModel);
+    public ResultModel editRole(@Validated RoleParam roleParam) {
+        return roleServiceImpl.editRole(roleParam);
     }
 
     @GetMapping("/loadRoleTable")
     @ApiOperation("获取所有角色")
-    public List<RoleTableModel> loadRoleTable() {
+    public ResultModel<List<RoleTableModel>> loadRoleTable() {
         return roleServiceImpl.loadRoleTable();
     }
 
     @DeleteMapping("/deleteRole/{id}")
     @ApiOperation("删除角色")
-    public String deleteRole(@PathVariable Integer id) {
+    public ResultModel deleteRole(@PathVariable Integer id) {
         return roleServiceImpl.deleteRole(id);
     }
 

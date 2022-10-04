@@ -2,8 +2,8 @@ package com.sychina.admin.infra.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.sychina.admin.infra.domain.User;
-import com.sychina.admin.web.model.UserInfoModel;
-import com.sychina.admin.web.model.UserTableModel;
+import com.sychina.admin.web.pojo.models.UserInfoModel;
+import com.sychina.admin.web.pojo.models.UserTableModel;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

@@ -1,7 +1,8 @@
 package com.sychina.admin.web;
 
 import com.sychina.admin.service.impl.ElementUiServiceImpl;
-import com.sychina.admin.web.model.SelectOption;
+import com.sychina.admin.web.pojo.SelectOption;
+import com.sychina.admin.web.pojo.models.response.ResultModel;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,19 +24,19 @@ public class UiController {
 
     @GetMapping("/loadMenuList")
     @ApiOperation("获取菜单信息")
-    public List<SelectOption> loadMenuList() {
+    public ResultModel<List<SelectOption>> loadMenuList() {
         return elementUiServiceImpl.loadMenuList();
     }
 
     @GetMapping("/fetchRoleOption")
     @ApiOperation("获取角色")
-    public List<SelectOption> fetchRoleOption() {
+    public ResultModel<List<SelectOption>> fetchRoleOption() {
         return elementUiServiceImpl.fetchRoleOption();
     }
 
     @GetMapping("/fetchUserOptions")
     @ApiOperation("获取用户")
-    public List<SelectOption> fetchUserOptions() {
+    public ResultModel<List<SelectOption>> fetchUserOptions() {
         return elementUiServiceImpl.fetchUserOptions();
     }
 

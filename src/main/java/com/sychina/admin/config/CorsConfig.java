@@ -9,8 +9,6 @@ import org.springframework.web.filter.CorsFilter;
 /**
  * Description:
  *
- * @author <a href="mailto:chencq@hzwesoft.com">chencq</a>
- * @version $Id: GateWayCorsConfig.java, 2018/9/10 10:55 $
  */
 @Configuration
 public class CorsConfig {

@@ -3,16 +3,17 @@ package com.sychina.admin.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.sychina.admin.common.ResponseConstants;
 import com.sychina.admin.infra.domain.Menu;
 import com.sychina.admin.infra.domain.Role;
 import com.sychina.admin.infra.mapper.MenuMapper;
 import com.sychina.admin.infra.mapper.RoleMapper;
-import com.sychina.admin.web.model.RoleModel;
-import com.sychina.admin.web.model.RoleTableModel;
+import com.sychina.admin.web.pojo.models.RoleTableModel;
+import com.sychina.admin.web.pojo.models.response.ResultModel;
+import com.sychina.admin.web.pojo.params.RoleParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,23 +30,29 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IS
 
     private ElementUiServiceImpl elementUiServiceImpl;
 
+    /**
+     * @param roleParam
+     * @return
+     */
+    public ResultModel addRole(RoleParam roleParam) {
 
-    public String addRole(RoleModel roleModel) {
-        Role role = baseMapper.selectOne(new QueryWrapper<Role>().eq("name", roleModel.getName()));
-        if (role != null) {
-            return ResponseConstants.EXISTS;
-        }
+        Role role = baseMapper.selectOne(new QueryWrapper<Role>().eq("name", roleParam.getName()));
+        Assert.isNull(role, "该角色已存在");
 
         role = new Role();
-        role.setName(roleModel.getName());
-        role.setMenus(roleModel.getMenus());
+        role.setName(roleParam.getName());
+        role.setMenus(roleParam.getMenuIds());
 
         baseMapper.insert(role);
 
-        return ResponseConstants.SUCCESS;
+        return ResultModel.succeed();
     }
 
-    public List<RoleTableModel> loadRoleTable() {
+    /**
+     * @return
+     */
+    public ResultModel<List<RoleTableModel>> loadRoleTable() {
+
         List<Role> roles = baseMapper.selectList(new QueryWrapper<>());
 
         List<RoleTableModel> roleTableModels = new ArrayList<>();
@@ -61,22 +68,24 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IS
             roleTableModels.add(roleTableModel);
         });
 
-        return roleTableModels;
+        return ResultModel.succeed(roleTableModels);
     }
 
-    public String editRole(RoleModel roleModel) {
+    /**
+     * @param roleParam
+     * @return
+     */
+    public ResultModel editRole(RoleParam roleParam) {
 
-        Role role = baseMapper.selectById(roleModel.getId());
-        if (role == null) {
-            return ResponseConstants.FAILURE;
-        }
+        Role role = baseMapper.selectById(roleParam.getId());
+        Assert.notNull(role, "未找到该角色");
 
-        role.setName(roleModel.getName());
-        role.setMenus(roleModel.getMenus());
+        role.setName(roleParam.getName());
+        role.setMenus(roleParam.getMenuIds());
 
         baseMapper.updateById(role);
 
-        return ResponseConstants.SUCCESS;
+        return ResultModel.succeed();
     }
 
     /**
@@ -85,14 +94,11 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IS
      * @param id roleid
      * @return 是否成
      */
-    public String deleteRole(Integer id) {
+    public ResultModel deleteRole(Integer id) {
 
-        int marker = baseMapper.deleteById(id);
-        if (marker == 0) {
-            return ResponseConstants.IN_USE;
-        }
+        baseMapper.deleteById(id);
 
-        return ResponseConstants.SUCCESS;
+        return ResultModel.succeed();
     }
 
 
