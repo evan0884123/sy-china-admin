@@ -49,7 +49,21 @@ public class SwaggerConfig {
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.regex("^(?!/error.*).*$"))
                 .build()
+                .globalRequestParameters(requestParameters())
                 .protocols(setOf("https", "http"));
+    }
+    /**
+     * 全局请求头
+     */
+    private List<RequestParameter> requestParameters() {
+        List<RequestParameter> headerPars = new ArrayList<>();
+        headerPars.add(new RequestParameterBuilder()
+                .in(ParameterType.HEADER)
+                .name("Authorization")
+                .query(q -> q.model(m -> m.scalarModel(ScalarType.STRING)))
+                .description("令牌")
+                .build());
+        return headerPars;
     }
 
     /**

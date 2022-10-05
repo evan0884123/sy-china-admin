@@ -12,6 +12,7 @@ import org.springframework.util.StringUtils;
 
 /**
  *
+ * @author Administrator
  */
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -25,7 +26,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
 
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        User user = userMapper.selectOne(queryWrapper.eq("loginName", s));
+        User user = userMapper.selectOne(queryWrapper.eq("login_name", s));
 
         if (user == null) {
             throw new UsernameNotFoundException("用户名或密码错误");

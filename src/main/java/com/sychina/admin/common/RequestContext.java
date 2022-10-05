@@ -1,45 +1,44 @@
 package com.sychina.admin.common;
 
+import com.sychina.admin.auth.jwt.JwtAuthenticationConfig;
 import com.sychina.admin.exception.AuthenticationException;
 import com.sychina.admin.infra.domain.User;
 import com.sychina.admin.infra.mapper.UserMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 
-@Service
+/**
+ * @author Administrator
+ */
+@Component
 public class RequestContext {
 
     private UserMapper userMapper;
 
-    @Value("${jwt.header:Authorization}")
-    private String header;
-
-    private String prefix;
-
-    private String secret;
+    private JwtAuthenticationConfig config;
 
     public User getRequestUser() {
         ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder
                 .getRequestAttributes();
         HttpServletRequest request = servletRequestAttributes.getRequest();
 
-        String token = request.getHeader(header);
+        String token = request.getHeader(config.getHeader());
 
-        if (StringUtils.isEmpty(token) || !token.startsWith(prefix)) {
+        if (StringUtils.isEmpty(token) || !token.startsWith(config.getPrefix())) {
             return null;
         }
 
-        token = token.substring(prefix.length());
+        token = token.substring(config.getPrefix().length());
 
-        Claims claims = Jwts.parser().setSigningKey(secret.getBytes()).parseClaimsJws(token).getBody();
+        Claims claims = Jwts.parser().setSigningKey(config.getSecret().getBytes()).parseClaimsJws(token).getBody();
         String userId = claims.getSubject();
         if (userId == null) {
             throw new AuthenticationException("user id is empty");
@@ -48,18 +47,13 @@ public class RequestContext {
         return user;
     }
 
-    @Value("${jwt.prefix}")
-    public void setPrefix(String prefix) {
-        this.prefix = prefix;
-    }
-
-    @Value("${jwt.secret}")
-    public void setSecret(String secret) {
-        this.secret = secret;
-    }
-
     @Autowired
     public void setUserMapper(UserMapper userMapper) {
         this.userMapper = userMapper;
+    }
+
+    @Autowired
+    public void setConfig(JwtAuthenticationConfig config) {
+        this.config = config;
     }
 }

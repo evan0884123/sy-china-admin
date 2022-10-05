@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 /**
  * 认证,WEB过滤器配置
+ * @author Administrator
  */
 public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 

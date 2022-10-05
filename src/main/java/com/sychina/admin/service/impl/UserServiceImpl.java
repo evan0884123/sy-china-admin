@@ -17,7 +17,6 @@ import org.springframework.util.Assert;
 import java.util.List;
 
 /**
- *
  * @author Administrator
  */
 @Service
@@ -34,7 +33,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public ResultModel<String> addUser(UserParam userParam) {
 
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        User user = baseMapper.selectOne(queryWrapper.eq("loginName", userParam.getLoginName()));
+        User user = baseMapper.selectOne(queryWrapper.eq("login_name", userParam.getLoginName()));
         Assert.isNull(user, "用户已存在");
 
         user = new User();
@@ -213,5 +212,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         result.setEmail(user.getEmail());
 
         return ResultModel.succeed(result);
+    }
+
+    public static void main(String[] args) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(4);
+        System.out.println(bCryptPasswordEncoder.encode("123456"));
     }
 }

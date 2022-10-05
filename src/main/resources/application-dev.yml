@@ -1,6 +1,8 @@
 jwt:
   secret: sychina-admin@@1234
   prefix: sychina
+  # 60 * 60
+  expiration: 3600
 server:
   shutdown: graceful
   port: 7004
@@ -16,7 +18,7 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://172.247.185.18:16033/sy-china?useSSL=false&&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false
+    url: jdbc:mysql://172.247.185.18:16033/sy_china?useSSL=false&&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2B8&allowMultiQueries=true
     username: root
     password: 20220916@root
 

@@ -1,31 +1,31 @@
 package com.sychina.admin.auth.jwt;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.ToString;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 /**
  * Description: jwt配置
+ *
+ * @author Administrator
  */
-@Getter
+@Data
 @ToString
+@ConfigurationProperties(prefix = "jwt")
+@Component
 public class JwtAuthenticationConfig {
 
-    @Value("${jwt.url:/login}")
-    private String url;
+    private String url = "/login";
 
-    @Value("${jwt.header:Authorization}")
-    private String header;
+    private String header = "Authorization";
 
-    @Value("${jwt.prefix}")
     private String prefix;
 
     /**
      * 默认1小时超时
      */
-    @Value("${jwt.expiration:#{60*60}}")
-    private int expiration;
+    private int expiration = 60 * 60;
 
-    @Value("${jwt.secret}")
     private String secret;
 }

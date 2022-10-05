@@ -33,11 +33,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsServiceImpl userDetailsService;
 
     @Bean
-    public JwtAuthenticationConfig jwtConfig() {
-        return new JwtAuthenticationConfig();
-    }
-
-    @Bean
     public WhaleAuthenticationProvider authenticationProvider() {
         WhaleAuthenticationProvider result = new WhaleAuthenticationProvider();
         result.setUserDetailsService(userDetailsService);

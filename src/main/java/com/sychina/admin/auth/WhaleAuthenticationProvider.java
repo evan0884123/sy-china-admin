@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  *
+ * @author Administrator
  */
 public class WhaleAuthenticationProvider extends DaoAuthenticationProvider {
 

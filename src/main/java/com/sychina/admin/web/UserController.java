@@ -21,7 +21,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/user")
-@Api(tags = {"数据分析模块"})
+@Api(tags = {"后台用户管理"})
 public class UserController {
 
     private UserServiceImpl userServiceImpl;
