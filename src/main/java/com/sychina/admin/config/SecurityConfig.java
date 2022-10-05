@@ -58,7 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests().antMatchers(config.getUrl()).permitAll()
                 // 放行swagger
-                .antMatchers("/swagger-ui.html","/swagger-resources/**","/webjars/**","/v3/**","/api/**","/doc.html").permitAll()
+                .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/webjars/**", "/v3/**", "/api/**", "/doc.html").permitAll()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .anyRequest().authenticated();
     }

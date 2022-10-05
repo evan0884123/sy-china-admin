@@ -8,6 +8,7 @@ import java.util.List;
 
 /**
  * Description: 角色列表表格元素
+ *
  * @author Administrator
  */
 @Data

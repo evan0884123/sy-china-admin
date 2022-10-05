@@ -1,6 +1,8 @@
 package com.sychina.admin.config;
 
 import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;
+import com.sychina.admin.auth.jwt.JwtAuthenticationConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -36,6 +38,7 @@ public class SwaggerConfig {
     @Value("${knife4j.setting.enable:true}")
     private boolean enable;
 
+    private JwtAuthenticationConfig config;
 
     /**
      * 创建RestApi 并包扫描controller
@@ -52,6 +55,7 @@ public class SwaggerConfig {
                 .globalRequestParameters(requestParameters())
                 .protocols(setOf("https", "http"));
     }
+
     /**
      * 全局请求头
      */
@@ -59,7 +63,7 @@ public class SwaggerConfig {
         List<RequestParameter> headerPars = new ArrayList<>();
         headerPars.add(new RequestParameterBuilder()
                 .in(ParameterType.HEADER)
-                .name("Authorization")
+                .name(config.getHeader())
                 .query(q -> q.model(m -> m.scalarModel(ScalarType.STRING)))
                 .description("令牌")
                 .build());
@@ -79,7 +83,12 @@ public class SwaggerConfig {
     }
 
 
-    private static<T> Set<T> setOf(T...ts) {
+    private static <T> Set<T> setOf(T... ts) {
         return new HashSet<>(Arrays.asList(ts));
+    }
+
+    @Autowired
+    public void setConfig(JwtAuthenticationConfig config) {
+        this.config = config;
     }
 }

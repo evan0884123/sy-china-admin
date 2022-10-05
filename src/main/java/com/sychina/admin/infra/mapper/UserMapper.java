@@ -16,8 +16,7 @@ import java.util.List;
 public interface UserMapper extends BaseMapper<User> {
 
     List<UserTableModel> findTable(@Param("name") String name, @Param("roleId") Integer roleId,
-                                   @Param("limit") Integer limit,
-                                   @Param("offset") Integer offset);
+                                   @Param("limit") Integer limit, @Param("offset") Integer offset);
 
     Integer count(@Param("name") String name, @Param("unitId") String unitId,
                   @Param("roleId") Integer roleId);

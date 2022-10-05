@@ -9,6 +9,7 @@ import org.springframework.web.filter.CorsFilter;
 /**
  * Description:
  *
+ * @author Administrator
  */
 @Configuration
 public class CorsConfig {
