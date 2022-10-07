@@ -82,9 +82,12 @@ public class FileUploadServiceImpl {
      * @return
      */
     private String getFilePath(String sourceFileName) {
-        DateTime dateTime = new DateTime();
-        return "images/" + dateTime.toString("yyyy") + "/" + dateTime.toString("MM") + "/"
-                + dateTime.toString("dd") + "/" + System.currentTimeMillis()
+//        DateTime dateTime = new DateTime();
+//        return "images/" + dateTime.toString("yyyy") + "/" + dateTime.toString("MM") + "/"
+//                + dateTime.toString("dd") + "/" + System.currentTimeMillis()
+//                + RandomUtils.nextInt(100, 9999) + "."
+//                + StringUtils.substringAfterLast(sourceFileName, ".");
+        return "images/" + "/" + System.currentTimeMillis()
                 + RandomUtils.nextInt(100, 9999) + "."
                 + StringUtils.substringAfterLast(sourceFileName, ".");
     }

@@ -1,8 +1,8 @@
 package com.sychina.admin.auth;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.sychina.admin.infra.domain.User;
-import com.sychina.admin.infra.mapper.UserMapper;
+import com.sychina.admin.infra.domain.AdminUser;
+import com.sychina.admin.infra.mapper.AdminUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,7 +16,7 @@ import org.springframework.util.StringUtils;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private UserMapper userMapper;
+    private AdminUserMapper adminUserMapper;
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
@@ -24,14 +24,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException("用户名或密码错误");
         }
 
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        User user = userMapper.selectOne(queryWrapper.eq("login_name", s));
+        QueryWrapper<AdminUser> queryWrapper = new QueryWrapper<>();
+        AdminUser adminUser = adminUserMapper.selectOne(queryWrapper.eq("login_name", s));
 
-        if (user == null) {
+        if (adminUser == null) {
             throw new UsernameNotFoundException("用户名或密码错误");
         }
 
-        SecurityUser securityUser = new SecurityUser(user);
+        SecurityAdminUser securityUser = new SecurityAdminUser(adminUser);
 
         securityUser.setEnabled(true);
         securityUser.setAccountNonLocked(true);
@@ -42,7 +42,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     @Autowired
-    public void setUserMapper(UserMapper userMapper) {
-        this.userMapper = userMapper;
+    public void setUserMapper(AdminUserMapper adminUserMapper) {
+        this.adminUserMapper = adminUserMapper;
     }
 }

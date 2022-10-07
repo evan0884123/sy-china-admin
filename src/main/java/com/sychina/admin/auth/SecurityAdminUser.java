@@ -4,7 +4,7 @@
  */
 package com.sychina.admin.auth;
 
-import com.sychina.admin.infra.domain.User;
+import com.sychina.admin.infra.domain.AdminUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +15,7 @@ import java.util.Objects;
 /**
  *
  */
-public class SecurityUser extends User implements UserDetails {
+public class SecurityAdminUser extends AdminUser implements UserDetails {
 
     private boolean accountNonExpired = true;
 
@@ -25,8 +25,8 @@ public class SecurityUser extends User implements UserDetails {
 
     private boolean enabled = true;
 
-    public SecurityUser(User user) {
-        super(user);
+    public SecurityAdminUser(AdminUser adminUser) {
+        super(adminUser);
     }
 
     @Override
@@ -83,7 +83,7 @@ public class SecurityUser extends User implements UserDetails {
             return false;
         if (!super.equals(o))
             return false;
-        SecurityUser that = (SecurityUser) o;
+        SecurityAdminUser that = (SecurityAdminUser) o;
         return accountNonExpired == that.accountNonExpired && accountNonLocked == that.accountNonLocked
                 && credentialsNonExpired == that.credentialsNonExpired && enabled == that.enabled;
     }

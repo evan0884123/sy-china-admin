@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @Api(tags = {"登录"})
-public class LoginController {
+public class AdminLoginController {
 
     @PostMapping("/login")
     @ApiOperation("登录")

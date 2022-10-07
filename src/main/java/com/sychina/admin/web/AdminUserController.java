@@ -1,10 +1,10 @@
 package com.sychina.admin.web;
 
-import com.sychina.admin.service.impl.UserServiceImpl;
-import com.sychina.admin.web.pojo.models.UserInfoModel;
-import com.sychina.admin.web.pojo.models.UserTableModel;
+import com.sychina.admin.service.impl.AdminUserServiceImpl;
+import com.sychina.admin.web.pojo.models.AdminUserInfoModel;
+import com.sychina.admin.web.pojo.models.AdminUserTableModel;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
-import com.sychina.admin.web.pojo.params.UserParam;
+import com.sychina.admin.web.pojo.params.AdminUserParam;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.swagger.annotations.Api;
@@ -21,11 +21,11 @@ import java.util.List;
  * @author Administrator
  */
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/admin-user")
 @Api(tags = {"后台用户管理"})
-public class UserController {
+public class AdminUserController {
 
-    private UserServiceImpl userServiceImpl;
+    private AdminUserServiceImpl userServiceImpl;
 
     private String jwtSecret;
 
@@ -33,14 +33,14 @@ public class UserController {
 
     @PostMapping("/addUser")
     @ApiOperation("新增用户")
-    public ResultModel addUser(@Validated UserParam userParam) {
-        return userServiceImpl.addUser(userParam);
+    public ResultModel addUser(@Validated AdminUserParam adminUserParam) {
+        return userServiceImpl.addUser(adminUserParam);
     }
 
     @PostMapping("/query")
     @ApiOperation("查询所有用户")
-    public ResultModel<List<UserTableModel>> query(@RequestParam String name, Integer roleId, Integer page,
-                                                   Integer pageSize) {
+    public ResultModel<List<AdminUserTableModel>> query(@RequestParam String name, Integer roleId, Integer page,
+                                                        Integer pageSize) {
         return userServiceImpl.query(name, roleId, page, pageSize);
     }
 
@@ -52,8 +52,8 @@ public class UserController {
 
     @PostMapping("/editUser")
     @ApiOperation("编辑用户")
-    public ResultModel editUser(@Validated UserParam userParam) {
-        return userServiceImpl.editUser(userParam);
+    public ResultModel editUser(@Validated AdminUserParam adminUserParam) {
+        return userServiceImpl.editUser(adminUserParam);
     }
 
     @DeleteMapping("/deleteUser/{id}")
@@ -70,7 +70,7 @@ public class UserController {
 
     @GetMapping("/getProfile/{loginName}")
     @ApiOperation("获取用户信息")
-    public ResultModel<UserTableModel> getProfile(@PathVariable String loginName) {
+    public ResultModel<AdminUserTableModel> getProfile(@PathVariable String loginName) {
         return userServiceImpl.getProfile(loginName);
     }
 
@@ -80,7 +80,7 @@ public class UserController {
      */
     @GetMapping("/info")
     @ApiOperation("获取用户信息")
-    public ResultModel<UserInfoModel> info(@RequestParam String token) {
+    public ResultModel<AdminUserInfoModel> info(@RequestParam String token) {
         token = token.substring(jwtPrefix.length());
         Claims claims = Jwts.parser().setSigningKey(jwtSecret.getBytes()).parseClaimsJws(token).getBody();
         String userId = claims.getSubject();
@@ -89,14 +89,14 @@ public class UserController {
 
     @GetMapping("/id/{id}")
     @ApiOperation("获取用户信息")
-    public ResultModel<UserTableModel> loadById(@PathVariable String id) {
+    public ResultModel<AdminUserTableModel> loadById(@PathVariable String id) {
         return userServiceImpl.loadUserById(id);
     }
 
     @PostMapping("/updateProfile")
     @ApiOperation("更新个人信息")
-    public ResultModel updateProfile(@Validated UserParam userParam) {
-        return userServiceImpl.updateProfile(userParam);
+    public ResultModel updateProfile(@Validated AdminUserParam adminUserParam) {
+        return userServiceImpl.updateProfile(adminUserParam);
     }
 
     @PostMapping("/updatePassword")
@@ -106,7 +106,7 @@ public class UserController {
     }
 
     @Autowired
-    public void setUserService(UserServiceImpl userServiceImpl) {
+    public void setUserService(AdminUserServiceImpl userServiceImpl) {
         this.userServiceImpl = userServiceImpl;
     }
 

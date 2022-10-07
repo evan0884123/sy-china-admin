@@ -6,27 +6,32 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 /**
- * 菜单
+ * 公共信息
  *
  * @author Administrator
  */
 @Data
-@TableName("admin_menu")
-public class Menu {
+@TableName("public")
+public class Public {
 
     /**
      *
      */
-    @TableId(type = IdType.ASSIGN_ID)
-    private Integer id;
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
+    private String id;
 
     /**
-     * 菜单code
+     * '内容'
      */
-    private String code;
+    private String content;
 
     /**
-     * 菜单名称
+     * '创建时间'
      */
-    private String name;
+    private Long create;
+
+    /**
+     * '修改时间'
+     */
+    private Long update;
 }

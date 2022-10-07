@@ -1,10 +1,11 @@
 package com.sychina.admin.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.sychina.admin.infra.domain.Role;
+import com.sychina.admin.infra.domain.AdminUser;
 
 /**
  * @author Administrator
  */
-public interface IRoleService extends IService<Role> {
+public interface IAdminUserService extends IService<AdminUser> {
+
 }

@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
  * Description:
  */
 @Data
-public class UserParam {
+public class AdminUserParam {
 
     @ApiModelProperty(value = "id")
     private String id;

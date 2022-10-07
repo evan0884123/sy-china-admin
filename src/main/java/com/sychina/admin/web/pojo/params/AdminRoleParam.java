@@ -11,7 +11,7 @@ import javax.validation.constraints.NotEmpty;
  * @author Administrator
  */
 @Data
-public class RoleParam {
+public class AdminRoleParam {
 
     @ApiModelProperty(value = "id")
     private Integer id;

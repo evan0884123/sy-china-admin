@@ -1,12 +1,12 @@
 package com.sychina.admin.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.sychina.admin.infra.domain.Menu;
-import com.sychina.admin.infra.domain.Role;
-import com.sychina.admin.infra.domain.User;
-import com.sychina.admin.infra.mapper.MenuMapper;
-import com.sychina.admin.infra.mapper.RoleMapper;
-import com.sychina.admin.infra.mapper.UserMapper;
+import com.sychina.admin.infra.domain.AdminMenu;
+import com.sychina.admin.infra.domain.AdminRole;
+import com.sychina.admin.infra.domain.AdminUser;
+import com.sychina.admin.infra.mapper.AdminMenuMapper;
+import com.sychina.admin.infra.mapper.AdminRoleMapper;
+import com.sychina.admin.infra.mapper.AdminUserMapper;
 import com.sychina.admin.web.pojo.SelectOption;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,26 +21,26 @@ import java.util.List;
 @Service
 public class ElementUiServiceImpl {
 
-    private MenuMapper menuMapper;
+    private AdminMenuMapper adminMenuMapper;
 
-    private RoleMapper roleMapper;
+    private AdminRoleMapper adminRoleMapper;
 
-    private UserMapper userMapper;
+    private AdminUserMapper adminUserMapper;
 
-    private RoleServiceImpl roleServiceImpl;
+    private AdminRoleServiceImpl adminRoleServiceImpl;
 
     /**
      * @return
      */
     public ResultModel<List<SelectOption>> loadMenuList() {
 
-        List<Menu> menus = menuMapper.selectList(new QueryWrapper<>());
+        List<AdminMenu> adminMenus = adminMenuMapper.selectList(new QueryWrapper<>());
         List<SelectOption> menuSelect = new ArrayList<>();
 
-        menus.forEach(menu -> {
+        adminMenus.forEach(adminMenu -> {
             SelectOption selectOption = new SelectOption();
-            selectOption.setLabel(menu.getName());
-            selectOption.setValue(menu.getId() + "");
+            selectOption.setLabel(adminMenu.getName());
+            selectOption.setValue(adminMenu.getId() + "");
             menuSelect.add(selectOption);
         });
 
@@ -52,13 +52,13 @@ public class ElementUiServiceImpl {
      */
     public ResultModel<List<SelectOption>> fetchRoleOption() {
 
-        List<Role> roles = roleMapper.selectList(new QueryWrapper<>());
+        List<AdminRole> adminRoles = adminRoleMapper.selectList(new QueryWrapper<>());
         List<SelectOption> roleSelect = new ArrayList<>();
 
-        roles.forEach(role -> {
+        adminRoles.forEach(adminRole -> {
             SelectOption selectOption = new SelectOption();
-            selectOption.setLabel(role.getName());
-            selectOption.setValue(role.getId() + "");
+            selectOption.setLabel(adminRole.getName());
+            selectOption.setValue(adminRole.getId() + "");
             roleSelect.add(selectOption);
         });
 
@@ -70,10 +70,10 @@ public class ElementUiServiceImpl {
      */
     public ResultModel<List<SelectOption>> fetchUserOptions() {
 
-        List<User> users = userMapper.selectList(new QueryWrapper<>());
+        List<AdminUser> adminUsers = adminUserMapper.selectList(new QueryWrapper<>());
         List<SelectOption> userSelect = new ArrayList<>();
 
-        users.forEach(user -> {
+        adminUsers.forEach(user -> {
             SelectOption selectOption = new SelectOption();
             selectOption.setLabel(user.getFullName());
             selectOption.setValue(user.getId());
@@ -84,22 +84,22 @@ public class ElementUiServiceImpl {
     }
 
     @Autowired
-    public void setMenuMapper(MenuMapper menuMapper) {
-        this.menuMapper = menuMapper;
+    public void setMenuMapper(AdminMenuMapper adminMenuMapper) {
+        this.adminMenuMapper = adminMenuMapper;
     }
 
     @Autowired
-    public void setRoleMapper(RoleMapper roleMapper) {
-        this.roleMapper = roleMapper;
+    public void setRoleMapper(AdminRoleMapper adminRoleMapper) {
+        this.adminRoleMapper = adminRoleMapper;
     }
 
     @Autowired
-    public void setUserMapper(UserMapper userMapper) {
-        this.userMapper = userMapper;
+    public void setUserMapper(AdminUserMapper adminUserMapper) {
+        this.adminUserMapper = adminUserMapper;
     }
 
     @Autowired
-    public void setRoleService(RoleServiceImpl roleServiceImpl) {
-        this.roleServiceImpl = roleServiceImpl;
+    public void setRoleService(AdminRoleServiceImpl adminRoleServiceImpl) {
+        this.adminRoleServiceImpl = adminRoleServiceImpl;
     }
 }

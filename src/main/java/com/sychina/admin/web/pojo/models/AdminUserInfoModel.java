@@ -9,7 +9,7 @@ import lombok.Data;
  * @author Administrator
  */
 @Data
-public class UserInfoModel {
+public class AdminUserInfoModel {
 
     @ApiModelProperty(value = "id")
     private String id;

@@ -16,6 +16,10 @@ server:
 
 #
 spring:
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 1000MB
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://172.247.185.18:16033/sy_china?useSSL=false&&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2B8&allowMultiQueries=true
@@ -28,6 +32,14 @@ mybatis-plus:
   type-aliases-package: com.sychina.admin.infra.domain
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+#
+aliyun:
+  endpoint: oss-cn-hangzhou.aliyuncs.com
+  accessKeyId: LTAI5tGHqmYUBs9mDN8MganB
+  accessKeySecret: wspz4KxbqpcxrBR2owN0OI3fdrypCZ
+  bucketName: sy-china
+  urlPrefix: https://oss-cn-hangzhou.aliyuncs.com/
 
 #
 knife4j:

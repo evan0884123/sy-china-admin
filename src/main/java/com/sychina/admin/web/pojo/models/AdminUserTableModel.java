@@ -7,7 +7,7 @@ import lombok.Data;
  * Description: 用户页面表格展示
  */
 @Data
-public class UserTableModel {
+public class AdminUserTableModel {
 
     @ApiModelProperty(value = "id")
     private String id;

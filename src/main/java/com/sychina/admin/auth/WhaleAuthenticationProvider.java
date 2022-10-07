@@ -16,7 +16,7 @@ public class WhaleAuthenticationProvider extends DaoAuthenticationProvider {
         Authentication parent = super.createSuccessAuthentication(principal, authentication, user);
 
         UsernamePasswordAuthenticationToken result = new UsernamePasswordAuthenticationToken(
-                ((SecurityUser) user).getId(), parent.getCredentials(), parent.getAuthorities());
+                ((SecurityAdminUser) user).getId(), parent.getCredentials(), parent.getAuthorities());
 
         result.setDetails(parent.getDetails());
 

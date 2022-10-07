@@ -13,9 +13,9 @@ import lombok.Data;
  */
 @Data
 @TableName("admin_user")
-public class User {
+public class AdminUser {
 
-    public User() {
+    public AdminUser() {
         this.id = UUIDGenerator.random();
     }
 
@@ -65,10 +65,10 @@ public class User {
      */
     private String type;
 
-    public User(User user) {
-        this.id = user.getId();
-        this.loginName = user.getLoginName();
-        this.password = user.getPassword();
+    public AdminUser(AdminUser adminUser) {
+        this.id = adminUser.getId();
+        this.loginName = adminUser.getLoginName();
+        this.password = adminUser.getPassword();
     }
 
 }

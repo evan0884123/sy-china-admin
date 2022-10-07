@@ -6,13 +6,13 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 /**
- * 角色
+ * 菜单
  *
  * @author Administrator
  */
 @Data
-@TableName(value = "admin_role")
-public class Role {
+@TableName("admin_menu")
+public class AdminMenu {
 
     /**
      *
@@ -21,12 +21,12 @@ public class Role {
     private Integer id;
 
     /**
-     * 角色名称
+     * 菜单code
      */
-    private String name;
+    private String code;
 
     /**
-     * 权限菜单id list ，使用 ”，“分割
+     * 菜单名称
      */
-    private String menus;
+    private String name;
 }

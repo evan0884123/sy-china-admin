@@ -2,8 +2,8 @@ package com.sychina.admin.common;
 
 import com.sychina.admin.auth.jwt.JwtAuthenticationConfig;
 import com.sychina.admin.exception.AuthenticationException;
-import com.sychina.admin.infra.domain.User;
-import com.sychina.admin.infra.mapper.UserMapper;
+import com.sychina.admin.infra.domain.AdminUser;
+import com.sychina.admin.infra.mapper.AdminUserMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +20,11 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 public class RequestContext {
 
-    private UserMapper userMapper;
+    private AdminUserMapper adminUserMapper;
 
     private JwtAuthenticationConfig config;
 
-    public User getRequestUser() {
+    public AdminUser getRequestUser() {
         ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder
                 .getRequestAttributes();
         HttpServletRequest request = servletRequestAttributes.getRequest();
@@ -42,13 +42,13 @@ public class RequestContext {
         if (userId == null) {
             throw new AuthenticationException("user id is empty");
         }
-        User user = userMapper.selectById(userId);
-        return user;
+        AdminUser adminUser = adminUserMapper.selectById(userId);
+        return adminUser;
     }
 
     @Autowired
-    public void setUserMapper(UserMapper userMapper) {
-        this.userMapper = userMapper;
+    public void setUserMapper(AdminUserMapper adminUserMapper) {
+        this.adminUserMapper = adminUserMapper;
     }
 
     @Autowired

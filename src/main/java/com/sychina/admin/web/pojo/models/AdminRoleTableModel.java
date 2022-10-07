@@ -1,6 +1,6 @@
 package com.sychina.admin.web.pojo.models;
 
-import com.sychina.admin.infra.domain.Menu;
+import com.sychina.admin.infra.domain.AdminMenu;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -12,7 +12,7 @@ import java.util.List;
  * @author Administrator
  */
 @Data
-public class RoleTableModel {
+public class AdminRoleTableModel {
 
     @ApiModelProperty(value = "id")
     private Integer id;
@@ -21,5 +21,5 @@ public class RoleTableModel {
     private String name;
 
     @ApiModelProperty(value = "菜单list")
-    private List<Menu> menus;
+    private List<AdminMenu> adminMenus;
 }
