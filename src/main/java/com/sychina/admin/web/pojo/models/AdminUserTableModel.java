@@ -5,6 +5,7 @@ import lombok.Data;
 
 /**
  * Description: 用户页面表格展示
+ * @author Administrator
  */
 @Data
 public class AdminUserTableModel {

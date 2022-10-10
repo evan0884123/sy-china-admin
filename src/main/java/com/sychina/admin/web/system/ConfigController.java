@@ -1,0 +1,42 @@
+package com.sychina.admin.web.system;
+
+import com.sychina.admin.service.impl.ConfigServiceImpl;
+import com.sychina.admin.web.pojo.models.response.ResultModel;
+import com.sychina.admin.web.pojo.params.ConfigParam;
+import com.sychina.admin.web.pojo.params.ConfigQuery;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * @author Administrator
+ */
+@RestController
+@RequestMapping("/config")
+@Api(tags = {"系统配置"})
+public class ConfigController {
+
+    private ConfigServiceImpl configService;
+
+    @GetMapping("/loadTable")
+    @ApiOperation("获取配置信息")
+    public ResultModel loadTable(ConfigQuery configQuery) {
+        return configService.loadTable(configQuery);
+    }
+
+    @PostMapping("/edit")
+    @ApiOperation("编辑配置信息")
+    public ResultModel edit(@Validated ConfigParam configParam) {
+        return configService.edit(configParam);
+    }
+
+    @Autowired
+    public void setConfigService(ConfigServiceImpl configService) {
+        this.configService = configService;
+    }
+}

@@ -26,7 +26,7 @@ public class News {
     private String title;
 
     /**
-     *
+     * 缩略图
      */
     private String thumbnail;
 

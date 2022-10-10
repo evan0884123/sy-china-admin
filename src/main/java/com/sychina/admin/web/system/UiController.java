@@ -1,4 +1,4 @@
-package com.sychina.admin.web;
+package com.sychina.admin.web.system;
 
 import com.sychina.admin.service.impl.ElementUiServiceImpl;
 import com.sychina.admin.web.pojo.SelectOption;

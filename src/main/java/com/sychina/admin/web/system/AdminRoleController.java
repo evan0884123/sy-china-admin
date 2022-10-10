@@ -1,4 +1,4 @@
-package com.sychina.admin.web;
+package com.sychina.admin.web.system;
 
 import com.sychina.admin.service.impl.AdminRoleServiceImpl;
 import com.sychina.admin.web.pojo.models.AdminRoleTableModel;
@@ -16,7 +16,7 @@ import java.util.List;
  *
  */
 @RestController
-@RequestMapping("/admin-role")
+@RequestMapping("/adminRole")
 @Api(tags = {"角色管理"})
 public class AdminRoleController {
 
@@ -28,16 +28,16 @@ public class AdminRoleController {
         return adminRoleServiceImpl.addRole(adminRoleParam);
     }
 
-    @PostMapping("/editRole")
-    @ApiOperation("编辑角色")
-    public ResultModel editRole(@Validated AdminRoleParam adminRoleParam) {
-        return adminRoleServiceImpl.editRole(adminRoleParam);
-    }
-
     @GetMapping("/loadRoleTable")
     @ApiOperation("获取所有角色")
     public ResultModel<List<AdminRoleTableModel>> loadRoleTable() {
         return adminRoleServiceImpl.loadRoleTable();
+    }
+
+    @PostMapping("/editRole")
+    @ApiOperation("编辑角色")
+    public ResultModel editRole(@Validated AdminRoleParam adminRoleParam) {
+        return adminRoleServiceImpl.editRole(adminRoleParam);
     }
 
     @DeleteMapping("/deleteRole/{id}")

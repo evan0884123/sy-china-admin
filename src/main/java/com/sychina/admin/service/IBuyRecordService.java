@@ -1,11 +1,11 @@
 package com.sychina.admin.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.sychina.admin.infra.domain.PlayerInfo;
+import com.sychina.admin.infra.domain.BuyRecords;
 
 /**
  * @author Administrator
  */
-public interface IPlayersService extends IService<PlayerInfo> {
+public interface IBuyRecordService extends IService<BuyRecords> {
 
 }

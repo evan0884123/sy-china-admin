@@ -1,4 +1,4 @@
-package com.sychina.admin.web;
+package com.sychina.admin.web.system;
 
 import com.aliyun.oss.model.OSSObjectSummary;
 import com.sychina.admin.service.impl.FileUploadServiceImpl;

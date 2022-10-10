@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * 银行卡信息
@@ -11,6 +12,7 @@ import lombok.Data;
  * @author Administrator
  */
 @Data
+@Accessors(chain = true)
 @TableName("bank_infos")
 public class BankInfos {
 
@@ -18,7 +20,7 @@ public class BankInfos {
      *
      */
     @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private String id;
+    private Long id;
 
     /**
      * '所属玩家ID'

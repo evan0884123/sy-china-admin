@@ -1,7 +1,12 @@
 package com.sychina.admin.web.pojo.models;
 
+import com.sychina.admin.infra.domain.AdminMenu;
+import com.sychina.admin.infra.domain.AdminUser;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.experimental.Accessors;
+
+import java.util.List;
 
 /**
  * Description:
@@ -9,13 +14,11 @@ import lombok.Data;
  * @author Administrator
  */
 @Data
+@Accessors(chain = true)
 public class AdminUserInfoModel {
 
     @ApiModelProperty(value = "id")
     private String id;
-
-    @ApiModelProperty(value = "token")
-    private String token;
 
     @ApiModelProperty(value = "登录名")
     private String loginName;
@@ -23,4 +26,12 @@ public class AdminUserInfoModel {
     @ApiModelProperty(value = "用户姓名")
     private String fullName;
 
+    @ApiModelProperty(value = "菜单list")
+    private List<AdminMenu> adminMenus;
+
+    public AdminUserInfoModel convert(AdminUser adminUser) {
+
+        this.setId(adminUser.getId()).setLoginName(adminUser.getLoginName()).setFullName(adminUser.getFullName());
+        return this;
+    }
 }

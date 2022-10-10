@@ -2,6 +2,7 @@ package com.sychina.admin.aop;
 
 import com.sychina.admin.auth.jwt.JwtAuthenticationConfig;
 import com.sychina.admin.common.RequestContext;
+import com.sychina.admin.exception.AuthenticationException;
 import com.sychina.admin.utils.IPUtil;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +38,9 @@ public class GlobalException {
         // 自定义的错误
         if (ex instanceof IllegalArgumentException) {
             IllegalArgumentException se = (IllegalArgumentException) ex;
+            failed = ResultModel.failed(se.getMessage());
+        }else if (ex instanceof AuthenticationException) {
+            AuthenticationException se = (AuthenticationException) ex;
             failed = ResultModel.failed(se.getMessage());
         }
         // 通用错误提示

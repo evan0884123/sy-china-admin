@@ -9,5 +9,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @author Administrator
  */
 @Mapper
-public interface PlayersMapper extends BaseMapper<Players> {
+public interface PlayerMapper extends BaseMapper<Players> {
 }

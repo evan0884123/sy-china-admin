@@ -9,5 +9,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @author Administrator
  */
 @Mapper
-public interface ProjectsMapper extends BaseMapper<Projects> {
+public interface ProjectMapper extends BaseMapper<Projects> {
 }
