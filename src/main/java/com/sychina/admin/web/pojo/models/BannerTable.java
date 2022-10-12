@@ -1,7 +1,9 @@
 package com.sychina.admin.web.pojo.models;
 
+import com.sychina.admin.infra.domain.Banners;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * Description:
@@ -9,7 +11,8 @@ import lombok.Data;
  * @author Administrator
  */
 @Data
-public class BannerTableModel {
+@Accessors(chain = true)
+public class BannerTable {
 
     @ApiModelProperty(value = "id")
     private String id;
@@ -32,4 +35,16 @@ public class BannerTableModel {
     @ApiModelProperty(value = "修改时间")
     private Long update;
 
+    public BannerTable convert(Banners banner) {
+
+        this.setId(banner.getId())
+                .setTab(banner.getTab())
+                .setImg(banner.getImg())
+                .setContent(banner.getContent())
+                .setStatus(banner.getStatus())
+                .setCreate(banner.getCreate())
+                .setUpdate(banner.getUpdate());
+
+        return this;
+    }
 }

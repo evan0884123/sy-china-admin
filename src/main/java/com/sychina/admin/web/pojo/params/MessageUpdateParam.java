@@ -1,7 +1,10 @@
 package com.sychina.admin.web.pojo.params;
 
+import com.sychina.admin.infra.domain.Messages;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * Description:
@@ -9,13 +12,10 @@ import lombok.Data;
  * @author Administrator
  */
 @Data
-public class MessageParam {
+public class MessageUpdateParam {
 
     @ApiModelProperty(value = "id")
-    private String id;
-
-    @ApiModelProperty(value = "玩家账号")
-    private String account;
+    private Long id;
 
     @ApiModelProperty(value = "标题")
     private String title;
@@ -23,6 +23,12 @@ public class MessageParam {
     @ApiModelProperty(value = "内容")
     private Integer content;
 
-    @ApiModelProperty(value = "已读(0-未读 1-已读)")
-    private Integer hadRead;
+    public Messages convert() {
+
+        Messages messages = new Messages();
+        messages.setTitle(this.getTitle())
+                .setContent(this.getContent());
+
+        return messages;
+    }
 }

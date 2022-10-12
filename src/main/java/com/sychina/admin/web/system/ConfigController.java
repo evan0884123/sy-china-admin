@@ -3,7 +3,6 @@ package com.sychina.admin.web.system;
 import com.sychina.admin.service.impl.ConfigServiceImpl;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.ConfigParam;
-import com.sychina.admin.web.pojo.params.ConfigQuery;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +24,8 @@ public class ConfigController {
 
     @GetMapping("/loadTable")
     @ApiOperation("获取配置信息")
-    public ResultModel loadTable(ConfigQuery configQuery) {
-        return configService.loadTable(configQuery);
+    public ResultModel loadTable() {
+        return configService.loadTable();
     }
 
     @PostMapping("/edit")

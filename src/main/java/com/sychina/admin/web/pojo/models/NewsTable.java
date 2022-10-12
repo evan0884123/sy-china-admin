@@ -1,7 +1,9 @@
 package com.sychina.admin.web.pojo.models;
 
+import com.sychina.admin.infra.domain.News;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * Description:
@@ -9,7 +11,8 @@ import lombok.Data;
  * @author Administrator
  */
 @Data
-public class NewsTableModel {
+@Accessors(chain = true)
+public class NewsTable {
 
     @ApiModelProperty(value = "id")
     private String id;
@@ -37,4 +40,19 @@ public class NewsTableModel {
 
     @ApiModelProperty(value = "修改时间")
     private Long update;
+
+    public NewsTable convert(News news) {
+
+        this.setId(news.getId())
+                .setTitle(news.getTitle())
+                .setThumbnail(news.getThumbnail())
+                .setType(news.getType())
+                .setContent(news.getContent())
+                .setVideoLink(news.getVideoLink())
+                .setAuthor(news.getAuthor())
+                .setCreate(news.getCreate())
+                .setUpdate(news.getUpdate());
+
+        return this;
+    }
 }

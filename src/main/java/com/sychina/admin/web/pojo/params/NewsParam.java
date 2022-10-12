@@ -1,5 +1,7 @@
 package com.sychina.admin.web.pojo.params;
 
+import com.sychina.admin.infra.domain.Banners;
+import com.sychina.admin.infra.domain.News;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -13,7 +15,7 @@ public class NewsParam {
     @ApiModelProperty(value = "id")
     private String id;
 
-    @ApiModelProperty(value = "id")
+    @ApiModelProperty(value = "title")
     private String title;
 
     @ApiModelProperty(value = "缩略图")
@@ -31,4 +33,16 @@ public class NewsParam {
     @ApiModelProperty(value = "出处")
     private String author;
 
+    public News convert() {
+
+        News news = new News();
+        news.setTitle(this.getTitle())
+                .setThumbnail(this.getThumbnail())
+                .setType(this.type)
+                .setContent(this.getContent())
+                .setVideoLink(this.videoLink)
+                .setAuthor(this.author);
+
+        return news;
+    }
 }

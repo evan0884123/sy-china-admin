@@ -4,6 +4,8 @@ import com.sychina.admin.web.pojo.params.page.PageQuery;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Description:
  *
@@ -16,5 +18,9 @@ public class BankQuery extends PageQuery {
     private String playerName;
 
     @ApiModelProperty(value = "开户银行")
-    private Integer bank;
+    private String bank;
+
+    @ApiModelProperty(value = "0-创建时间, 1-修改时间")
+    @NotNull
+    private Integer timeType;
 }

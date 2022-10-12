@@ -1,7 +1,9 @@
 package com.sychina.admin.web.pojo.models;
 
+import com.sychina.admin.infra.domain.Messages;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * Description:
@@ -9,10 +11,11 @@ import lombok.Data;
  * @author Administrator
  */
 @Data
-public class MessageTableModel {
+@Accessors(chain = true)
+public class MessageTable {
 
     @ApiModelProperty(value = "id")
-    private String id;
+    private Long id;
 
     @ApiModelProperty(value = "玩家账号")
     private String account;
@@ -31,4 +34,18 @@ public class MessageTableModel {
 
     @ApiModelProperty(value = "修改时间")
     private Long update;
+
+    public MessageTable convert(Messages message) {
+
+        this.setId(message.getId())
+                .setAccount(message.getAccount())
+                .setTitle(message.getTitle())
+                .setContent(message.getContent())
+                .setContent(message.getContent())
+                .setHadRead(message.getHadRead())
+                .setCreate(message.getCreate())
+                .setUpdate(message.getUpdate());
+
+        return this;
+    }
 }

@@ -1,9 +1,6 @@
 package com.sychina.admin.utils;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.Date;
 
 /**
@@ -13,8 +10,7 @@ public final class LocalDateTimeHelper {
 
     public static LocalDateTime dateToLocalDateTime(Date date) {
         Instant instant = date.toInstant();
-        ZoneId zone = ZoneId.systemDefault();
-        return LocalDateTime.ofInstant(instant, zone);
+        return LocalDateTime.ofInstant(instant, ZoneId.of("Asia/Shanghai"));
     }
 
     public static LocalDateTime longToLocalDateTime(Long timestamp) {
@@ -25,7 +21,7 @@ public final class LocalDateTimeHelper {
     }
 
     public static LocalDateTime parse(String str) {
-        return ZonedDateTime.parse(str).withZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime();
+        return ZonedDateTime.parse(str).withZoneSameInstant(ZoneId.of("Asia/Shanghai")).toLocalDateTime();
     }
 
     public static LocalDateTime max(LocalDateTime time1, LocalDateTime time2) {
@@ -37,6 +33,10 @@ public final class LocalDateTimeHelper {
         }
 
         return time1.isAfter(time2) ? time1 : time2;
+    }
+
+    public static Long toLong(LocalDateTime localDateTime) {
+        return localDateTime.toInstant(ZoneOffset.of("+8")).toEpochMilli();
     }
 
 }

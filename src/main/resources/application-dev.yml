@@ -39,7 +39,8 @@ aliyun:
   accessKeyId: LTAI5tGHqmYUBs9mDN8MganB
   accessKeySecret: wspz4KxbqpcxrBR2owN0OI3fdrypCZ
   bucketName: sy-china
-  urlPrefix: https://oss-cn-hangzhou.aliyuncs.com/
+  # https://oss-cn-hangzhou.aliyuncs.com/
+  urlPrefix: https://sy-china.oss-cn-hangzhou.aliyuncs.com/
 
 #
 knife4j:

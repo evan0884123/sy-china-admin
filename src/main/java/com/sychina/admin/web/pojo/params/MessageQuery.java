@@ -4,6 +4,8 @@ import com.sychina.admin.web.pojo.params.page.PageQuery;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Description:
  *
@@ -13,7 +15,7 @@ import lombok.Data;
 public class MessageQuery extends PageQuery {
 
     @ApiModelProperty(value = "玩家账号")
-    private String account;
+    private String playerName;
 
     @ApiModelProperty(value = "标题")
     private String title;
@@ -21,9 +23,7 @@ public class MessageQuery extends PageQuery {
     @ApiModelProperty(value = "已读(0-未读 1-已读)")
     private Integer hadRead;
 
-    @ApiModelProperty(value = "创建时间")
-    private Long create;
-
-    @ApiModelProperty(value = "修改时间")
-    private Long update;
+    @ApiModelProperty(value = "0-创建时间, 1-修改时间")
+    @NotNull
+    private Integer timeType;
 }

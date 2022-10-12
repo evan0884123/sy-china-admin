@@ -4,17 +4,15 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 /**
- * 咨询信息
+ *
  *
  * @author Administrator
  */
 @Data
-@Accessors(chain = true)
-@TableName("news")
-public class News {
+@TableName("debt_records")
+public class DebtRecords {
 
     /**
      *
@@ -23,34 +21,32 @@ public class News {
     private String id;
 
     /**
-     * '标题'
+     * '国债ID'
      */
-    private String title;
+    private String debt;
 
     /**
-     * 缩略图
+     * '国债名称'
      */
-    private String thumbnail;
+    private String debtName;
+
 
     /**
-     * '类型(0-纯文字 1-图文 2-视频)'
+     * '玩家ID'
      */
-    private Integer type;
+    private String player;
+
 
     /**
-     * '内容'
+     * '玩家姓名'
      */
-    private String content;
+    private String playerName;
+
 
     /**
-     * '视频链接'
+     * '投资转化(0-未 1-已)'
      */
-    private String videoLink;
-
-    /**
-     * '出处'
-     */
-    private String author;
+    private String invest;
 
     /**
      * '创建时间'

@@ -1,27 +1,94 @@
 package com.sychina.admin.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sychina.admin.infra.domain.Messages;
+import com.sychina.admin.infra.domain.Players;
 import com.sychina.admin.infra.mapper.MessageMapper;
+import com.sychina.admin.infra.mapper.PlayerMapper;
 import com.sychina.admin.service.IMessageService;
+import com.sychina.admin.utils.LocalDateTimeHelper;
+import com.sychina.admin.web.pojo.models.MessageTable;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
-import com.sychina.admin.web.pojo.params.MessageParam;
+import com.sychina.admin.web.pojo.params.MessageAddParam;
 import com.sychina.admin.web.pojo.params.MessageQuery;
+import com.sychina.admin.web.pojo.params.MessageUpdateParam;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Administrator
  */
+@Service
 public class MessageServiceImpl extends ServiceImpl<MessageMapper, Messages> implements IMessageService {
 
-    public ResultModel add(MessageParam messageParam) {
+    private PlayerMapper playerMapper;
+
+    public ResultModel add(MessageAddParam messageParam) {
+
+        List<Players> players = playerMapper.selectBatchIds(messageParam.getPlayer());
+
+        List<Messages> messagesList = new ArrayList<>();
+        players.forEach(player -> {
+            Messages message = messageParam.convert()
+                    .setPlayer(player.getId())
+                    .setPlayerName(player.getAccount());
+
+            messagesList.add(message);
+        });
+
+        saveBatch(messagesList);
+
+        return ResultModel.succeed();
     }
 
     public ResultModel loadTable(MessageQuery messageQuery) {
+
+        QueryWrapper<Messages> wrapper = new QueryWrapper<>();
+        wrapper.likeRight(StringUtils.isNotBlank(messageQuery.getPlayerName()), "player_name", messageQuery.getPlayerName());
+        wrapper.likeRight(StringUtils.isNotBlank(messageQuery.getTitle()), "title", messageQuery.getTitle());
+        wrapper.eq(messageQuery.getHadRead() != null, "hadRead", messageQuery.getHadRead());
+        wrapper.between(messageQuery.getTimeType() == 0, "create", messageQuery.getStartTime(), messageQuery.getEndTime());
+        wrapper.between(messageQuery.getTimeType() == 1, "update", messageQuery.getStartTime(), messageQuery.getEndTime());
+
+        IPage page = baseMapper.selectMapsPage(messageQuery.page(), wrapper);
+
+        List<MessageTable> tables = new ArrayList<>();
+        List<Messages> records = page.getRecords();
+        records.forEach(message -> {
+            tables.add(new MessageTable().convert(message));
+        });
+        page.setRecords(tables);
+
+        return ResultModel.succeed();
     }
 
-    public ResultModel edit(MessageParam messageParam) {
+    public ResultModel edit(MessageUpdateParam messageParam) {
+
+        Messages messages = messageParam.convert()
+                .setId(messageParam.getId())
+                .setUpdate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
+
+        baseMapper.updateById(messages);
+
+        return ResultModel.succeed();
     }
 
     public ResultModel delete(Integer id) {
+
+        baseMapper.deleteById(id);
+
+        return ResultModel.succeed();
+    }
+
+    @Autowired
+    public void setPlayerMapper(PlayerMapper playerMapper) {
+        this.playerMapper = playerMapper;
     }
 }

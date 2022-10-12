@@ -28,84 +28,44 @@ public class Projects {
     private String name;
 
     /**
-     * '限购数量(0-不限购 -1-人均限购 >1-限购数量)'
+     * '最低准入金额'
      */
-    private Integer limit;
+    private BigDecimal investThreshold;
 
     /**
-     * '类型(0-可以认购 1-不能认购 2-人均认购)'
+     * '项目生命周期'
      */
-    private Integer type;
+    private Integer lifeCycle;
 
     /**
-     * '售价'
+     * '项目日利率'
      */
-    private BigDecimal price;
+    private String dir;
 
     /**
-     * '立返可用余额'
+     * '返现可用认购'
      */
-    private BigDecimal fbUseAmount;
+    private BigDecimal fbBalance;
 
     /**
-     * '立返可提金额'
+     * '可提返现'
      */
-    private BigDecimal fb_withdraw_amount;
+    private BigDecimal fbWithdraw;
 
     /**
-     * '收益率'
+     * '项目提现天数'
      */
-    private BigDecimal rate;
+    private String withdrawLc;
 
     /**
-     * '产生周期(单位:小时)'
+     * '可提现周期利率'
      */
-    private Integer produce_cycle;
+    private BigDecimal withdrawRate;
 
     /**
-     * '提现周期(单位:小时 0-随记录配置)'
+     * '提现门槛'
      */
-    private Integer withdraw_cycle;
-
-    /**
-     * '周期提现次数(0-无限制)'
-     */
-    private Integer withdraw_cycle_count;
-
-    /**
-     * '生命周期(单位:小时 0-无限)'
-     */
-    private Integer life_cycle;
-
-    /**
-     * ''上级返现''
-     */
-    private BigDecimal superior;
-
-    /**
-     * '配赠项目ID(0-无配赠)'
-     */
-    private Integer gift_project;
-
-    /**
-     * '配赠项目配置'
-     */
-    private String gift_config;
-
-    /**
-     * '标题'
-     */
-    private String title;
-
-    /**
-     * '副标题'
-     */
-    private String sub_title;
-
-    /**
-     * '背景图片'
-     */
-    private String background;
+    private BigDecimal withdrawThreshold;
 
     /**
      * '状态(0-关闭 1-启用)'

@@ -4,6 +4,7 @@ import com.sychina.admin.service.impl.BankInfoServiceImpl;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.BankParam;
 import com.sychina.admin.web.pojo.params.BankQuery;
+import com.sychina.admin.web.pojo.params.NewsParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,12 @@ import org.springframework.web.bind.annotation.*;
 public class BankController {
 
     private BankInfoServiceImpl bankInfoService;
+
+    @PostMapping("/add")
+    @ApiOperation("新增玩家的银行卡")
+    public ResultModel add(@Validated BankParam bankParam) {
+        return bankInfoService.add(bankParam);
+    }
 
     @GetMapping("/loadTable")
     @ApiOperation("获取所有玩家的银行卡")

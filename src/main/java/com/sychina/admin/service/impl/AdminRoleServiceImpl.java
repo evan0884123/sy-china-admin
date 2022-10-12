@@ -7,7 +7,7 @@ import com.sychina.admin.infra.domain.AdminMenu;
 import com.sychina.admin.infra.domain.AdminRole;
 import com.sychina.admin.infra.mapper.AdminMenuMapper;
 import com.sychina.admin.infra.mapper.AdminRoleMapper;
-import com.sychina.admin.web.pojo.models.AdminRoleTableModel;
+import com.sychina.admin.web.pojo.models.AdminRoleTable;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.AdminRoleParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,24 +51,24 @@ public class AdminRoleServiceImpl extends ServiceImpl<AdminRoleMapper, AdminRole
     /**
      * @return
      */
-    public ResultModel<List<AdminRoleTableModel>> loadRoleTable() {
+    public ResultModel<List<AdminRoleTable>> loadRoleTable() {
 
         List<AdminRole> adminRoles = baseMapper.selectList(new QueryWrapper<>());
 
-        List<AdminRoleTableModel> adminRoleTableModels = new ArrayList<>();
+        List<AdminRoleTable> adminRoleTables = new ArrayList<>();
         adminRoles.forEach(adminRole -> {
-            AdminRoleTableModel adminRoleTableModel = new AdminRoleTableModel();
-            adminRoleTableModel.setId(adminRole.getId());
-            adminRoleTableModel.setName(adminRole.getName());
+            AdminRoleTable adminRoleTable = new AdminRoleTable();
+            adminRoleTable.setId(adminRole.getId());
+            adminRoleTable.setName(adminRole.getName());
 
             String[] menuId = adminRole.getMenus().split(",");
             List<AdminMenu> adminMenuList = adminMenuMapper.selectBatchIds(Arrays.asList(menuId));
-            adminRoleTableModel.setAdminMenus(adminMenuList);
+            adminRoleTable.setAdminMenus(adminMenuList);
 
-            adminRoleTableModels.add(adminRoleTableModel);
+            adminRoleTables.add(adminRoleTable);
         });
 
-        return ResultModel.succeed(adminRoleTableModels);
+        return ResultModel.succeed(adminRoleTables);
     }
 
     /**

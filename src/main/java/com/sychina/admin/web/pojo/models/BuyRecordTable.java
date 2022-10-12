@@ -9,7 +9,7 @@ import java.math.BigDecimal;
  * @author Administrator
  */
 @Data
-public class BuyRecordTableModel {
+public class BuyRecordTable {
 
     @ApiModelProperty(value = "id")
     private Long id;

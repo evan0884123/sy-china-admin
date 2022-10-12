@@ -8,7 +8,7 @@ import lombok.Data;
  * @author Administrator
  */
 @Data
-public class AdminUserTableModel {
+public class AdminUserTable {
 
     @ApiModelProperty(value = "id")
     private String id;

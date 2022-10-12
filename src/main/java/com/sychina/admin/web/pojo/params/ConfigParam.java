@@ -1,5 +1,6 @@
 package com.sychina.admin.web.pojo.params;
 
+import com.sychina.admin.infra.domain.Config;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -36,10 +37,19 @@ public class ConfigParam {
     @ApiModelProperty(value = "企业视频展示")
     private String video;
 
-    @ApiModelProperty(value = "创建时间")
-    private Long create;
+    public Config convert() {
 
-    @ApiModelProperty(value = "修改时间")
-    private Long update;
+        Config config = new Config();
+        config.setId(this.getId())
+                .setIcon(this.getIcon())
+                .setAbout(this.getAbout())
+                .setVision(this.getVision())
+                .setProject(this.getProject())
+                .setCustomer(this.getCustomer())
+                .setDutyOne(this.getDutyOne())
+                .setDutyTwo(this.dutyTwo)
+                .setVideo(this.getVideo());
 
+        return config;
+    }
 }

@@ -39,11 +39,10 @@ public class BankParam {
     @ApiModelProperty(value = "银行卡绑定身份证号码")
     private String cardIdNumber;
 
-    public BankInfos convert(){
+    public BankInfos convert() {
 
         BankInfos bankInfo = new BankInfos();
-        bankInfo.setId(this.getId())
-                .setBank(this.getBank())
+        bankInfo.setBank(this.getBank())
                 .setBankAddr(this.getBankAddr())
                 .setCardType(this.getCardType())
                 .setCardNumber(this.getCardNumber())

@@ -13,7 +13,7 @@ import java.math.BigDecimal;
  * @author Administrator
  */
 @Data
-public class PlayerTableModel {
+public class PlayerTable {
 
     @ApiModelProperty(value = "id")
     private String id;

@@ -20,7 +20,7 @@ public class Players {
      *
      */
     @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private String id;
+    private Long id;
 
     /**
      * '账号'
@@ -40,22 +40,22 @@ public class Players {
     /**
      * '可用余额'
      */
-    private BigDecimal use_balance;
+    private BigDecimal useBalance;
 
     /**
      * '可提余额'
      */
-    private BigDecimal withdraw_balance;
+    private BigDecimal withdrawBalance;
 
     /**
      * '推广余额'
      */
-    private BigDecimal promote_balance;
+    private BigDecimal promoteBalance;
 
     /**
      * '累计充值'
      */
-    private BigDecimal total_recharge;
+    private BigDecimal totalRecharge;
 
     /**
      * 'VIP等级'

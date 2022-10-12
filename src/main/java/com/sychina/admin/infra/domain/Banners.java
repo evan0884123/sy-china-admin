@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * banner 信息
@@ -11,6 +12,7 @@ import lombok.Data;
  * @author Administrator
  */
 @Data
+@Accessors(chain = true)
 @TableName("banners")
 public class Banners {
 
@@ -18,7 +20,7 @@ public class Banners {
      *
      */
     @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private String id;
+    private Long id;
 
     /**
      * ''栏目banner(0-首页 1-投资 2-咨询)''

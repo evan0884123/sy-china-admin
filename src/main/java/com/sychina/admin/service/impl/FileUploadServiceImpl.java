@@ -19,6 +19,8 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -32,6 +34,8 @@ public class FileUploadServiceImpl {
      *
      */
     private static final String[] IMAGE_TYPE = new String[]{".bmp", ".jpg", ".jpeg", ".gif", ".png"};
+
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 
     /**
@@ -82,13 +86,8 @@ public class FileUploadServiceImpl {
      * @return
      */
     private String getFilePath(String sourceFileName) {
-//        DateTime dateTime = new DateTime();
-//        return "images/" + dateTime.toString("yyyy") + "/" + dateTime.toString("MM") + "/"
-//                + dateTime.toString("dd") + "/" + System.currentTimeMillis()
-//                + RandomUtils.nextInt(100, 9999) + "."
-//                + StringUtils.substringAfterLast(sourceFileName, ".");
-        return "images/" + "/" + System.currentTimeMillis()
-                + RandomUtils.nextInt(100, 9999) + "."
+        return "images/" + formatter.format(LocalDateTime.now()) + "/"
+                + System.currentTimeMillis() + RandomUtils.nextInt(100, 9999) + "."
                 + StringUtils.substringAfterLast(sourceFileName, ".");
     }
 

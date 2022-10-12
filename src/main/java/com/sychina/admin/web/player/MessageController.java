@@ -2,8 +2,9 @@ package com.sychina.admin.web.player;
 
 import com.sychina.admin.service.impl.MessageServiceImpl;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
-import com.sychina.admin.web.pojo.params.MessageParam;
+import com.sychina.admin.web.pojo.params.MessageAddParam;
 import com.sychina.admin.web.pojo.params.MessageQuery;
+import com.sychina.admin.web.pojo.params.MessageUpdateParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class MessageController {
 
     @PostMapping("/add")
     @ApiOperation("新增通知消息")
-    public ResultModel add(@Validated MessageParam messageParam) {
+    public ResultModel add(@Validated MessageAddParam messageParam) {
         return messageService.add(messageParam);
     }
 
@@ -34,7 +35,7 @@ public class MessageController {
 
     @PostMapping("/edit")
     @ApiOperation("编辑通知消息")
-    public ResultModel edit(@Validated MessageParam messageParam) {
+    public ResultModel edit(@Validated MessageUpdateParam messageParam) {
         return messageService.edit(messageParam);
     }
 

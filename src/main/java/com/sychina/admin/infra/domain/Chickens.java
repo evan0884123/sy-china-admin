@@ -7,14 +7,14 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 /**
- * 银行卡信息
+ * banner 信息
  *
  * @author Administrator
  */
 @Data
 @Accessors(chain = true)
-@TableName("bank_infos")
-public class BankInfos {
+@TableName("chickens")
+public class Chickens {
 
     /**
      *
@@ -23,49 +23,29 @@ public class BankInfos {
     private Long id;
 
     /**
-     * '所属玩家ID'
+     * '玩家ID'
      */
     private Long player;
 
     /**
-     * '玩家账号'
+     * '玩家昵称'
      */
     private String playerName;
 
     /**
-     * '开户银行'
+     * '来源类型(0-注册即赠送 1-首充1000送 2-认购)'
      */
-    private String bank;
+    private Integer type;
 
     /**
-     * '开户支行地址'
+     * '蛋(0-无 1-有)'
      */
-    private String bankAddr;
+    private Integer egg;
 
     /**
-     * '卡类型(0-储蓄卡 1-信用卡)'
+     * '上次开启时间'
      */
-    private Integer cardType;
-
-    /**
-     * '银行卡号'
-     */
-    private String cardNumber;
-
-    /**
-     * '持卡人姓名'
-     */
-    private String cardMaster;
-
-    /**
-     * '银行卡绑定手机号码'
-     */
-    private String cardPhoneNumber;
-
-    /**
-     * '银行卡绑定身份证号码'
-     */
-    private String cardIdNumber;
+    private Integer lastOpenTime;
 
     /**
      * '创建时间'

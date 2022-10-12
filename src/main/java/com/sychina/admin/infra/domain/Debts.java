@@ -4,53 +4,66 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 /**
- * 咨询信息
+ * 公司信息
  *
  * @author Administrator
  */
 @Data
-@Accessors(chain = true)
-@TableName("news")
-public class News {
+@TableName("debts")
+public class Debts {
 
     /**
      *
      */
     @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private String id;
+    private Long id;
 
     /**
-     * '标题'
+     * '名称'
      */
-    private String title;
+    private String name;
 
     /**
-     * 缩略图
+     * '口号'
      */
-    private String thumbnail;
+    private String slogan;
+
 
     /**
-     * '类型(0-纯文字 1-图文 2-视频)'
+     * '项目金额'
      */
-    private Integer type;
+    private String price;
+
 
     /**
-     * '内容'
+     * '国债年利率'
      */
-    private String content;
+    private String apr;
+
 
     /**
-     * '视频链接'
+     * '年限'
      */
-    private String videoLink;
+    private String term;
 
     /**
-     * '出处'
+     * '总计金额'
      */
-    private String author;
+    private String total;
+
+
+    /**
+     * '挂载项目'
+     */
+    private String mount;
+
+
+    /**
+     * '状态(0-关闭 1-启用)'
+     */
+    private String status;
 
     /**
      * '创建时间'

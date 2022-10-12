@@ -6,15 +6,16 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.math.BigDecimal;
+
 /**
- * 银行卡信息
  *
  * @author Administrator
  */
 @Data
 @Accessors(chain = true)
-@TableName("bank_infos")
-public class BankInfos {
+@TableName("equities")
+public class Equities {
 
     /**
      *
@@ -23,49 +24,24 @@ public class BankInfos {
     private Long id;
 
     /**
-     * '所属玩家ID'
+     * '玩家ID'
      */
     private Long player;
 
     /**
-     * '玩家账号'
+     * '玩家昵称'
      */
     private String playerName;
 
     /**
-     * '开户银行'
+     * '数量'
      */
-    private String bank;
+    private BigDecimal amount;
 
     /**
-     * '开户支行地址'
+     * '公司名称'
      */
-    private String bankAddr;
-
-    /**
-     * '卡类型(0-储蓄卡 1-信用卡)'
-     */
-    private Integer cardType;
-
-    /**
-     * '银行卡号'
-     */
-    private String cardNumber;
-
-    /**
-     * '持卡人姓名'
-     */
-    private String cardMaster;
-
-    /**
-     * '银行卡绑定手机号码'
-     */
-    private String cardPhoneNumber;
-
-    /**
-     * '银行卡绑定身份证号码'
-     */
-    private String cardIdNumber;
+    private String company;
 
     /**
      * '创建时间'

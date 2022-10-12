@@ -12,7 +12,7 @@ import java.util.List;
  * @author Administrator
  */
 @Data
-public class AdminRoleTableModel {
+public class AdminRoleTable {
 
     @ApiModelProperty(value = "id")
     private Integer id;

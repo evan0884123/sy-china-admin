@@ -12,7 +12,7 @@ import com.sychina.admin.infra.mapper.AdminMenuMapper;
 import com.sychina.admin.infra.mapper.AdminUserMapper;
 import com.sychina.admin.service.IAdminUserService;
 import com.sychina.admin.web.pojo.models.AdminUserInfoModel;
-import com.sychina.admin.web.pojo.models.AdminUserTableModel;
+import com.sychina.admin.web.pojo.models.AdminUserTable;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.AdminUserParam;
 import com.sychina.admin.web.pojo.params.AdminUserProfileQuery;
@@ -57,9 +57,9 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
         return ResultModel.succeed(adminUserInfo);
     }
 
-    public ResultModel<AdminUserTableModel> getProfile(AdminUserProfileQuery profileQuery) {
+    public ResultModel<AdminUserTable> getProfile(AdminUserProfileQuery profileQuery) {
 
-        AdminUserTableModel userTable = baseMapper.findByLoginName(profileQuery);
+        AdminUserTable userTable = baseMapper.findByLoginName(profileQuery);
 
         return ResultModel.succeed(userTable);
     }
@@ -137,7 +137,7 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
      */
     public ResultModel query(AdminUserQuery userQuery) {
 
-        Page<AdminUserTableModel> table = baseMapper.findTable(userQuery.page(), userQuery);
+        Page<AdminUserTable> table = baseMapper.findTable(userQuery.page(), userQuery);
 
         return ResultModel.succeed(table);
     }

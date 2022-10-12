@@ -1,7 +1,7 @@
 package com.sychina.admin.web.system;
 
 import com.sychina.admin.service.impl.AdminRoleServiceImpl;
-import com.sychina.admin.web.pojo.models.AdminRoleTableModel;
+import com.sychina.admin.web.pojo.models.AdminRoleTable;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.AdminRoleParam;
 import io.swagger.annotations.Api;
@@ -30,7 +30,7 @@ public class AdminRoleController {
 
     @GetMapping("/loadRoleTable")
     @ApiOperation("获取所有角色")
-    public ResultModel<List<AdminRoleTableModel>> loadRoleTable() {
+    public ResultModel<List<AdminRoleTable>> loadRoleTable() {
         return adminRoleServiceImpl.loadRoleTable();
     }
 

@@ -1,24 +1,17 @@
 package com.sychina.admin.web.system;
 
-import com.sychina.admin.common.RequestContext;
-import com.sychina.admin.infra.domain.AdminUser;
 import com.sychina.admin.service.impl.AdminUserServiceImpl;
 import com.sychina.admin.web.pojo.models.AdminUserInfoModel;
-import com.sychina.admin.web.pojo.models.AdminUserTableModel;
+import com.sychina.admin.web.pojo.models.AdminUserTable;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.AdminUserParam;
 import com.sychina.admin.web.pojo.params.AdminUserProfileQuery;
 import com.sychina.admin.web.pojo.params.AdminUserQuery;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  *
@@ -40,7 +33,7 @@ public class AdminUserController {
 
     @PostMapping("/getProfile")
     @ApiOperation("获取用户信息")
-    public ResultModel<AdminUserTableModel> getProfile(@Validated AdminUserProfileQuery profileQuery) {
+    public ResultModel<AdminUserTable> getProfile(@Validated AdminUserProfileQuery profileQuery) {
         return userServiceImpl.getProfile(profileQuery);
     }
 

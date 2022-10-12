@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * 配置信息
@@ -11,6 +12,7 @@ import lombok.Data;
  * @author Administrator
  */
 @Data
+@Accessors(chain = true)
 @TableName("config")
 public class Config {
 
@@ -59,6 +61,26 @@ public class Config {
      * '企业视频展示'
      */
     private String video;
+
+    /**
+     * 共享金补贴比例
+     */
+    private String smScale;
+
+    /**
+     * 共享金年利率
+     */
+    private String smYearRate;
+
+    /**
+     * 共享金提现门槛
+     */
+    private String smWithdrawThreshold;
+
+    /**
+     * 共享金提现生命周期(单位:月)
+     */
+    private String smWithdrawLifeCycle;
 
     /**
      * '创建时间'

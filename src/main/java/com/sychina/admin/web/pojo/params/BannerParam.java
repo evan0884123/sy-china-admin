@@ -1,5 +1,6 @@
 package com.sychina.admin.web.pojo.params;
 
+import com.sychina.admin.infra.domain.Banners;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -12,7 +13,7 @@ import lombok.Data;
 public class BannerParam {
 
     @ApiModelProperty(value = "id")
-    private String id;
+    private Long id;
 
     @ApiModelProperty(value = "栏目banner(0-首页 1-投资 2-咨询)")
     private Integer tab;
@@ -25,4 +26,15 @@ public class BannerParam {
 
     @ApiModelProperty(value = "状态(0-关闭 1-开启)")
     private Integer status;
+
+    public Banners convert() {
+
+        Banners banner = new Banners();
+        banner.setTab(this.getTab())
+                .setImg(this.getImg())
+                .setContent(this.getContent())
+                .setStatus(this.getStatus());
+
+        return banner;
+    }
 }

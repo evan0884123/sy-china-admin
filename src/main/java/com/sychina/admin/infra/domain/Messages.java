@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * 通知 信息
@@ -11,6 +12,7 @@ import lombok.Data;
  * @author Administrator
  */
 @Data
+@Accessors(chain = true)
 @TableName("messages")
 public class Messages {
 
@@ -18,7 +20,7 @@ public class Messages {
      *
      */
     @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private String id;
+    private Long id;
 
     /**
      * '玩家ID'
@@ -26,9 +28,14 @@ public class Messages {
     private Long player;
 
     /**
+     * '玩家昵称'
+     */
+    private String playerName;
+
+    /**
      * '标题
      */
-    private Long title;
+    private String title;
 
     /**
      * '内容'
