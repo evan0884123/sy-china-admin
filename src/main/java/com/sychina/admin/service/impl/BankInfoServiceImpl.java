@@ -42,10 +42,10 @@ public class BankInfoServiceImpl extends ServiceImpl<BankInfoMapper, BankInfos> 
         QueryWrapper<BankInfos> wrapper = new QueryWrapper<>();
         wrapper.likeRight(StringUtils.isNotBlank(bankQuery.getPlayerName()), "player_name", bankQuery.getPlayerName());
         wrapper.likeRight(StringUtils.isNotBlank(bankQuery.getBank()), "bank", bankQuery.getBank());
-        wrapper.between(bankQuery.getTimeType() == 0, "create", bankQuery.getStartTime(), bankQuery.getEndTime());
-        wrapper.between(bankQuery.getTimeType() == 1, "update", bankQuery.getStartTime(), bankQuery.getEndTime());
+        wrapper.between(bankQuery.getTimeType() == 0, "`create`", bankQuery.getStartTime(), bankQuery.getEndTime());
+        wrapper.between(bankQuery.getTimeType() == 1, "`update`", bankQuery.getStartTime(), bankQuery.getEndTime());
 
-        IPage page = baseMapper.selectMapsPage(bankQuery.page(), wrapper);
+        IPage page = baseMapper.selectPage(bankQuery.page(), wrapper);
 
         List<BankTable> tables = new ArrayList<>();
         List<BankInfos> records = page.getRecords();
@@ -54,7 +54,7 @@ public class BankInfoServiceImpl extends ServiceImpl<BankInfoMapper, BankInfos> 
         });
         page.setRecords(tables);
 
-        return ResultModel.succeed();
+        return ResultModel.succeed(page);
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.sychina.admin.infra.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -28,10 +29,12 @@ public class Public {
     /**
      * '创建时间'
      */
+    @TableField("`create`")
     private Long create;
 
     /**
      * '修改时间'
      */
+    @TableField("`update`")
     private Long update;
 }

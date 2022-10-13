@@ -20,7 +20,7 @@ public class EquitiesQuery extends PageQuery {
     @ApiModelProperty(value = "公司名称")
     private String company;
 
-    @ApiModelProperty(value = "0-创建时间, 1-修改时间")
+    @ApiModelProperty(value = "0-创建时间, 1-修改时间",required = true)
     @NotNull
     private Integer timeType;
 }

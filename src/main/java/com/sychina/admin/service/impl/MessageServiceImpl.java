@@ -53,10 +53,10 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Messages> imp
         wrapper.likeRight(StringUtils.isNotBlank(messageQuery.getPlayerName()), "player_name", messageQuery.getPlayerName());
         wrapper.likeRight(StringUtils.isNotBlank(messageQuery.getTitle()), "title", messageQuery.getTitle());
         wrapper.eq(messageQuery.getHadRead() != null, "hadRead", messageQuery.getHadRead());
-        wrapper.between(messageQuery.getTimeType() == 0, "create", messageQuery.getStartTime(), messageQuery.getEndTime());
-        wrapper.between(messageQuery.getTimeType() == 1, "update", messageQuery.getStartTime(), messageQuery.getEndTime());
+        wrapper.between(messageQuery.getTimeType() == 0, "`create`", messageQuery.getStartTime(), messageQuery.getEndTime());
+        wrapper.between(messageQuery.getTimeType() == 1, "`update`", messageQuery.getStartTime(), messageQuery.getEndTime());
 
-        IPage page = baseMapper.selectMapsPage(messageQuery.page(), wrapper);
+        IPage page = baseMapper.selectPage(messageQuery.page(), wrapper);
 
         List<MessageTable> tables = new ArrayList<>();
         List<Messages> records = page.getRecords();
@@ -65,7 +65,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Messages> imp
         });
         page.setRecords(tables);
 
-        return ResultModel.succeed();
+        return ResultModel.succeed(page);
     }
 
     public ResultModel edit(MessageUpdateParam messageParam) {

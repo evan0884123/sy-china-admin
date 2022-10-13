@@ -26,10 +26,10 @@ public class EquitiesServiceImpl extends ServiceImpl<EquitiesMapper, Equities> i
         QueryWrapper<Equities> wrapper = new QueryWrapper<>();
         wrapper.likeRight(StringUtils.isNotBlank(recordQuery.getPlayerName()), "player_name", recordQuery.getPlayerName());
         wrapper.likeRight(StringUtils.isNotBlank(recordQuery.getCompany()), "company", recordQuery.getCompany());
-        wrapper.between(recordQuery.getTimeType() == 0, "create", recordQuery.getStartTime(), recordQuery.getEndTime());
-        wrapper.between(recordQuery.getTimeType() == 1, "update", recordQuery.getStartTime(), recordQuery.getEndTime());
+        wrapper.between(recordQuery.getTimeType() == 0, "`create`", recordQuery.getStartTime(), recordQuery.getEndTime());
+        wrapper.between(recordQuery.getTimeType() == 1, "`update`", recordQuery.getStartTime(), recordQuery.getEndTime());
 
-        IPage page = baseMapper.selectMapsPage(recordQuery.page(), wrapper);
+        IPage page = baseMapper.selectPage(recordQuery.page(), wrapper);
 
         List<EquitiesTable> tables = new ArrayList<>();
         List<Equities> records = page.getRecords();
@@ -38,7 +38,7 @@ public class EquitiesServiceImpl extends ServiceImpl<EquitiesMapper, Equities> i
         });
         page.setRecords(tables);
 
-        return ResultModel.succeed();
+        return ResultModel.succeed(page);
     }
 
 }

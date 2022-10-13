@@ -27,10 +27,10 @@ public class ProjectRecordServiceImpl extends ServiceImpl<ProjectRecordMapper, P
         wrapper.likeRight(StringUtils.isNotBlank(recordQuery.getPlayerName()), "player_name", recordQuery.getPlayerName());
         wrapper.likeRight(StringUtils.isNotBlank(recordQuery.getProjectName()), "project_name", recordQuery.getProjectName());
         wrapper.eq(recordQuery.getStatus() != null, "status", recordQuery.getStatus());
-        wrapper.between(recordQuery.getTimeType() == 0, "create", recordQuery.getStartTime(), recordQuery.getEndTime());
-        wrapper.between(recordQuery.getTimeType() == 1, "update", recordQuery.getStartTime(), recordQuery.getEndTime());
+        wrapper.between(recordQuery.getTimeType() == 0, "`create`", recordQuery.getStartTime(), recordQuery.getEndTime());
+        wrapper.between(recordQuery.getTimeType() == 1, "`update`", recordQuery.getStartTime(), recordQuery.getEndTime());
 
-        IPage page = baseMapper.selectMapsPage(recordQuery.page(), wrapper);
+        IPage page = baseMapper.selectPage(recordQuery.page(), wrapper);
 
         List<ProjectRecordTable> tables = new ArrayList<>();
         List<ProjectRecords> records = page.getRecords();
@@ -39,7 +39,7 @@ public class ProjectRecordServiceImpl extends ServiceImpl<ProjectRecordMapper, P
         });
         page.setRecords(tables);
 
-        return ResultModel.succeed();
+        return ResultModel.succeed(page);
     }
 
 }

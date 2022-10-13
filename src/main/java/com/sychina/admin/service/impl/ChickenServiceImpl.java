@@ -27,10 +27,10 @@ public class ChickenServiceImpl extends ServiceImpl<ChickenMapper, Chickens> imp
         wrapper.likeRight(StringUtils.isNotBlank(recordQuery.getPlayerName()), "player_name", recordQuery.getPlayerName());
         wrapper.eq(recordQuery.getType() != null, "type", recordQuery.getType());
         wrapper.eq(recordQuery.getEgg() != null, "egg", recordQuery.getEgg());
-        wrapper.between(recordQuery.getTimeType() == 0, "create", recordQuery.getStartTime(), recordQuery.getEndTime());
-        wrapper.between(recordQuery.getTimeType() == 1, "update", recordQuery.getStartTime(), recordQuery.getEndTime());
+        wrapper.between(recordQuery.getTimeType() == 0, "`create`", recordQuery.getStartTime(), recordQuery.getEndTime());
+        wrapper.between(recordQuery.getTimeType() == 1, "`update`", recordQuery.getStartTime(), recordQuery.getEndTime());
 
-        IPage page = baseMapper.selectMapsPage(recordQuery.page(), wrapper);
+        IPage page = baseMapper.selectPage(recordQuery.page(), wrapper);
 
         List<ChickenTable> tables = new ArrayList<>();
         List<Chickens> records = page.getRecords();
@@ -39,7 +39,7 @@ public class ChickenServiceImpl extends ServiceImpl<ChickenMapper, Chickens> imp
         });
         page.setRecords(tables);
 
-        return ResultModel.succeed(tables);
+        return ResultModel.succeed(page);
     }
 
 }

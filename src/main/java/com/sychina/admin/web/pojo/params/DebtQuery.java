@@ -72,7 +72,7 @@ public class DebtQuery extends PageQuery {
     @ApiModelProperty(value = "状态(0-关闭 1-启用)")
     private Integer status;
 
-    @ApiModelProperty(value = "0-创建时间, 1-修改时间")
+    @ApiModelProperty(value = "0-创建时间, 1-修改时间",required = true)
     @NotNull
     private Integer timeType;
 }

@@ -27,10 +27,10 @@ public class DebtRecordServiceImpl extends ServiceImpl<DebtRecordMapper, DebtRec
         wrapper.likeRight(StringUtils.isNotBlank(recordQuery.getDebtName()), "debt_name", recordQuery.getDebtName());
         wrapper.likeRight(StringUtils.isNotBlank(recordQuery.getPlayerName()), "player_name", recordQuery.getPlayerName());
         wrapper.eq(recordQuery.getInvest() != null, "invest", recordQuery.getInvest());
-        wrapper.between(recordQuery.getTimeType() == 0, "create", recordQuery.getStartTime(), recordQuery.getEndTime());
-        wrapper.between(recordQuery.getTimeType() == 1, "update", recordQuery.getStartTime(), recordQuery.getEndTime());
+        wrapper.between(recordQuery.getTimeType() == 0, "`create`", recordQuery.getStartTime(), recordQuery.getEndTime());
+        wrapper.between(recordQuery.getTimeType() == 1, "`update`", recordQuery.getStartTime(), recordQuery.getEndTime());
 
-        IPage page = baseMapper.selectMapsPage(recordQuery.page(), wrapper);
+        IPage page = baseMapper.selectPage(recordQuery.page(), wrapper);
 
         List<DebtRecordTable> tables = new ArrayList<>();
         List<DebtRecords> records = page.getRecords();
@@ -39,6 +39,6 @@ public class DebtRecordServiceImpl extends ServiceImpl<DebtRecordMapper, DebtRec
         });
         page.setRecords(tables);
 
-        return ResultModel.succeed();
+        return ResultModel.succeed(page);
     }
 }

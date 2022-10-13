@@ -36,10 +36,10 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements IN
 
         QueryWrapper<News> wrapper = new QueryWrapper<>();
         wrapper.eq(newsQuery.getType() != null, "type", newsQuery.getType());
-        wrapper.between(newsQuery.getTimeType() == 0, "create", newsQuery.getStartTime(), newsQuery.getEndTime());
-        wrapper.between(newsQuery.getTimeType() == 1, "update", newsQuery.getStartTime(), newsQuery.getEndTime());
+        wrapper.between(newsQuery.getTimeType() == 0, "`create`", newsQuery.getStartTime(), newsQuery.getEndTime());
+        wrapper.between(newsQuery.getTimeType() == 1, "`update`", newsQuery.getStartTime(), newsQuery.getEndTime());
 
-        IPage page = baseMapper.selectMapsPage(newsQuery.page(), wrapper);
+        IPage page = baseMapper.selectPage(newsQuery.page(), wrapper);
 
         List<NewsTable> tables = new ArrayList<>();
         List<News> records = page.getRecords();
@@ -48,7 +48,7 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements IN
         });
         page.setRecords(tables);
 
-        return ResultModel.succeed();
+        return ResultModel.succeed(page);
     }
 
     public ResultModel edit(NewsParam newsParam) {

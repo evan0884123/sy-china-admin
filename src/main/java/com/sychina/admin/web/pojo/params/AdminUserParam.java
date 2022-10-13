@@ -28,7 +28,7 @@ public class AdminUserParam {
     @NotEmpty
     private String subDepartments;
 
-    @ApiModelProperty(value = "角色ID")
+    @ApiModelProperty(value = "角色ID",required = true)
     @NotNull
     private Integer roleId;
 

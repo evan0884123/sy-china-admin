@@ -29,7 +29,7 @@ public class ChickenQuery extends PageQuery {
     @ApiModelProperty(value = "蛋(0-无 1-有)")
     private Integer egg;
 
-    @ApiModelProperty(value = "0-创建时间, 1-修改时间")
+    @ApiModelProperty(value = "0-创建时间, 1-修改时间",required = true)
     @NotNull
     private Integer timeType;
 }

@@ -26,10 +26,10 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
     public ResultModel loadTable(PlayerQuery playerQuery) {
 
         QueryWrapper<Players> wrapper = new QueryWrapper<>();
-        wrapper.between(playerQuery.getTimeType() == 0, "create", playerQuery.getStartTime(), playerQuery.getEndTime());
-        wrapper.between(playerQuery.getTimeType() == 1, "update", playerQuery.getStartTime(), playerQuery.getEndTime());
+        wrapper.between(playerQuery.getTimeType() == 0, "`create`", playerQuery.getStartTime(), playerQuery.getEndTime());
+        wrapper.between(playerQuery.getTimeType() == 1, "`update`", playerQuery.getStartTime(), playerQuery.getEndTime());
 
-        IPage page = baseMapper.selectMapsPage(playerQuery.page(), wrapper);
+        IPage page = baseMapper.selectPage(playerQuery.page(), wrapper);
 
         List<PlayerTable> tables = new ArrayList<>();
         List<Players> records = page.getRecords();
@@ -38,7 +38,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
         });
         page.setRecords(tables);
 
-        return ResultModel.succeed();
+        return ResultModel.succeed(page);
     }
 
     public ResultModel edit(PlayerParam playerParam) {

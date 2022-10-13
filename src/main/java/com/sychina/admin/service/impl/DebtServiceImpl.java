@@ -36,10 +36,10 @@ public class DebtServiceImpl extends ServiceImpl<DebtMapper, Debts> implements I
     public ResultModel loadTable(DebtQuery debtQuery) {
 
         QueryWrapper<Debts> wrapper = new QueryWrapper<>();
-        wrapper.between(debtQuery.getTimeType() == 0, "create", debtQuery.getStartTime(), debtQuery.getEndTime());
-        wrapper.between(debtQuery.getTimeType() == 1, "update", debtQuery.getStartTime(), debtQuery.getEndTime());
+        wrapper.between(debtQuery.getTimeType() == 0, "`create`", debtQuery.getStartTime(), debtQuery.getEndTime());
+        wrapper.between(debtQuery.getTimeType() == 1, "`update`", debtQuery.getStartTime(), debtQuery.getEndTime());
 
-        IPage page = baseMapper.selectMapsPage(debtQuery.page(), wrapper);
+        IPage page = baseMapper.selectPage(debtQuery.page(), wrapper);
 
         List<DebtTable> tables = new ArrayList<>();
         List<Debts> records = page.getRecords();
@@ -48,7 +48,7 @@ public class DebtServiceImpl extends ServiceImpl<DebtMapper, Debts> implements I
         });
         page.setRecords(tables);
 
-        return ResultModel.succeed();
+        return ResultModel.succeed(page);
     }
 
     public ResultModel edit(DebtParam debtParam) {

@@ -23,7 +23,7 @@ public class ProjectRecordQuery extends PageQuery {
     @ApiModelProperty(value = "状态(0-项目投资阶段 1-共享金阶段)")
     private Integer status;
 
-    @ApiModelProperty(value = "0-创建时间, 1-修改时间")
+    @ApiModelProperty(value = "0-创建时间, 1-修改时间",required = true)
     @NotNull
     private Integer timeType;
 }

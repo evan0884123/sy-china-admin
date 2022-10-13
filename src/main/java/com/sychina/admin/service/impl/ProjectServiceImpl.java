@@ -36,10 +36,10 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Projects> imp
     public ResultModel loadTable(ProjectQuery projectQuery) {
 
         QueryWrapper<Projects> wrapper = new QueryWrapper<>();
-        wrapper.between(projectQuery.getTimeType() == 0, "create", projectQuery.getStartTime(), projectQuery.getEndTime());
-        wrapper.between(projectQuery.getTimeType() == 1, "update", projectQuery.getStartTime(), projectQuery.getEndTime());
+        wrapper.between(projectQuery.getTimeType() == 0, "`create`", projectQuery.getStartTime(), projectQuery.getEndTime());
+        wrapper.between(projectQuery.getTimeType() == 1, "`update`", projectQuery.getStartTime(), projectQuery.getEndTime());
 
-        IPage page = baseMapper.selectMapsPage(projectQuery.page(), wrapper);
+        IPage page = baseMapper.selectPage(projectQuery.page(), wrapper);
 
         List<ProjectTable> tables = new ArrayList<>();
         List<Projects> records = page.getRecords();
@@ -48,7 +48,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Projects> imp
         });
         page.setRecords(tables);
 
-        return ResultModel.succeed();
+        return ResultModel.succeed(page);
     }
 
     public ResultModel edit(ProjectParam projectParam) {

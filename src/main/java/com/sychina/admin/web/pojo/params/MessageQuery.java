@@ -23,7 +23,7 @@ public class MessageQuery extends PageQuery {
     @ApiModelProperty(value = "已读(0-未读 1-已读)")
     private Integer hadRead;
 
-    @ApiModelProperty(value = "0-创建时间, 1-修改时间")
+    @ApiModelProperty(value = "0-创建时间, 1-修改时间",required = true)
     @NotNull
     private Integer timeType;
 }
