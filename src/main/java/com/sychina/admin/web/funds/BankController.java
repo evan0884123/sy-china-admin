@@ -26,7 +26,7 @@ public class BankController {
         return bankInfoService.add(bankParam);
     }
 
-    @GetMapping("/loadTable")
+    @PostMapping("/loadTable")
     @ApiOperation("获取所有玩家的银行卡")
     public ResultModel loadTable(@Validated BankQuery bankQuery) {
         return bankInfoService.loadTable(bankQuery);
@@ -38,9 +38,9 @@ public class BankController {
         return bankInfoService.edit(bankParam);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PostMapping("/delete")
     @ApiOperation("删除玩家的银行卡")
-    public ResultModel delete(@PathVariable Long id) {
+    public ResultModel delete(@RequestParam Long id) {
         return bankInfoService.delete(id);
     }
 

@@ -28,7 +28,7 @@ public class AdminRoleController {
         return adminRoleServiceImpl.addRole(adminRoleParam);
     }
 
-    @GetMapping("/loadRoleTable")
+    @PostMapping("/loadRoleTable")
     @ApiOperation("获取所有角色")
     public ResultModel<List<AdminRoleTable>> loadRoleTable() {
         return adminRoleServiceImpl.loadRoleTable();
@@ -40,9 +40,9 @@ public class AdminRoleController {
         return adminRoleServiceImpl.editRole(adminRoleParam);
     }
 
-    @DeleteMapping("/deleteRole/{id}")
+    @PostMapping("/deleteRole")
     @ApiOperation("删除角色")
-    public ResultModel deleteRole(@PathVariable Integer id) {
+    public ResultModel deleteRole(@RequestParam Integer id) {
         return adminRoleServiceImpl.deleteRole(id);
     }
 

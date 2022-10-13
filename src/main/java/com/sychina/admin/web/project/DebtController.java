@@ -8,7 +8,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author Administrator
@@ -38,9 +41,9 @@ public class DebtController {
         return debtService.edit(debtParam);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PostMapping("/delete")
     @ApiOperation("删除国债")
-    public ResultModel delete(@PathVariable Long id) {
+    public ResultModel delete(@RequestParam Long id) {
         return debtService.delete(id);
     }
 

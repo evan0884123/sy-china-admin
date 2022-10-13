@@ -11,10 +11,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
- *
  * @author Administrator
  */
 @RestController
@@ -24,7 +26,7 @@ public class AdminUserController {
 
     private AdminUserServiceImpl userServiceImpl;
 
-    @GetMapping("/info")
+    @PostMapping("/info")
     @ApiOperation("获取用户信息")
     public ResultModel<AdminUserInfoModel> info() {
 
@@ -68,15 +70,15 @@ public class AdminUserController {
         return userServiceImpl.editUser(adminUserParam);
     }
 
-    @DeleteMapping("/deleteUser/{id}")
+    @PostMapping("/deleteUser")
     @ApiOperation("删除用户")
-    public ResultModel deleteUser(@PathVariable String id) {
+    public ResultModel deleteUser(@RequestParam String id) {
         return userServiceImpl.deleteUser(id);
     }
 
-    @GetMapping("/resetPassword/{id}")
+    @PostMapping("/resetPassword")
     @ApiOperation("重置用户密码")
-    public ResultModel<String> resetPassword(@PathVariable String id) {
+    public ResultModel<String> resetPassword(@RequestParam String id) {
         return userServiceImpl.resetPassword(id);
     }
 

@@ -26,7 +26,7 @@ public class ProjectController {
         return projectService.add(projectParam);
     }
 
-    @GetMapping("/loadTable")
+    @PostMapping("/loadTable")
     @ApiOperation("获取所有项目信息")
     public ResultModel loadTable(@Validated ProjectQuery projectQuery) {
         return projectService.loadTable(projectQuery);
@@ -38,9 +38,9 @@ public class ProjectController {
         return projectService.edit(projectParam);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PostMapping("/delete")
     @ApiOperation("删除项目信息")
-    public ResultModel delete(@PathVariable Long id) {
+    public ResultModel delete(@RequestParam Long id) {
         return projectService.delete(id);
     }
 

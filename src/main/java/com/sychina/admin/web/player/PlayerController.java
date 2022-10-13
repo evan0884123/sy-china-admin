@@ -20,7 +20,7 @@ public class PlayerController {
 
     private PlayerServiceImpl playerService;
 
-    @GetMapping("/loadTable")
+    @PostMapping("/loadTable")
     @ApiOperation("获取所有玩家信息")
     public ResultModel loadTable(@Validated PlayerQuery playerQuery) {
         return playerService.loadTable(playerQuery);
@@ -32,9 +32,9 @@ public class PlayerController {
         return playerService.edit(playerParam);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PostMapping("/delete")
     @ApiOperation("删除玩家信息")
-    public ResultModel delete(@PathVariable Long id) {
+    public ResultModel delete(@RequestParam Long id) {
         return playerService.delete(id);
     }
 

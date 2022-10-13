@@ -22,7 +22,7 @@ public class ConfigController {
 
     private ConfigServiceImpl configService;
 
-    @GetMapping("/loadTable")
+    @PostMapping("/loadTable")
     @ApiOperation("获取配置信息")
     public ResultModel loadTable() {
         return configService.loadTable();

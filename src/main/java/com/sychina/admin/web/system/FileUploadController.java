@@ -30,14 +30,14 @@ public class FileUploadController {
         return fileUploadService.upload(uploadFile);
     }
 
-    @DeleteMapping("/delete")
+    @PostMapping("/delete")
     @ApiOperation("删除")
     public ResultModel<FileUploadModel> delete(@RequestParam("fileName") String fileName) {
 
         return fileUploadService.delete(fileName);
     }
 
-    @RequestMapping("/list")
+    @PostMapping("/list")
     @ApiOperation("删除")
     public ResultModel<List<OSSObjectSummary>> list() {
 
