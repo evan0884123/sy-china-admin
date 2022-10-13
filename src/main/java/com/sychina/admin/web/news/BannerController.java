@@ -26,7 +26,7 @@ public class BannerController {
         return bannerService.add(bannerParam);
     }
 
-    @GetMapping("/loadTable")
+    @PostMapping("/loadTable")
     @ApiOperation("获取所有banner")
     public ResultModel loadTable(@Validated BannerQuery bannerQuery) {
         return bannerService.loadTable(bannerQuery);
@@ -38,9 +38,9 @@ public class BannerController {
         return bannerService.edit(bannerParam);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PostMapping("/delete")
     @ApiOperation("删除banner")
-    public ResultModel delete(@PathVariable Long id) {
+    public ResultModel delete(@RequestParam Long id) {
         return bannerService.delete(id);
     }
 
