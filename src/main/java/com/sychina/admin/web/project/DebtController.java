@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
  * @author Administrator
  */
 @RestController
-@RequestMapping("/project")
+@RequestMapping("/debt")
 @Api(tags = {"国债管理"})
 public class DebtController {
 

@@ -1,18 +1,19 @@
 package com.sychina.admin.service.impl;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.sychina.admin.infra.domain.BankInfos;
 import com.sychina.admin.infra.domain.Chickens;
-import com.sychina.admin.infra.mapper.BankInfoMapper;
 import com.sychina.admin.infra.mapper.ChickenMapper;
-import com.sychina.admin.service.IBankInfoService;
 import com.sychina.admin.service.IChickenService;
-import com.sychina.admin.web.pojo.models.BankTable;
+import com.sychina.admin.web.pojo.models.ChickenTable;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
-import com.sychina.admin.web.pojo.params.BankParam;
-import com.sychina.admin.web.pojo.params.BankQuery;
+import com.sychina.admin.web.pojo.params.ChickenQuery;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Administrator
@@ -20,37 +21,25 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChickenServiceImpl extends ServiceImpl<ChickenMapper, Chickens> implements IChickenService {
 
-    /**
-     *
-     * @param bankQuery
-     * @return
-     */
-    public ResultModel loadTable(BankQuery bankQuery) {
+    public ResultModel loadTable(ChickenQuery recordQuery) {
 
-        Page<BankTable> table = baseMapper.loadTable(bankQuery.page(), bankQuery);
+        QueryWrapper<Chickens> wrapper = new QueryWrapper<>();
+        wrapper.likeRight(StringUtils.isNotBlank(recordQuery.getPlayerName()), "player_name", recordQuery.getPlayerName());
+        wrapper.eq(recordQuery.getType() != null, "type", recordQuery.getType());
+        wrapper.eq(recordQuery.getEgg() != null, "egg", recordQuery.getEgg());
+        wrapper.between(recordQuery.getTimeType() == 0, "create", recordQuery.getStartTime(), recordQuery.getEndTime());
+        wrapper.between(recordQuery.getTimeType() == 1, "update", recordQuery.getStartTime(), recordQuery.getEndTime());
 
-        return ResultModel.succeed(table);
+        IPage page = baseMapper.selectMapsPage(recordQuery.page(), wrapper);
+
+        List<ChickenTable> tables = new ArrayList<>();
+        List<Chickens> records = page.getRecords();
+        records.forEach(record -> {
+            tables.add(new ChickenTable(record));
+        });
+        page.setRecords(tables);
+
+        return ResultModel.succeed(tables);
     }
 
-    /**
-     *
-     * @param bankParam
-     * @return
-     */
-    public ResultModel edit(BankParam bankParam) {
-
-        baseMapper.updateById(bankParam.convert());
-        return ResultModel.succeed();
-    }
-
-    /**
-     *
-     * @param id
-     * @return
-     */
-    public ResultModel delete(Long id) {
-
-        baseMapper.deleteById(id);
-        return ResultModel.succeed();
-    }
 }

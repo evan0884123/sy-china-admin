@@ -49,8 +49,8 @@ public class BankInfoServiceImpl extends ServiceImpl<BankInfoMapper, BankInfos> 
 
         List<BankTable> tables = new ArrayList<>();
         List<BankInfos> records = page.getRecords();
-        records.forEach(re -> {
-            tables.add(new BankTable().convert(re));
+        records.forEach(record -> {
+            tables.add(new BankTable(record));
         });
         page.setRecords(tables);
 

@@ -45,7 +45,7 @@ public class Chickens {
     /**
      * '上次开启时间'
      */
-    private Integer lastOpenTime;
+    private Long lastOpenTime;
 
     /**
      * '创建时间'
