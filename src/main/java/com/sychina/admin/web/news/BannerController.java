@@ -28,7 +28,7 @@ public class BannerController {
 
     @GetMapping("/loadTable")
     @ApiOperation("获取所有banner")
-    public ResultModel loadTable(BannerQuery bannerQuery) {
+    public ResultModel loadTable(@Validated BannerQuery bannerQuery) {
         return bannerService.loadTable(bannerQuery);
     }
 
@@ -40,7 +40,7 @@ public class BannerController {
 
     @DeleteMapping("/delete/{id}")
     @ApiOperation("删除banner")
-    public ResultModel delete(@PathVariable Integer id) {
+    public ResultModel delete(@PathVariable Long id) {
         return bannerService.delete(id);
     }
 

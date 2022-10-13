@@ -4,6 +4,7 @@ import com.sychina.admin.web.pojo.params.page.PageQuery;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 /**
@@ -14,14 +15,8 @@ import java.math.BigDecimal;
 @Data
 public class PlayerQuery extends PageQuery {
 
-    @ApiModelProperty(value = "id")
-    private String id;
-
     @ApiModelProperty(value = "账号")
     private String account;
-
-    @ApiModelProperty(value = "昵称")
-    private String nickname;
 
     @ApiModelProperty(value = "可用余额")
     private BigDecimal use_balance;
@@ -59,15 +54,10 @@ public class PlayerQuery extends PageQuery {
     @ApiModelProperty(value = "是否认证经理人(0-否 1-是)")
     private Integer isVerifyManager;
 
-    @ApiModelProperty(value = "邀请码")
-    private Long inviteCode;
-
     @ApiModelProperty(value = "状态(0-禁用 1-正常)")
     private Integer status;
 
-    @ApiModelProperty(value = "创建时间")
-    private Long create;
-
-    @ApiModelProperty(value = "修改时间")
-    private Long update;
+    @ApiModelProperty(value = "0-创建时间, 1-修改时间")
+    @NotNull
+    private Integer timeType;
 }

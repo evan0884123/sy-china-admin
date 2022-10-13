@@ -1,9 +1,11 @@
 package com.sychina.admin.web.pojo.models;
 
-import com.sychina.admin.infra.domain.Messages;
+import com.sychina.admin.infra.domain.Equities;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
+
+import java.math.BigDecimal;
 
 /**
  * Description:
@@ -12,22 +14,22 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-public class MessageTable {
+public class EquitiesTable {
 
     @ApiModelProperty(value = "id")
     private Long id;
 
-    @ApiModelProperty(value = "玩家账号")
+    @ApiModelProperty(value = "玩家ID")
+    private Long player;
+
+    @ApiModelProperty(value = "玩家姓名")
     private String playerName;
 
-    @ApiModelProperty(value = "标题")
-    private String title;
+    @ApiModelProperty(value = "数量")
+    private BigDecimal amount;
 
-    @ApiModelProperty(value = "内容")
-    private Integer content;
-
-    @ApiModelProperty(value = "已读(0-未读 1-已读)")
-    private Integer hadRead;
+    @ApiModelProperty(value = "公司名称")
+    private String company;
 
     @ApiModelProperty(value = "创建时间")
     private Long create;
@@ -35,15 +37,15 @@ public class MessageTable {
     @ApiModelProperty(value = "修改时间")
     private Long update;
 
-    public MessageTable(Messages record) {
+    public EquitiesTable(Equities record) {
 
         this.setId(record.getId())
+                .setPlayer(record.getPlayer())
                 .setPlayerName(record.getPlayerName())
-                .setTitle(record.getTitle())
-                .setContent(record.getContent())
-                .setContent(record.getContent())
-                .setHadRead(record.getHadRead())
+                .setAmount(record.getAmount())
+                .setCompany(record.getCompany())
                 .setCreate(record.getCreate())
                 .setUpdate(record.getUpdate());
     }
+
 }

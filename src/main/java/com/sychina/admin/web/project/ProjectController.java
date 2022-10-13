@@ -11,7 +11,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- *
  * @author Administrator
  */
 @RestController
@@ -29,7 +28,7 @@ public class ProjectController {
 
     @GetMapping("/loadTable")
     @ApiOperation("获取所有项目信息")
-    public ResultModel loadTable(ProjectQuery projectQuery) {
+    public ResultModel loadTable(@Validated ProjectQuery projectQuery) {
         return projectService.loadTable(projectQuery);
     }
 
@@ -41,7 +40,7 @@ public class ProjectController {
 
     @DeleteMapping("/delete/{id}")
     @ApiOperation("删除项目信息")
-    public ResultModel delete(@PathVariable Integer id) {
+    public ResultModel delete(@PathVariable Long id) {
         return projectService.delete(id);
     }
 

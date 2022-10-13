@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 public class BannerTable {
 
     @ApiModelProperty(value = "id")
-    private String id;
+    private Long id;
 
     @ApiModelProperty(value = "栏目banner(0-首页 1-投资 2-咨询)")
     private Integer tab;
@@ -35,16 +35,14 @@ public class BannerTable {
     @ApiModelProperty(value = "修改时间")
     private Long update;
 
-    public BannerTable convert(Banners banner) {
+    public BannerTable(Banners record) {
 
-        this.setId(banner.getId())
-                .setTab(banner.getTab())
-                .setImg(banner.getImg())
-                .setContent(banner.getContent())
-                .setStatus(banner.getStatus())
-                .setCreate(banner.getCreate())
-                .setUpdate(banner.getUpdate());
-
-        return this;
+        this.setId(record.getId())
+                .setTab(record.getTab())
+                .setImg(record.getImg())
+                .setContent(record.getContent())
+                .setStatus(record.getStatus())
+                .setCreate(record.getCreate())
+                .setUpdate(record.getUpdate());
     }
 }

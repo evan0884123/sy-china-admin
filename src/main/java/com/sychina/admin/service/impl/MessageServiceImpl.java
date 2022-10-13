@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sychina.admin.infra.domain.Messages;
 import com.sychina.admin.infra.domain.Players;
 import com.sychina.admin.infra.mapper.MessageMapper;
-import com.sychina.admin.infra.mapper.PlayerMapper;
 import com.sychina.admin.service.IMessageService;
 import com.sychina.admin.utils.LocalDateTimeHelper;
 import com.sychina.admin.web.pojo.models.MessageTable;
@@ -28,11 +27,11 @@ import java.util.List;
 @Service
 public class MessageServiceImpl extends ServiceImpl<MessageMapper, Messages> implements IMessageService {
 
-    private PlayerMapper playerMapper;
+    private PlayerServiceImpl playerService;
 
     public ResultModel add(MessageAddParam messageParam) {
 
-        List<Players> players = playerMapper.selectBatchIds(messageParam.getPlayer());
+        List<Players> players = playerService.listByIds(messageParam.getPlayer());
 
         List<Messages> messagesList = new ArrayList<>();
         players.forEach(player -> {
@@ -62,7 +61,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Messages> imp
         List<MessageTable> tables = new ArrayList<>();
         List<Messages> records = page.getRecords();
         records.forEach(message -> {
-            tables.add(new MessageTable().convert(message));
+            tables.add(new MessageTable(message));
         });
         page.setRecords(tables);
 
@@ -80,7 +79,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Messages> imp
         return ResultModel.succeed();
     }
 
-    public ResultModel delete(Integer id) {
+    public ResultModel delete(Long id) {
 
         baseMapper.deleteById(id);
 
@@ -88,7 +87,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Messages> imp
     }
 
     @Autowired
-    public void setPlayerMapper(PlayerMapper playerMapper) {
-        this.playerMapper = playerMapper;
+    public void setPlayerService(PlayerServiceImpl playerService) {
+        this.playerService = playerService;
     }
 }

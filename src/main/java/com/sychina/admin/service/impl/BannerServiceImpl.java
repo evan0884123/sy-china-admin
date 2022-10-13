@@ -44,7 +44,7 @@ public class BannerServiceImpl extends ServiceImpl<BannerMapper, Banners> implem
         List<BannerTable> tables = new ArrayList<>();
         List<Banners> records = page.getRecords();
         records.forEach(banner -> {
-            tables.add(new BannerTable().convert(banner));
+            tables.add(new BannerTable(banner));
         });
         page.setRecords(tables);
 
@@ -62,7 +62,7 @@ public class BannerServiceImpl extends ServiceImpl<BannerMapper, Banners> implem
         return ResultModel.succeed();
     }
 
-    public ResultModel delete(Integer id) {
+    public ResultModel delete(Long id) {
 
         baseMapper.deleteById(id);
 

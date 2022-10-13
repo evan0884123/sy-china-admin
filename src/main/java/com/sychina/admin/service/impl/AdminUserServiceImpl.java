@@ -52,7 +52,7 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
         String[] menuId = adminRole.getMenus().split(",");
         List<AdminMenu> adminMenuList = adminMenuMapper.selectBatchIds(Arrays.asList(menuId));
 
-        AdminUserInfoModel adminUserInfo = new AdminUserInfoModel().convert(adminUser).setAdminMenus(adminMenuList);
+        AdminUserInfoModel adminUserInfo = new AdminUserInfoModel(adminUser).setAdminMenus(adminMenuList);
 
         return ResultModel.succeed(adminUserInfo);
     }

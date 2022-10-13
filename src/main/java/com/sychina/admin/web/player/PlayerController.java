@@ -22,7 +22,7 @@ public class PlayerController {
 
     @GetMapping("/loadTable")
     @ApiOperation("获取所有玩家信息")
-    public ResultModel loadTable(PlayerQuery playerQuery) {
+    public ResultModel loadTable(@Validated PlayerQuery playerQuery) {
         return playerService.loadTable(playerQuery);
     }
 
@@ -34,7 +34,7 @@ public class PlayerController {
 
     @DeleteMapping("/delete/{id}")
     @ApiOperation("删除玩家信息")
-    public ResultModel delete(@PathVariable Integer id) {
+    public ResultModel delete(@PathVariable Long id) {
         return playerService.delete(id);
     }
 

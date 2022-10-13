@@ -75,7 +75,7 @@ public class BankInfoServiceImpl extends ServiceImpl<BankInfoMapper, BankInfos> 
      * @param id
      * @return
      */
-    public ResultModel delete(Integer id) {
+    public ResultModel delete(Long id) {
 
         baseMapper.deleteById(id);
 

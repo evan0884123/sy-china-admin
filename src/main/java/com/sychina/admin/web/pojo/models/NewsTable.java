@@ -41,18 +41,16 @@ public class NewsTable {
     @ApiModelProperty(value = "修改时间")
     private Long update;
 
-    public NewsTable convert(News news) {
+    public NewsTable(News record) {
 
-        this.setId(news.getId())
-                .setTitle(news.getTitle())
-                .setThumbnail(news.getThumbnail())
-                .setType(news.getType())
-                .setContent(news.getContent())
-                .setVideoLink(news.getVideoLink())
-                .setAuthor(news.getAuthor())
-                .setCreate(news.getCreate())
-                .setUpdate(news.getUpdate());
-
-        return this;
+        this.setId(record.getId())
+                .setTitle(record.getTitle())
+                .setThumbnail(record.getThumbnail())
+                .setType(record.getType())
+                .setContent(record.getContent())
+                .setVideoLink(record.getVideoLink())
+                .setAuthor(record.getAuthor())
+                .setCreate(record.getCreate())
+                .setUpdate(record.getUpdate());
     }
 }

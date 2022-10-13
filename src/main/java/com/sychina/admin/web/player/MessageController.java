@@ -29,7 +29,7 @@ public class MessageController {
 
     @GetMapping("/loadTable")
     @ApiOperation("获取所有通知消息")
-    public ResultModel loadTable(MessageQuery messageQuery) {
+    public ResultModel loadTable(@Validated MessageQuery messageQuery) {
         return messageService.loadTable(messageQuery);
     }
 
@@ -41,7 +41,7 @@ public class MessageController {
 
     @DeleteMapping("/delete/{id}")
     @ApiOperation("删除通知消息")
-    public ResultModel delete(@PathVariable Integer id) {
+    public ResultModel delete(@PathVariable Long id) {
         return messageService.delete(id);
     }
 

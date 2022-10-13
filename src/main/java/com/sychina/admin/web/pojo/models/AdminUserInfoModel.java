@@ -29,9 +29,10 @@ public class AdminUserInfoModel {
     @ApiModelProperty(value = "菜单list")
     private List<AdminMenu> adminMenus;
 
-    public AdminUserInfoModel convert(AdminUser adminUser) {
+    public AdminUserInfoModel(AdminUser record) {
 
-        this.setId(adminUser.getId()).setLoginName(adminUser.getLoginName()).setFullName(adminUser.getFullName());
-        return this;
+        this.setId(record.getId())
+                .setLoginName(record.getLoginName())
+                .setFullName(record.getFullName());
     }
 }

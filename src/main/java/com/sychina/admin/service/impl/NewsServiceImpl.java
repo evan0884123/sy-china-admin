@@ -44,7 +44,7 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements IN
         List<NewsTable> tables = new ArrayList<>();
         List<News> records = page.getRecords();
         records.forEach(news -> {
-            tables.add(new NewsTable().convert(news));
+            tables.add(new NewsTable(news));
         });
         page.setRecords(tables);
 
@@ -62,7 +62,7 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements IN
         return ResultModel.succeed();
     }
 
-    public ResultModel delete(Integer id) {
+    public ResultModel delete(Long id) {
 
         baseMapper.deleteById(id);
 

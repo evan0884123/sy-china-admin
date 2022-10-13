@@ -1,9 +1,9 @@
 package com.sychina.admin.web.pojo.models;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.sychina.admin.infra.domain.Players;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.math.BigDecimal;
 
@@ -13,10 +13,11 @@ import java.math.BigDecimal;
  * @author Administrator
  */
 @Data
+@Accessors(chain = true)
 public class PlayerTable {
 
     @ApiModelProperty(value = "id")
-    private String id;
+    private Long id;
 
     @ApiModelProperty(value = "账号")
     private String account;
@@ -25,16 +26,16 @@ public class PlayerTable {
     private String nickname;
 
     @ApiModelProperty(value = "可用余额")
-    private BigDecimal use_balance;
+    private BigDecimal useBalance;
 
     @ApiModelProperty(value = "可提余额")
-    private BigDecimal withdraw_balance;
+    private BigDecimal withdrawBalance;
 
     @ApiModelProperty(value = "推广余额")
-    private BigDecimal promote_balance;
+    private BigDecimal promoteBalance;
 
     @ApiModelProperty(value = "累计充值")
-    private BigDecimal total_recharge;
+    private BigDecimal totalRecharge;
 
     @ApiModelProperty(value = "VIP等级")
     private Long vIp;
@@ -72,4 +73,26 @@ public class PlayerTable {
     @ApiModelProperty(value = "修改时间")
     private Long update;
 
+    public PlayerTable(Players record) {
+
+        this.setId(record.getId())
+                .setAccount(record.getAccount())
+                .setNickname(record.getNickname())
+                .setUseBalance(record.getUseBalance())
+                .setWithdrawBalance(record.getWithdrawBalance())
+                .setPromoteBalance(record.getPromoteBalance())
+                .setTotalRecharge(record.getTotalRecharge())
+                .setVIp(record.getVIp())
+                .setSuperior(record.getSuperior())
+                .setLevelInfo(record.getLevelInfo())
+                .setRealName(record.getRealName())
+                .setIdNumber(record.getIdNumber())
+                .setPhoneNumber(record.getPhoneNumber())
+                .setId(record.getId())
+                .setIsVerifyManager(record.getIsVerifyManager())
+                .setInviteCode(record.getInviteCode())
+                .setStatus(record.getStatus())
+                .setCreate(record.getCreate())
+                .setUpdate(record.getUpdate());
+    }
 }

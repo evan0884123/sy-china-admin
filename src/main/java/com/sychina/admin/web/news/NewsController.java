@@ -28,7 +28,7 @@ public class NewsController {
 
     @GetMapping("/loadTable")
     @ApiOperation("获取资讯")
-    public ResultModel loadTable(NewsQuery newsQuery) {
+    public ResultModel loadTable(@Validated NewsQuery newsQuery) {
         return newsService.loadTable(newsQuery);
     }
 
@@ -40,7 +40,7 @@ public class NewsController {
 
     @DeleteMapping("/delete/{id}")
     @ApiOperation("删除资讯")
-    public ResultModel delete(@PathVariable Integer id) {
+    public ResultModel delete(@PathVariable Long id) {
         return newsService.delete(id);
     }
 

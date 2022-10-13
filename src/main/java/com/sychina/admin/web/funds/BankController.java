@@ -4,7 +4,6 @@ import com.sychina.admin.service.impl.BankInfoServiceImpl;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.BankParam;
 import com.sychina.admin.web.pojo.params.BankQuery;
-import com.sychina.admin.web.pojo.params.NewsParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +28,7 @@ public class BankController {
 
     @GetMapping("/loadTable")
     @ApiOperation("获取所有玩家的银行卡")
-    public ResultModel loadTable(BankQuery bankQuery) {
+    public ResultModel loadTable(@Validated BankQuery bankQuery) {
         return bankInfoService.loadTable(bankQuery);
     }
 
@@ -41,7 +40,7 @@ public class BankController {
 
     @DeleteMapping("/delete/{id}")
     @ApiOperation("删除玩家的银行卡")
-    public ResultModel delete(@PathVariable Integer id) {
+    public ResultModel delete(@PathVariable Long id) {
         return bankInfoService.delete(id);
     }
 

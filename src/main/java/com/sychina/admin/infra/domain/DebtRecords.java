@@ -18,12 +18,12 @@ public class DebtRecords {
      *
      */
     @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private String id;
+    private Long id;
 
     /**
      * '国债ID'
      */
-    private String debt;
+    private Long debt;
 
     /**
      * '国债名称'
@@ -34,7 +34,7 @@ public class DebtRecords {
     /**
      * '玩家ID'
      */
-    private String player;
+    private Long player;
 
 
     /**
@@ -46,7 +46,7 @@ public class DebtRecords {
     /**
      * '投资转化(0-未 1-已)'
      */
-    private String invest;
+    private Integer invest;
 
     /**
      * '创建时间'

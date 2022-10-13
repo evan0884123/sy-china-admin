@@ -48,7 +48,7 @@ public class ChickenServiceImpl extends ServiceImpl<ChickenMapper, Chickens> imp
      * @param id
      * @return
      */
-    public ResultModel delete(Integer id) {
+    public ResultModel delete(Long id) {
 
         baseMapper.deleteById(id);
         return ResultModel.succeed();

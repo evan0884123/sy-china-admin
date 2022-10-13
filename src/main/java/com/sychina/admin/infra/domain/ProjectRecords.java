@@ -88,7 +88,7 @@ public class ProjectRecords {
     /**
      * '项目总收益'
      */
-    private String totalProfit;
+    private BigDecimal totalProfit;
 
     /**
      * '状态(0-项目投资阶段 1-共享金阶段)'

@@ -45,20 +45,18 @@ public class BankTable {
     @ApiModelProperty(value = "修改时间")
     private Long update;
 
-    public BankTable convert(BankInfos re) {
+    public BankTable(BankInfos record) {
 
-        this.setId(re.getId())
-                .setPlayerName(re.getPlayerName())
-                .setBank(re.getBank())
-                .setBankAddr(re.getBankAddr())
-                .setCardType(re.getCardType())
-                .setCardNumber(re.getCardNumber())
-                .setCardMaster(re.getCardMaster())
-                .setCardPhoneNumber(re.getCardPhoneNumber())
-                .setCardIdNumber(re.getCardIdNumber())
-                .setCreate(re.getCreate())
-                .setUpdate(re.getUpdate());
-
-        return this;
+        this.setId(record.getId())
+                .setPlayerName(record.getPlayerName())
+                .setBank(record.getBank())
+                .setBankAddr(record.getBankAddr())
+                .setCardType(record.getCardType())
+                .setCardNumber(record.getCardNumber())
+                .setCardMaster(record.getCardMaster())
+                .setCardPhoneNumber(record.getCardPhoneNumber())
+                .setCardIdNumber(record.getCardIdNumber())
+                .setCreate(record.getCreate())
+                .setUpdate(record.getUpdate());
     }
 }
