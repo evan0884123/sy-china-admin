@@ -1,6 +1,7 @@
 package com.sychina.admin.web.system;
 
 import com.sychina.admin.service.impl.AdminUserServiceImpl;
+import com.sychina.admin.web.pojo.SelectOption;
 import com.sychina.admin.web.pojo.models.AdminUserInfoModel;
 import com.sychina.admin.web.pojo.models.AdminUserTable;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author Administrator
@@ -80,6 +83,18 @@ public class AdminUserController {
     @ApiOperation("重置用户密码")
     public ResultModel<String> resetPassword(@RequestParam String id) {
         return userServiceImpl.resetPassword(id);
+    }
+
+    @PostMapping("/fetchUserOptions")
+    @ApiOperation("获取用户")
+    public ResultModel<List<SelectOption>> fetchUserOptions() {
+        return userServiceImpl.fetchUserOptions();
+    }
+
+    @PostMapping("/loadMenuList")
+    @ApiOperation("获取菜单信息")
+    public ResultModel<List<SelectOption>> loadMenuList() {
+        return userServiceImpl.loadMenuList();
     }
 
 

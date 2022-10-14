@@ -23,7 +23,7 @@ public class MessageAddParam {
     private String title;
 
     @ApiModelProperty(value = "内容")
-    private Integer content;
+    private String content;
 
     public Messages convert() {
 

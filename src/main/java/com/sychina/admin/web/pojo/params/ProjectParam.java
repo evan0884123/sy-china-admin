@@ -4,6 +4,9 @@ import com.sychina.admin.infra.domain.Projects;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 /**
@@ -13,10 +16,17 @@ import java.math.BigDecimal;
 public class ProjectParam {
 
     @ApiModelProperty(value = "id")
-    private String id;
+    private Long id;
 
     @ApiModelProperty(value = "项目名称")
     private String name;
+
+    @ApiModelProperty(value = "国债编号", required = true)
+    @NotBlank
+    private String debtNumbering;
+
+    @ApiModelProperty(value = "国债名称")
+    private String debtName;
 
     @ApiModelProperty(value = "最低准入金额")
     private BigDecimal investThreshold;

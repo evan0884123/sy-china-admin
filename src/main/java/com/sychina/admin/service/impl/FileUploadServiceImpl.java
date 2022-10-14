@@ -57,7 +57,7 @@ public class FileUploadServiceImpl {
         FileUploadModel fileUploadModel = new FileUploadModel();
         if (!isLegal) {
             fileUploadModel.setStatus("error");
-            return ResultModel.succeed(fileUploadModel);
+            return ResultModel.failed(fileUploadModel);
         }
         // 文件新路径
         String fileName = uploadFile.getOriginalFilename();
@@ -69,7 +69,7 @@ public class FileUploadServiceImpl {
             e.printStackTrace();
             // 上传失败
             fileUploadModel.setStatus("error");
-            return ResultModel.succeed(fileUploadModel);
+            return ResultModel.failed(fileUploadModel);
         }
         fileUploadModel.setStatus("done");
         fileUploadModel.setResponse("success");

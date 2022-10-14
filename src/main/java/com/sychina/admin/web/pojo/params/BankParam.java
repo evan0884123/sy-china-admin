@@ -15,7 +15,6 @@ import javax.validation.constraints.NotNull;
 public class BankParam {
 
     @ApiModelProperty(value = "id", required = true)
-    @NotNull
     private Long id;
 
     @ApiModelProperty(value = "开户银行")

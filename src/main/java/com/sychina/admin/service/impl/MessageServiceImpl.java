@@ -52,7 +52,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Messages> imp
         QueryWrapper<Messages> wrapper = new QueryWrapper<>();
         wrapper.likeRight(StringUtils.isNotBlank(messageQuery.getPlayerName()), "player_name", messageQuery.getPlayerName());
         wrapper.likeRight(StringUtils.isNotBlank(messageQuery.getTitle()), "title", messageQuery.getTitle());
-        wrapper.eq(messageQuery.getHadRead() != null, "hadRead", messageQuery.getHadRead());
+        wrapper.eq(messageQuery.getHadRead() != null, "had_read", messageQuery.getHadRead());
         wrapper.between(messageQuery.getTimeType() == 0, "`create`", messageQuery.getStartTime(), messageQuery.getEndTime());
         wrapper.between(messageQuery.getTimeType() == 1, "`update`", messageQuery.getStartTime(), messageQuery.getEndTime());
 

@@ -7,6 +7,7 @@ import com.sychina.admin.infra.domain.AdminMenu;
 import com.sychina.admin.infra.domain.AdminRole;
 import com.sychina.admin.infra.mapper.AdminMenuMapper;
 import com.sychina.admin.infra.mapper.AdminRoleMapper;
+import com.sychina.admin.web.pojo.SelectOption;
 import com.sychina.admin.web.pojo.models.AdminRoleTable;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.AdminRoleParam;
@@ -27,8 +28,6 @@ import java.util.List;
 public class AdminRoleServiceImpl extends ServiceImpl<AdminRoleMapper, AdminRole> implements IService<AdminRole> {
 
     private AdminMenuMapper adminMenuMapper;
-
-    private ElementUiServiceImpl elementUiServiceImpl;
 
     /**
      * @param adminRoleParam
@@ -102,13 +101,23 @@ public class AdminRoleServiceImpl extends ServiceImpl<AdminRoleMapper, AdminRole
     }
 
 
-    @Autowired
-    public void setMenuMapper(AdminMenuMapper adminMenuMapper) {
-        this.adminMenuMapper = adminMenuMapper;
+    public ResultModel<List<SelectOption>> fetchRoleOption() {
+
+        List<AdminRole> adminRoles = baseMapper.selectList(new QueryWrapper<>());
+        List<SelectOption> roleSelect = new ArrayList<>();
+
+        adminRoles.forEach(adminRole -> {
+            SelectOption selectOption = new SelectOption();
+            selectOption.setLabel(adminRole.getName());
+            selectOption.setValue(adminRole.getId() + "");
+            roleSelect.add(selectOption);
+        });
+
+        return ResultModel.succeed(roleSelect);
     }
 
     @Autowired
-    public void setElementUiService(ElementUiServiceImpl elementUiServiceImpl) {
-        this.elementUiServiceImpl = elementUiServiceImpl;
+    public void setMenuMapper(AdminMenuMapper adminMenuMapper) {
+        this.adminMenuMapper = adminMenuMapper;
     }
 }

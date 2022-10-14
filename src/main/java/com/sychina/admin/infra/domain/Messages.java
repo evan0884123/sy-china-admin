@@ -41,7 +41,7 @@ public class Messages {
     /**
      * '内容'
      */
-    private Integer content;
+    private String content;
 
     /**
      * '已读(0-未读 1-已读)'

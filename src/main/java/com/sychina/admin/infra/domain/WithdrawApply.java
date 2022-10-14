@@ -10,14 +10,13 @@ import lombok.experimental.Accessors;
 import java.math.BigDecimal;
 
 /**
- * 项目信息
  *
  * @author Administrator
  */
 @Data
 @Accessors(chain = true)
-@TableName("projects")
-public class Projects {
+@TableName("charge_withdraw_reply")
+public class WithdrawApply {
 
     /**
      *
@@ -26,64 +25,59 @@ public class Projects {
     private Long id;
 
     /**
-     * '项目名称'
+     * '玩家ID'
      */
-    private String name;
+    private Long player;
 
     /**
-     * 国债编号
+     * 玩家名称
      */
-    private String debtNumbering;
+    private String playerName;
 
     /**
-     * 国债名称
+     * 金额
      */
-    private String debtName;
+    private BigDecimal amount;
 
     /**
-     * '最低准入金额'
+     * '类型(0-充值 1-提现)'
      */
-    private BigDecimal investThreshold;
+    private Integer type;
 
     /**
-     * '项目生命周期'
+     * '充值支付方式(0-人工客服 1-微信 2-支付宝 3-云闪付)'
      */
-    private Integer lifeCycle;
+    private Integer chargeChannel;
 
     /**
-     * '项目日利率'
+     * '提现类型(0-收益提现 1-推广金提现 2-返现金额提现)'
      */
-    private String dir;
+    private Integer wdType;
 
     /**
-     * '返现可用认购'
+     * '提现银行卡真实姓名'
      */
-    private BigDecimal fbBalance;
+    private String wdCardMaster;
 
     /**
-     * '可提返现'
+     * '提现银行卡号'
      */
-    private BigDecimal fbWithdraw;
+    private String wdCardNumber;
 
     /**
-     * '项目提现天数'
+     * '提现银行'
      */
-    private String withdrawLc;
+    private String wdBank;
 
     /**
-     * '可提现周期利率'
-     */
-    private BigDecimal withdrawRate;
-
-    /**
-     * '提现门槛'
-     */
-    private BigDecimal withdrawThreshold;
-
-    /**
-     * '状态(0-关闭 1-启用)'
+     * '状态(0-申请 1-操作中 2-通过 3-拒绝)'
      */
     private Integer status;
+
+    /**
+     * '备注'
+     */
+    private String remark;
 
     /**
      * '创建时间'

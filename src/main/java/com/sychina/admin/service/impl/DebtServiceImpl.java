@@ -7,15 +7,21 @@ import com.sychina.admin.infra.domain.Debts;
 import com.sychina.admin.infra.mapper.DebtMapper;
 import com.sychina.admin.service.IDebtService;
 import com.sychina.admin.utils.LocalDateTimeHelper;
+import com.sychina.admin.web.pojo.SelectOption;
 import com.sychina.admin.web.pojo.models.DebtTable;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.DebtParam;
 import com.sychina.admin.web.pojo.params.DebtQuery;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * @author Administrator
@@ -23,9 +29,13 @@ import java.util.List;
 @Service
 public class DebtServiceImpl extends ServiceImpl<DebtMapper, Debts> implements IDebtService {
 
+    private ProjectServiceImpl projectService;
+
     public ResultModel add(DebtParam debtParam) {
 
         Debts debts = debtParam.convert()
+                .setName(debtParam.getName())
+                .setNumbering(debtParam.getNumbering())
                 .setCreate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
 
         baseMapper.insert(debts);
@@ -36,6 +46,9 @@ public class DebtServiceImpl extends ServiceImpl<DebtMapper, Debts> implements I
     public ResultModel loadTable(DebtQuery debtQuery) {
 
         QueryWrapper<Debts> wrapper = new QueryWrapper<>();
+        wrapper.likeRight(StringUtils.isNotBlank(debtQuery.getName()), "`name`", debtQuery.getName());
+        wrapper.likeRight(StringUtils.isNotBlank(debtQuery.getNumbering()), "`numbering`", debtQuery.getNumbering());
+        wrapper.eq(debtQuery.getStatus() != null, "`status`", debtQuery.getStatus());
         wrapper.between(debtQuery.getTimeType() == 0, "`create`", debtQuery.getStartTime(), debtQuery.getEndTime());
         wrapper.between(debtQuery.getTimeType() == 1, "`update`", debtQuery.getStartTime(), debtQuery.getEndTime());
 
@@ -62,9 +75,41 @@ public class DebtServiceImpl extends ServiceImpl<DebtMapper, Debts> implements I
         return ResultModel.succeed();
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public ResultModel delete(Long id) {
+
+        Debts debts = baseMapper.selectById(id);
+        Assert.notNull(debts, "未找到该国债信息");
+
+        String mount = debts.getMount();
+        if (StringUtils.isNotBlank(mount)) {
+            String[] split = mount.substring(1, mount.length() - 1).split(",");
+            Stream.of(split).forEach(pid -> {
+                projectService.delete(Long.valueOf(pid));
+            });
+        }
 
         baseMapper.deleteById(id);
         return ResultModel.succeed();
+    }
+
+    public ResultModel<List<SelectOption>> fetchDebtOptions() {
+
+        List<Debts> debtsList = baseMapper.selectList(new QueryWrapper<>());
+        List<SelectOption> debtSelect = new ArrayList<>();
+
+        debtsList.forEach(debts -> {
+            SelectOption selectOption = new SelectOption();
+            selectOption.setLabel(debts.getName());
+            selectOption.setValue(debts.getNumbering());
+            debtSelect.add(selectOption);
+        });
+
+        return ResultModel.succeed(debtSelect);
+    }
+
+    @Autowired
+    public void setProjectService(ProjectServiceImpl projectService) {
+        this.projectService = projectService;
     }
 }

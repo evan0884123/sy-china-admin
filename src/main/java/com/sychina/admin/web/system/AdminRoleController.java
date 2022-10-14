@@ -1,6 +1,7 @@
 package com.sychina.admin.web.system;
 
 import com.sychina.admin.service.impl.AdminRoleServiceImpl;
+import com.sychina.admin.web.pojo.SelectOption;
 import com.sychina.admin.web.pojo.models.AdminRoleTable;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.AdminRoleParam;
@@ -44,6 +45,12 @@ public class AdminRoleController {
     @ApiOperation("删除角色")
     public ResultModel deleteRole(@RequestParam Integer id) {
         return adminRoleServiceImpl.deleteRole(id);
+    }
+
+    @PostMapping("/fetchRoleOption")
+    @ApiOperation("获取角色")
+    public ResultModel<List<SelectOption>> fetchRoleOption() {
+        return adminRoleServiceImpl.fetchRoleOption();
     }
 
     @Autowired

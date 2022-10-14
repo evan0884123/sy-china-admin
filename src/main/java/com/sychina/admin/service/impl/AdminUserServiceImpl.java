@@ -11,6 +11,7 @@ import com.sychina.admin.infra.domain.AdminUser;
 import com.sychina.admin.infra.mapper.AdminMenuMapper;
 import com.sychina.admin.infra.mapper.AdminUserMapper;
 import com.sychina.admin.service.IAdminUserService;
+import com.sychina.admin.web.pojo.SelectOption;
 import com.sychina.admin.web.pojo.models.AdminUserInfoModel;
 import com.sychina.admin.web.pojo.models.AdminUserTable;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
@@ -22,6 +23,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -194,6 +196,36 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
         baseMapper.updateById(adminUser);
 
         return ResultModel.succeed(password);
+    }
+
+    public ResultModel<List<SelectOption>> fetchUserOptions() {
+
+        List<AdminUser> adminUsers = baseMapper.selectList(new QueryWrapper<>());
+        List<SelectOption> userSelect = new ArrayList<>();
+
+        adminUsers.forEach(user -> {
+            SelectOption selectOption = new SelectOption();
+            selectOption.setLabel(user.getFullName());
+            selectOption.setValue(user.getId());
+            userSelect.add(selectOption);
+        });
+
+        return ResultModel.succeed(userSelect);
+    }
+
+    public ResultModel<List<SelectOption>> loadMenuList() {
+
+        List<AdminMenu> adminMenus = adminMenuMapper.selectList(new QueryWrapper<>());
+        List<SelectOption> menuSelect = new ArrayList<>();
+
+        adminMenus.forEach(adminMenu -> {
+            SelectOption selectOption = new SelectOption();
+            selectOption.setLabel(adminMenu.getName());
+            selectOption.setValue(adminMenu.getId() + "");
+            menuSelect.add(selectOption);
+        });
+
+        return ResultModel.succeed(menuSelect);
     }
 
     @Autowired

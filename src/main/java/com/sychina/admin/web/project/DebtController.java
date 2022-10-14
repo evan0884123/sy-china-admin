@@ -1,6 +1,7 @@
 package com.sychina.admin.web.project;
 
 import com.sychina.admin.service.impl.DebtServiceImpl;
+import com.sychina.admin.web.pojo.SelectOption;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.DebtParam;
 import com.sychina.admin.web.pojo.params.DebtQuery;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author Administrator
@@ -45,6 +48,12 @@ public class DebtController {
     @ApiOperation("删除国债")
     public ResultModel delete(@RequestParam Long id) {
         return debtService.delete(id);
+    }
+
+    @PostMapping("/fetchDebtOptions")
+    @ApiOperation("获取所有国债数据")
+    public ResultModel<List<SelectOption>> fetchDebtOptions() {
+        return debtService.fetchDebtOptions();
     }
 
     @Autowired

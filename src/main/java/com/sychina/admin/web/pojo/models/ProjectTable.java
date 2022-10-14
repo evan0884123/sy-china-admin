@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 
 /**
@@ -17,10 +18,16 @@ import java.math.BigDecimal;
 public class ProjectTable {
 
     @ApiModelProperty(value = "id")
-    private String id;
+    private Long id;
 
     @ApiModelProperty(value = "项目名称")
     private String name;
+
+    @ApiModelProperty(value = "国债编号")
+    private String debtNumbering;
+
+    @ApiModelProperty(value = "国债名称")
+    private String debtName;
 
     @ApiModelProperty(value = "最低准入金额")
     private BigDecimal investThreshold;
@@ -55,10 +62,12 @@ public class ProjectTable {
     @ApiModelProperty(value = "修改时间")
     private Long update;
 
-    public ProjectTable(Projects record){
+    public ProjectTable(Projects record) {
 
         this.setId(record.getId())
                 .setName(record.getName())
+                .setDebtNumbering(record.getDebtNumbering())
+                .setDebtName(record.getDebtName())
                 .setInvestThreshold(record.getInvestThreshold())
                 .setLifeCycle(record.getLifeCycle())
                 .setDir(record.getDir())

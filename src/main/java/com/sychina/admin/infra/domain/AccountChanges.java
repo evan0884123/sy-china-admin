@@ -7,15 +7,16 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.math.BigDecimal;
+
 /**
- * 公司信息
  *
  * @author Administrator
  */
 @Data
 @Accessors(chain = true)
-@TableName("debts")
-public class Debts {
+@TableName("charge_withdraw_reply")
+public class AccountChanges {
 
     /**
      *
@@ -24,54 +25,49 @@ public class Debts {
     private Long id;
 
     /**
-     * '名称'
+     * '玩家ID'
      */
-    private String name;
+    private Long player;
 
     /**
-     * '编号
+     * 玩家名称
      */
-    private String numbering;
+    private String playerName;
 
     /**
-     * '口号'
+     * 变动金额类型(0-可用余额 1-可提现余额 2-推广金额 3-项目收益)
      */
-    private String slogan;
-
+    private BigDecimal amountType;
 
     /**
-     * '项目金额'
+     * '变动前金额'
      */
-    private String price;
-
+    private BigDecimal bcBalance;
 
     /**
-     * '国债年利率'
+     * '变动金额'
      */
-    private String apr;
-
+    private BigDecimal amount;
 
     /**
-     * '年限'
+     * '变动后金额'
      */
-    private String term;
+    private BigDecimal acBalance;
 
     /**
-     * '总计金额'
+     * '变动类型(0-充值 1-提现 2-项目收益 3-鸡蛋收益 4-项目返现 5-推广充值返现)'
      */
-    private String total;
-
+    private Integer changeType;
 
     /**
-     * '挂载项目'
+     * '变动说明'
      */
-    private String mount;
-
+    private String changeDescribe;
 
     /**
-     * '状态(0-关闭 1-启用)'
+     * '关联ID'
      */
-    private String status;
+    private String connId;
 
     /**
      * '创建时间'

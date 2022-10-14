@@ -20,7 +20,7 @@ public class BankController {
 
     private BankInfoServiceImpl bankInfoService;
 
-    @PostMapping("/add")
+//    @PostMapping("/add")
     @ApiOperation("新增玩家的银行卡")
     public ResultModel add(@Validated BankParam bankParam) {
         return bankInfoService.add(bankParam);

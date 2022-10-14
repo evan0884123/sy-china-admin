@@ -14,12 +14,6 @@ import javax.validation.constraints.NotNull;
 @Data
 public class ChickenQuery extends PageQuery {
 
-    @ApiModelProperty(value = "id")
-    private Long id;
-
-    @ApiModelProperty(value = "玩家ID")
-    private Long player;
-
     @ApiModelProperty(value = "玩家姓名")
     private String playerName;
 

@@ -20,6 +20,9 @@ public class DebtTable {
     @ApiModelProperty(value = "名称")
     private String name;
 
+    @ApiModelProperty(value = "编号")
+    private String numbering;
+
     @ApiModelProperty(value = "口号")
     private String slogan;
 
@@ -51,6 +54,7 @@ public class DebtTable {
 
         this.setId(record.getId())
                 .setName(record.getName())
+                .setNumbering(record.getNumbering())
                 .setSlogan(record.getSlogan())
                 .setPrice(record.getPrice())
                 .setApr(record.getApr())

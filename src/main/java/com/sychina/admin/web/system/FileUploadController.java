@@ -38,7 +38,7 @@ public class FileUploadController {
     }
 
     @PostMapping("/list")
-    @ApiOperation("删除")
+    @ApiOperation("获取文件list")
     public ResultModel<List<OSSObjectSummary>> list() {
 
         return fileUploadService.list();

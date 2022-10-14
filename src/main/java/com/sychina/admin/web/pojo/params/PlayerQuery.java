@@ -18,23 +18,8 @@ public class PlayerQuery extends PageQuery {
     @ApiModelProperty(value = "账号")
     private String account;
 
-    @ApiModelProperty(value = "可用余额")
-    private BigDecimal use_balance;
-
-    @ApiModelProperty(value = "可提余额")
-    private BigDecimal withdraw_balance;
-
-    @ApiModelProperty(value = "推广余额")
-    private BigDecimal promote_balance;
-
-    @ApiModelProperty(value = "累计充值")
-    private BigDecimal total_recharge;
-
     @ApiModelProperty(value = "VIP等级")
     private Long vIp;
-
-    @ApiModelProperty(value = "上级ID")
-    private Long superior;
 
     @ApiModelProperty(value = "层级信息(上上级/上级)")
     private String levelInfo;
@@ -47,9 +32,6 @@ public class PlayerQuery extends PageQuery {
 
     @ApiModelProperty(value = "手机号码")
     private String phoneNumber;
-
-    @ApiModelProperty(value = "最后登陆IP")
-    private String ip;
 
     @ApiModelProperty(value = "是否认证经理人(0-否 1-是)")
     private Integer isVerifyManager;

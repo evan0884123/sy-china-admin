@@ -24,7 +24,7 @@ public class MessageTable {
     private String title;
 
     @ApiModelProperty(value = "内容")
-    private Integer content;
+    private String content;
 
     @ApiModelProperty(value = "已读(0-未读 1-已读)")
     private Integer hadRead;

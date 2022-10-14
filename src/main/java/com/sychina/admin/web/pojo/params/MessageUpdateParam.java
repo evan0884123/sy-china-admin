@@ -4,8 +4,6 @@ import com.sychina.admin.infra.domain.Messages;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.util.List;
-
 /**
  * Description:
  *
@@ -21,7 +19,7 @@ public class MessageUpdateParam {
     private String title;
 
     @ApiModelProperty(value = "内容")
-    private Integer content;
+    private String content;
 
     public Messages convert() {
 
