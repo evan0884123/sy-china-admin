@@ -48,7 +48,7 @@ public class ProjectController {
     }
 
 //    @PostMapping("/loadProjectList")
-    @ApiOperation("获取菜单信息")
+    @ApiOperation("获取所有工程信息")
     public ResultModel<List<SelectOption>> loadProjectList() {
         return projectService.loadProjectList();
     }

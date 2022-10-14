@@ -13,6 +13,7 @@ import com.sychina.admin.web.pojo.params.BankParam;
 import com.sychina.admin.web.pojo.params.BankQuery;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -62,6 +63,8 @@ public class BankInfoServiceImpl extends ServiceImpl<BankInfoMapper, BankInfos> 
      * @return
      */
     public ResultModel edit(BankParam bankParam) {
+
+        Assert.notNull(bankParam.getId(), "id不能为空");
 
         BankInfos bankInfos = bankParam.convert()
                 .setId(bankParam.getId())

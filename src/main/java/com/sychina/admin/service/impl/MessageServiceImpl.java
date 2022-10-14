@@ -16,6 +16,7 @@ import com.sychina.admin.web.pojo.params.MessageUpdateParam;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -69,6 +70,8 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Messages> imp
     }
 
     public ResultModel edit(MessageUpdateParam messageParam) {
+
+        Assert.notNull(messageParam.getId(), "id不能为空");
 
         Messages messages = messageParam.convert()
                 .setId(messageParam.getId())

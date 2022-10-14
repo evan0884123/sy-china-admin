@@ -6,7 +6,7 @@ import com.sychina.admin.web.pojo.params.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,31 +31,31 @@ public class RecordController {
 
     @PostMapping("/projectRecord")
     @ApiOperation("获取项目购买信息")
-    public ResultModel getProjectRecord(@PathVariable ProjectRecordQuery recordQuery) {
+    public ResultModel getProjectRecord(@Validated ProjectRecordQuery recordQuery) {
         return projectRecordService.loadTable(recordQuery);
     }
 
     @PostMapping("/debtRecord")
     @ApiOperation("获取项目购买信息")
-    public ResultModel getDebtRecord(@PathVariable DebtRecordQuery recordQuery) {
+    public ResultModel getDebtRecord(@Validated DebtRecordQuery recordQuery) {
         return debtRecordService.loadTable(recordQuery);
     }
 
     @PostMapping("/equities")
     @ApiOperation("获取股权购买信息")
-    public ResultModel getEquities(@PathVariable EquitiesQuery recordQuery) {
+    public ResultModel getEquities(@Validated EquitiesQuery recordQuery) {
         return equitiesService.loadTable(recordQuery);
     }
 
     @PostMapping("/chicken")
     @ApiOperation("获取农场鸡信息")
-    public ResultModel getChicken(@PathVariable ChickenQuery recordQuery) {
+    public ResultModel getChicken(@Validated ChickenQuery recordQuery) {
         return chickenService.loadTable(recordQuery);
     }
 
     @PostMapping("/accountChange")
     @ApiOperation("获取用户金额流水")
-    public ResultModel getAccountChange(@PathVariable AccountChangeQuery recordQuery) {
+    public ResultModel getAccountChange(@Validated AccountChangeQuery recordQuery) {
         return accountChangeService.loadTable(recordQuery);
     }
 

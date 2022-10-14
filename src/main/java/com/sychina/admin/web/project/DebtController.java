@@ -52,8 +52,8 @@ public class DebtController {
 
     @PostMapping("/fetchDebtOptions")
     @ApiOperation("获取所有国债数据")
-    public ResultModel<List<SelectOption>> fetchDebtOptions() {
-        return debtService.fetchDebtOptions();
+    public ResultModel<List<SelectOption>> fetchDebtOptions(@RequestParam String name) {
+        return debtService.fetchDebtOptions(name);
     }
 
     @Autowired

@@ -80,6 +80,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Projects> imp
 
     public ResultModel edit(ProjectParam projectParam) {
 
+        Assert.notNull(projectParam.getId(), "id不能为空");
+
         Projects projects = projectParam.convert()
                 .setId(projectParam.getId())
                 .setUpdate(LocalDateTimeHelper.toLong(LocalDateTime.now()));

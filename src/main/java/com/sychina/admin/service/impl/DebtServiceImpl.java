@@ -66,6 +66,8 @@ public class DebtServiceImpl extends ServiceImpl<DebtMapper, Debts> implements I
 
     public ResultModel edit(DebtParam debtParam) {
 
+        Assert.notNull(debtParam.getId(), "id不能为空");
+
         Debts debts = debtParam.convert()
                 .setId(debtParam.getId())
                 .setUpdate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
@@ -93,9 +95,13 @@ public class DebtServiceImpl extends ServiceImpl<DebtMapper, Debts> implements I
         return ResultModel.succeed();
     }
 
-    public ResultModel<List<SelectOption>> fetchDebtOptions() {
+    public ResultModel<List<SelectOption>> fetchDebtOptions(String name) {
 
-        List<Debts> debtsList = baseMapper.selectList(new QueryWrapper<>());
+        QueryWrapper<Debts> wrapper = new QueryWrapper<Debts>()
+                .likeRight("name", name)
+                .likeRight("numbering", name);
+
+        List<Debts> debtsList = baseMapper.selectList(wrapper);
         List<SelectOption> debtSelect = new ArrayList<>();
 
         debtsList.forEach(debts -> {

@@ -7,11 +7,13 @@ import com.sychina.admin.infra.domain.Players;
 import com.sychina.admin.infra.mapper.PlayerMapper;
 import com.sychina.admin.service.IPlayerService;
 import com.sychina.admin.utils.LocalDateTimeHelper;
+import com.sychina.admin.web.pojo.SelectOption;
 import com.sychina.admin.web.pojo.models.PlayerTable;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.PlayerParam;
 import com.sychina.admin.web.pojo.params.PlayerQuery;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -43,6 +45,8 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 
     public ResultModel edit(PlayerParam playerParam) {
 
+        Assert.notNull(playerParam.getId(), "id不能为空");
+
         Players players = playerParam.convert()
                 .setId(playerParam.getId())
                 .setUpdate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
@@ -57,5 +61,20 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
         baseMapper.deleteById(id);
 
         return ResultModel.succeed();
+    }
+
+    public ResultModel<List<SelectOption>> fetchPlayerOptions(String account) {
+
+        List<Players> playersList = baseMapper.selectList(new QueryWrapper<Players>().likeRight("account", account));
+        List<SelectOption> playerSelect = new ArrayList<>();
+
+        playersList.forEach(players -> {
+            SelectOption selectOption = new SelectOption();
+            selectOption.setLabel(players.getAccount());
+            selectOption.setValue(players.getId().toString());
+            playerSelect.add(selectOption);
+        });
+
+        return ResultModel.succeed(playerSelect);
     }
 }
