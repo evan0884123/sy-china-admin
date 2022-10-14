@@ -5,6 +5,7 @@ import com.sychina.admin.web.pojo.SelectOption;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.PlayerParam;
 import com.sychina.admin.web.pojo.params.PlayerQuery;
+import com.sychina.admin.web.pojo.params.TopScoreParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -48,6 +50,12 @@ public class PlayerController {
     @ApiOperation("按照用户名获取信息")
     public ResultModel<List<SelectOption>> fetchPlayerOptions(@RequestParam String account) {
         return playerService.fetchPlayerOptions(account);
+    }
+
+    @PostMapping("/topScore")
+    @ApiOperation("用户上分")
+    public ResultModel topScore(@RequestParam TopScoreParam topScoreParam){
+        return playerService.topScore(topScoreParam);
     }
 
     @Autowired

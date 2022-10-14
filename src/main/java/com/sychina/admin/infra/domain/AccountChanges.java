@@ -15,7 +15,7 @@ import java.math.BigDecimal;
  */
 @Data
 @Accessors(chain = true)
-@TableName("charge_withdraw_reply")
+@TableName("account_changes")
 public class AccountChanges {
 
     /**
@@ -37,7 +37,7 @@ public class AccountChanges {
     /**
      * 变动金额类型(0-可用余额 1-可提现余额 2-推广金额 3-项目收益)
      */
-    private BigDecimal amountType;
+    private Integer amountType;
 
     /**
      * '变动前金额'

@@ -1,4 +1,4 @@
-package com.sychina.admin.common;
+package com.sychina.admin.utils;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

@@ -26,7 +26,7 @@ public class AccountChangeTable {
     private String playerName;
 
     @ApiModelProperty(value = "变动金额类型(0-可用余额 1-可提现余额 2-推广金额 3-项目收益)")
-    private BigDecimal amountType;
+    private Integer amountType;
 
     @ApiModelProperty(value = "变动前金额")
     private BigDecimal bcBalance;

@@ -3,7 +3,7 @@ package com.sychina.admin.infra.domain;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.sychina.admin.common.UUIDGenerator;
+import com.sychina.admin.utils.UUIDGenerator;
 import lombok.Data;
 
 /**

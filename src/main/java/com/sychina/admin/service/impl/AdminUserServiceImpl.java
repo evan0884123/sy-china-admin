@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sychina.admin.common.RequestContext;
-import com.sychina.admin.common.StringGenerator;
+import com.sychina.admin.utils.StringGenerator;
 import com.sychina.admin.infra.domain.AdminMenu;
 import com.sychina.admin.infra.domain.AdminRole;
 import com.sychina.admin.infra.domain.AdminUser;
