@@ -25,6 +25,12 @@ spring:
     url: jdbc:mysql://172.247.185.18:16033/sy_china?useSSL=false&&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2B8&allowMultiQueries=true
     username: root
     password: 20220916@root
+#
+  redis:
+    host: 172.247.185.18
+    port: 9736
+    password: 20220916@root
+    database: 0
 
 #
 mybatis-plus:

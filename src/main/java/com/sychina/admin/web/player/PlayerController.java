@@ -46,7 +46,7 @@ public class PlayerController {
         return playerService.delete(id);
     }
 
-    @PostMapping("/fetchPlayerOptions")
+//    @PostMapping("/fetchPlayerOptions")
     @ApiOperation("按照用户名获取信息")
     public ResultModel<List<SelectOption>> fetchPlayerOptions(@RequestParam String account) {
         return playerService.fetchPlayerOptions(account);
@@ -54,7 +54,7 @@ public class PlayerController {
 
     @PostMapping("/topScore")
     @ApiOperation("用户上分")
-    public ResultModel topScore(@RequestParam TopScoreParam topScoreParam){
+    public ResultModel topScore(@Validated TopScoreParam topScoreParam){
         return playerService.topScore(topScoreParam);
     }
 

@@ -19,7 +19,7 @@ public class TopScoreParam {
     @NotNull
     private List<Long> ids;
 
-    @ApiModelProperty(value = "昵称", required = true)
+    @ApiModelProperty(value = "需要添加的金额", required = true)
     @NotNull
     private BigDecimal score;
 

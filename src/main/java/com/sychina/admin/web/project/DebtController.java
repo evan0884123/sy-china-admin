@@ -50,7 +50,7 @@ public class DebtController {
         return debtService.delete(id);
     }
 
-    @PostMapping("/fetchDebtOptions")
+//    @PostMapping("/fetchDebtOptions")
     @ApiOperation("获取所有国债数据")
     public ResultModel<List<SelectOption>> fetchDebtOptions(@RequestParam String name) {
         return debtService.fetchDebtOptions(name);

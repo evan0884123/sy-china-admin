@@ -5,6 +5,7 @@ import com.sychina.admin.utils.LocalDateTimeHelper;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -16,8 +17,9 @@ import java.util.List;
 @Data
 public class MessageAddParam {
 
-    @ApiModelProperty(value = "玩家ID")
-    private List<Long> player;
+    @ApiModelProperty(value = "玩家账号list ")
+    @NotNull
+    private List<String> playerNames;
 
     @ApiModelProperty(value = "标题")
     private String title;

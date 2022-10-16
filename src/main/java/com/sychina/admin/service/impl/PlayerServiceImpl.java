@@ -111,7 +111,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
     @Transactional(rollbackFor = Exception.class)
     public void actionAmount(Players players, TopScoreParam topScoreParam) {
 
-        BigDecimal useBalance = players.getWithdrawBalance().add(topScoreParam.getScore());
+        BigDecimal useBalance = players.getUseBalance().add(topScoreParam.getScore());
         AccountChanges accountChanges = convert(players, topScoreParam, useBalance);
         players.setUseBalance(useBalance);
 

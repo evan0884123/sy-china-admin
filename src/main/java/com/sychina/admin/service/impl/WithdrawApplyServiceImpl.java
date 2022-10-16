@@ -84,6 +84,9 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
 
                 Players players = playerService.getById(withdrawApply.getPlayer());
                 BigDecimal acBalance = players.getWithdrawBalance().subtract(withdrawApply.getAmount());
+                if (acBalance.compareTo(BigDecimal.ZERO) < 0){
+                    return;
+                }
                 AccountChanges accountChanges = convert(withdrawApply, players, withdrawApplyParam, acBalance);
                 players.setWithdrawBalance(acBalance);
 
