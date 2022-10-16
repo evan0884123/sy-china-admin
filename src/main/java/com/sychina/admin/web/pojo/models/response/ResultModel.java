@@ -29,6 +29,19 @@ public class ResultModel<T> {
     protected Long timestamp = System.currentTimeMillis();
 
     /**
+     * token 失效
+     *
+     * @return
+     */
+    public static <T> ResultModel<T> unauthorized() {
+        return new ResultModel<T>(ResponseStatus.UNAUTHORIZED);
+    }
+
+    public static <T> ResultModel<T> unauthorized(T data) {
+        return new ResultModel<T>(ResponseStatus.UNAUTHORIZED, data);
+    }
+
+    /**
      * 返回成功
      *
      * @return 视图模型

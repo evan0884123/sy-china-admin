@@ -5,6 +5,7 @@ package com.sychina.admin.web.pojo.models.response;
  */
 public enum ResponseStatus {
 
+    UNAUTHORIZED("unauthorized",401),
     EXISTS("exists", 100),
     SUCCESS("success", 200),
     FAILURE("failure", 500),
