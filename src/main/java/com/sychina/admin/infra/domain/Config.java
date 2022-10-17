@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.models.auth.In;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -21,7 +22,7 @@ public class Config {
      *
      */
     @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private String id;
+    private Long id;
 
     /**
      * 'Icon'
@@ -82,6 +83,16 @@ public class Config {
      * 共享金提现生命周期(单位:月)
      */
     private String smWithdrawLifeCycle;
+
+    /**
+     * 共享金开关(0-关 1-开)
+     */
+    private Integer smSwitch;
+
+    /**
+     * 下载二维码图片地址
+     */
+    private String downloadQrCodeImg;
 
     /**
      * '创建时间'

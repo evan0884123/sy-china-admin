@@ -4,8 +4,6 @@ import com.sychina.admin.infra.domain.BankInfos;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
-
 /**
  * Description:
  *
@@ -38,6 +36,9 @@ public class BankParam {
     @ApiModelProperty(value = "银行卡绑定身份证号码")
     private String cardIdNumber;
 
+    @ApiModelProperty(value = "核实(0-未 1-已)")
+    private Integer verified;
+
     public BankInfos convert() {
 
         BankInfos bankInfo = new BankInfos();
@@ -47,7 +48,8 @@ public class BankParam {
                 .setCardNumber(this.getCardNumber())
                 .setCardMaster(this.getCardMaster())
                 .setCardPhoneNumber(this.getCardPhoneNumber())
-                .setCardIdNumber(this.getCardIdNumber());
+                .setCardIdNumber(this.getCardIdNumber())
+                .setVerified(this.getVerified());
 
         return bankInfo;
     }

@@ -20,7 +20,10 @@ public class BankQuery extends PageQuery {
     @ApiModelProperty(value = "开户银行")
     private String bank;
 
-    @ApiModelProperty(value = "0-创建时间, 1-修改时间",required = true)
+    @ApiModelProperty(value = "核实(0-未 1-已)")
+    private Integer verified;
+
+    @ApiModelProperty(value = "0-创建时间, 1-修改时间", required = true)
     @NotNull
     private Integer timeType;
 }

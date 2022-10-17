@@ -62,6 +62,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Projects> imp
 
         QueryWrapper<Projects> wrapper = new QueryWrapper<>();
         wrapper.likeRight(StringUtils.isNotBlank(projectQuery.getName()), "`name`", projectQuery.getName());
+        wrapper.likeRight(StringUtils.isNotBlank(projectQuery.getDebtName()), "`debt_name`", projectQuery.getDebtName());
+        wrapper.likeRight(StringUtils.isNotBlank(projectQuery.getDebtNumbering()), "`debt_numbering`", projectQuery.getDebtNumbering());
         wrapper.eq(projectQuery.getStatus() != null, "`status`", projectQuery.getStatus());
         wrapper.between(projectQuery.getTimeType() == 0, "`create`", projectQuery.getStartTime(), projectQuery.getEndTime());
         wrapper.between(projectQuery.getTimeType() == 1, "`update`", projectQuery.getStartTime(), projectQuery.getEndTime());

@@ -1,12 +1,12 @@
 package com.sychina.admin.web.pojo.params;
 
+import com.alibaba.fastjson.JSONObject;
 import com.sychina.admin.infra.domain.Projects;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.util.Assert;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 /**
@@ -57,14 +57,18 @@ public class ProjectParam {
 
     public Projects convert() {
 
+        String[] dirs = this.getDir().split(",");
+        String[] wdls = this.getWithdrawLc().split(",");
+        Assert.isTrue(dirs.length == wdls.length, "项目日利率和项目提现天数的数量必须对应");
+
         Projects projects = new Projects();
         projects.setName(this.getName())
                 .setInvestThreshold(this.getInvestThreshold())
                 .setLifeCycle(this.getLifeCycle())
-                .setDir(this.getDir())
+                .setDir(JSONObject.toJSONString(dirs))
                 .setFbBalance(this.getFbBalance())
                 .setFbWithdraw(this.getFbWithdraw())
-                .setWithdrawLc(this.getWithdrawLc())
+                .setWithdrawLc(JSONObject.toJSONString(wdls))
                 .setWithdrawRate(this.getWithdrawRate())
                 .setWithdrawThreshold(this.getWithdrawThreshold())
                 .setStatus(this.getStatus());

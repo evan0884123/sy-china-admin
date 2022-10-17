@@ -17,6 +17,9 @@ public class DebtRecordQuery extends PageQuery {
     @ApiModelProperty(value = "国债名称")
     private String debtName;
 
+    @ApiModelProperty(value = "国债编号")
+    private String debtNumbering;
+
     @ApiModelProperty(value = "玩家姓名")
     private String playerName;
 

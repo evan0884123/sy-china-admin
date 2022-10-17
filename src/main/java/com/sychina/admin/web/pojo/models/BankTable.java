@@ -39,6 +39,9 @@ public class BankTable {
     @ApiModelProperty(value = "银行卡绑定身份证号码")
     private String cardIdNumber;
 
+    @ApiModelProperty(value = "核实(0-未 1-已)")
+    private Integer verified;
+
     @ApiModelProperty(value = "创建时间")
     private Long create;
 
@@ -56,6 +59,7 @@ public class BankTable {
                 .setCardMaster(record.getCardMaster())
                 .setCardPhoneNumber(record.getCardPhoneNumber())
                 .setCardIdNumber(record.getCardIdNumber())
+                .setVerified(record.getVerified())
                 .setCreate(record.getCreate())
                 .setUpdate(record.getUpdate());
     }

@@ -1,15 +1,18 @@
-package com.sychina.admin.web.pojo.params;
+package com.sychina.admin.web.pojo.models;
 
 import com.sychina.admin.infra.domain.Config;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * Description:
+ *
  * @author Administrator
  */
 @Data
-public class ConfigParam {
+@Accessors(chain = true)
+public class ConfigTable {
 
     @ApiModelProperty(value = "id")
     private Long id;
@@ -56,25 +59,32 @@ public class ConfigParam {
     @ApiModelProperty(value = "下载二维码图片地址")
     private String downloadQrCodeImg;
 
-    public Config convert() {
+    @ApiModelProperty(value = "创建时间")
+    private Long create;
 
-        Config config = new Config();
-        config.setId(this.getId())
-                .setIcon(this.getIcon())
-                .setAbout(this.getAbout())
-                .setVision(this.getVision())
-                .setProject(this.getProject())
-                .setCustomer(this.getCustomer())
-                .setDutyOne(this.getDutyOne())
-                .setDutyTwo(this.getDutyTwo())
-                .setVideo(this.getVideo())
-                .setSmScale(this.getSmScale())
-                .setSmYearRate(this.getSmYearRate())
-                .setSmWithdrawThreshold(this.getSmWithdrawThreshold())
-                .setSmWithdrawLifeCycle(this.getSmWithdrawLifeCycle())
-                .setSmSwitch(this.getSmSwitch())
-                .setDownloadQrCodeImg(this.getDownloadQrCodeImg());
+    @ApiModelProperty(value = "修改时间")
+    private Long update;
 
-        return config;
+    public ConfigTable(Config record) {
+
+        this.setId(record.getId())
+                .setIcon(record.getIcon())
+                .setAbout(record.getAbout())
+                .setVision(record.getVision())
+                .setProject(record.getProject())
+                .setProject(record.getProject())
+                .setCustomer(record.getCustomer())
+                .setDutyOne(record.getDutyOne())
+                .setDutyTwo(record.getDutyTwo())
+                .setVideo(record.getVideo())
+                .setSmScale(record.getSmScale())
+                .setSmYearRate(record.getSmYearRate())
+                .setSmWithdrawThreshold(record.getSmWithdrawThreshold())
+                .setSmWithdrawLifeCycle(record.getSmWithdrawLifeCycle())
+                .setSmSwitch(record.getSmSwitch())
+                .setDownloadQrCodeImg(record.getDownloadQrCodeImg())
+                .setCreate(record.getCreate())
+                .setUpdate(record.getUpdate());
     }
+
 }

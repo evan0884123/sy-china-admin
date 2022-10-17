@@ -127,6 +127,16 @@ public class ProjectRecords {
     private Long smLatestWithdraw;
 
     /**
+     * '国债编号'
+     */
+    private String debtNumbering;
+
+    /**
+     * '转换共享金阶段时间'
+     */
+    private Long smTransferTime;
+
+    /**
      * '创建时间'
      */
     @TableField("`create`")

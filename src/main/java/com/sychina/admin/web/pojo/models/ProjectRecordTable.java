@@ -83,6 +83,12 @@ public class ProjectRecordTable {
     @ApiModelProperty(value = "共享金上次提现时间")
     private Long smLatestWithdraw;
 
+    @ApiModelProperty(value = "国债编号")
+    private String debtNumbering;
+
+    @ApiModelProperty(value = "转换共享金阶段时间")
+    private Long smTransferTime;
+
     @ApiModelProperty(value = "创建时间")
     private Long create;
 
@@ -113,6 +119,8 @@ public class ProjectRecordTable {
                 .setSmGrandWithdraw(record.getSmGrandWithdraw())
                 .setSmWithdrawThreshold(record.getSmWithdrawThreshold())
                 .setSmLatestWithdraw(record.getSmLatestWithdraw())
+                .setDebtNumbering(record.getDebtNumbering())
+                .setSmTransferTime(record.getSmTransferTime())
                 .setCreate(record.getCreate())
                 .setUpdate(record.getUpdate());
     }

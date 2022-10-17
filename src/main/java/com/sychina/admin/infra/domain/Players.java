@@ -111,6 +111,36 @@ public class Players {
     private Integer status;
 
     /**
+     * '今日收益'
+     */
+    private BigDecimal todayPromote;
+
+    /**
+     * '身份证正面照'
+     */
+    private String idFrontImg;
+
+    /**
+     * '身份证反面照'
+     */
+    private String idBackImg;
+
+    /**
+     * '本人正面照'
+     */
+    private String peopleImg;
+
+    /**
+     * '本人手持身份证正面照'
+     */
+    private String peopleWithIdImg;
+
+    /**
+     * '最后登录时间'
+     */
+    private Long lastLoginTime;
+
+    /**
      * '创建时间'
      */
     @TableField("`create`")

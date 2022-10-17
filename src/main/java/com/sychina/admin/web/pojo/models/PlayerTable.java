@@ -67,6 +67,24 @@ public class PlayerTable {
     @ApiModelProperty(value = "状态(0-禁用 1-正常)")
     private Integer status;
 
+    @ApiModelProperty(value = "今日收益")
+    private BigDecimal todayPromote;
+
+    @ApiModelProperty(value = "身份证正面照")
+    private String idFrontImg;
+
+    @ApiModelProperty(value = "身份证反面照")
+    private String idBackImg;
+
+    @ApiModelProperty(value = "本人正面照")
+    private String peopleImg;
+
+    @ApiModelProperty(value = "本人手持身份证正面照")
+    private String peopleWithIdImg;
+
+    @ApiModelProperty(value = "最后登录时间")
+    private Long lastLoginTime;
+
     @ApiModelProperty(value = "创建时间")
     private Long create;
 
@@ -88,10 +106,16 @@ public class PlayerTable {
                 .setRealName(record.getRealName())
                 .setIdNumber(record.getIdNumber())
                 .setPhoneNumber(record.getPhoneNumber())
-                .setId(record.getId())
+                .setIp(record.getIp())
                 .setIsVerifyManager(record.getIsVerifyManager())
                 .setInviteCode(record.getInviteCode())
                 .setStatus(record.getStatus())
+                .setTodayPromote(record.getTodayPromote())
+                .setIdFrontImg(record.getIdFrontImg())
+                .setIdBackImg(record.getIdBackImg())
+                .setPeopleImg(record.getPeopleImg())
+                .setPeopleWithIdImg(record.getPeopleWithIdImg())
+                .setLastLoginTime(record.getLastLoginTime())
                 .setCreate(record.getCreate())
                 .setUpdate(record.getUpdate());
     }

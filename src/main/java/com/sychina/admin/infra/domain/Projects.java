@@ -66,7 +66,9 @@ public class Projects {
     private BigDecimal fbWithdraw;
 
     /**
-     * '项目提现天数'
+     * '项目提现天数'  和项目日利率（dir） 一一对应，比如：
+     * dir -> [0.1, 0.2, 0.3]
+     * withdrawLc -> [1, 3, 5]
      */
     private String withdrawLc;
 

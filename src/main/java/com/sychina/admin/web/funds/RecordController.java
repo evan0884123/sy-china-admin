@@ -36,7 +36,7 @@ public class RecordController {
     }
 
     @PostMapping("/debtRecord")
-    @ApiOperation("获取项目购买信息")
+    @ApiOperation("获取国债购买信息")
     public ResultModel getDebtRecord(@Validated DebtRecordQuery recordQuery) {
         return debtRecordService.loadTable(recordQuery);
     }

@@ -31,6 +31,11 @@ public class DebtRecords {
      */
     private String debtName;
 
+    /**
+     * '国债编号'
+     */
+    private String debtNumbering;
+
 
     /**
      * '玩家ID'

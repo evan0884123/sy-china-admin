@@ -16,6 +16,7 @@ import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.PlayerParam;
 import com.sychina.admin.web.pojo.params.PlayerQuery;
 import com.sychina.admin.web.pojo.params.TopScoreParam;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,8 +40,17 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
     public ResultModel loadTable(PlayerQuery playerQuery) {
 
         QueryWrapper<Players> wrapper = new QueryWrapper<>();
+        wrapper.likeRight(StringUtils.isNotBlank(playerQuery.getAccount()), "account", playerQuery.getAccount());
+        wrapper.eq(playerQuery.getVIp() != null, "v_ip", playerQuery.getVIp());
+        wrapper.like(StringUtils.isNotBlank(playerQuery.getLevelInfo()), "level_info", playerQuery.getLevelInfo());
+        wrapper.likeRight(StringUtils.isNotBlank(playerQuery.getRealName()), "real_name", playerQuery.getRealName());
+        wrapper.likeRight(StringUtils.isNotBlank(playerQuery.getIdNumber()), "id_number", playerQuery.getIdNumber());
+        wrapper.likeRight(StringUtils.isNotBlank(playerQuery.getPhoneNumber()), "phone_number", playerQuery.getPhoneNumber());
+        wrapper.eq(playerQuery.getIsVerifyManager() != null, "is_verify_manager", playerQuery.getIsVerifyManager());
+        wrapper.eq(playerQuery.getStatus() != null, "status", playerQuery.getStatus());
         wrapper.between(playerQuery.getTimeType() == 0, "`create`", playerQuery.getStartTime(), playerQuery.getEndTime());
         wrapper.between(playerQuery.getTimeType() == 1, "`update`", playerQuery.getStartTime(), playerQuery.getEndTime());
+        wrapper.between(playerQuery.getTimeType() == 2, "`last_login_time`", playerQuery.getStartTime(), playerQuery.getEndTime());
 
         IPage page = baseMapper.selectPage(playerQuery.page(), wrapper);
 

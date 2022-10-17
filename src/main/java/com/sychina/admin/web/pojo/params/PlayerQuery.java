@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
 
 /**
  * Description:
@@ -39,7 +38,7 @@ public class PlayerQuery extends PageQuery {
     @ApiModelProperty(value = "状态(0-禁用 1-正常)")
     private Integer status;
 
-    @ApiModelProperty(value = "0-创建时间, 1-修改时间",required = true)
+    @ApiModelProperty(value = "0-创建时间, 1-修改时间, 2-登录时间", required = true)
     @NotNull
     private Integer timeType;
 }

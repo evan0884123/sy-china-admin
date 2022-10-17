@@ -23,6 +23,9 @@ public class DebtRecordTable {
     @ApiModelProperty(value = "国债名称")
     private String debtName;
 
+    @ApiModelProperty(value = "国债编号")
+    private String debtNumbering;
+
     @ApiModelProperty(value = "玩家ID")
     private Long player;
 
@@ -43,6 +46,7 @@ public class DebtRecordTable {
         this.setId(record.getId())
                 .setDebt(record.getDebt())
                 .setDebtName(record.getDebtName())
+                .setDebtNumbering(record.getDebtNumbering())
                 .setPlayer(record.getPlayer())
                 .setPlayerName(record.getPlayerName())
                 .setInvest(record.getInvest())

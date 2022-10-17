@@ -26,6 +26,7 @@ public class DebtRecordServiceImpl extends ServiceImpl<DebtRecordMapper, DebtRec
         QueryWrapper<DebtRecords> wrapper = new QueryWrapper<>();
         wrapper.likeRight(StringUtils.isNotBlank(recordQuery.getDebtName()), "debt_name", recordQuery.getDebtName());
         wrapper.likeRight(StringUtils.isNotBlank(recordQuery.getPlayerName()), "player_name", recordQuery.getPlayerName());
+        wrapper.likeRight(StringUtils.isNotBlank(recordQuery.getDebtNumbering()), "debt_numbering", recordQuery.getDebtNumbering());
         wrapper.eq(recordQuery.getInvest() != null, "invest", recordQuery.getInvest());
         wrapper.between(recordQuery.getTimeType() == 0, "`create`", recordQuery.getStartTime(), recordQuery.getEndTime());
         wrapper.between(recordQuery.getTimeType() == 1, "`update`", recordQuery.getStartTime(), recordQuery.getEndTime());
