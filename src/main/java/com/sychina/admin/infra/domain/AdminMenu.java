@@ -17,7 +17,7 @@ public class AdminMenu {
     /**
      *
      */
-    @TableId(type = IdType.ASSIGN_ID)
+    @TableId(type = IdType.AUTO)
     private Integer id;
 
     /**

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.sychina.admin.utils.UUIDGenerator;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 后台用户信息
@@ -12,12 +13,9 @@ import lombok.Data;
  * @author Administrator
  */
 @Data
+@NoArgsConstructor
 @TableName("admin_user")
 public class AdminUser {
-
-    public AdminUser() {
-        this.id = UUIDGenerator.random();
-    }
 
     /**
      *

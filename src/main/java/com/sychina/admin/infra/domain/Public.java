@@ -18,7 +18,7 @@ public class Public {
     /**
      *
      */
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
+    @TableId(value = "id", type = IdType.AUTO)
     private String id;
 
     /**
