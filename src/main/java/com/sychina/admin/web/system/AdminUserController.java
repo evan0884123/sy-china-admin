@@ -91,12 +91,6 @@ public class AdminUserController {
         return userServiceImpl.fetchUserOptions();
     }
 
-    @PostMapping("/loadMenuList")
-    @ApiOperation("获取菜单信息")
-    public ResultModel<List<SelectOption>> loadMenuList() {
-        return userServiceImpl.loadMenuList();
-    }
-
 
     @Autowired
     public void setUserService(AdminUserServiceImpl userServiceImpl) {

@@ -53,6 +53,12 @@ public class AdminRoleController {
         return adminRoleServiceImpl.fetchRoleOption();
     }
 
+    @PostMapping("/loadMenuList")
+    @ApiOperation("获取菜单信息")
+    public ResultModel<List<SelectOption>> loadMenuList() {
+        return adminRoleServiceImpl.loadMenuList();
+    }
+
     @Autowired
     public void setRoleService(AdminRoleServiceImpl adminRoleServiceImpl) {
         this.adminRoleServiceImpl = adminRoleServiceImpl;

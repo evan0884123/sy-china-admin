@@ -116,6 +116,21 @@ public class AdminRoleServiceImpl extends ServiceImpl<AdminRoleMapper, AdminRole
         return ResultModel.succeed(roleSelect);
     }
 
+    public ResultModel<List<SelectOption>> loadMenuList() {
+
+        List<AdminMenu> adminMenus = adminMenuMapper.selectList(new QueryWrapper<>());
+        List<SelectOption> menuSelect = new ArrayList<>();
+
+        adminMenus.forEach(adminMenu -> {
+            SelectOption selectOption = new SelectOption();
+            selectOption.setLabel(adminMenu.getName());
+            selectOption.setValue(adminMenu.getId() + "");
+            menuSelect.add(selectOption);
+        });
+
+        return ResultModel.succeed(menuSelect);
+    }
+
     @Autowired
     public void setMenuMapper(AdminMenuMapper adminMenuMapper) {
         this.adminMenuMapper = adminMenuMapper;

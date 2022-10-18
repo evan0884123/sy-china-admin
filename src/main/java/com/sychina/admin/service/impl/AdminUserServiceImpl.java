@@ -4,13 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sychina.admin.common.RequestContext;
-import com.sychina.admin.utils.StringGenerator;
 import com.sychina.admin.infra.domain.AdminMenu;
 import com.sychina.admin.infra.domain.AdminRole;
 import com.sychina.admin.infra.domain.AdminUser;
 import com.sychina.admin.infra.mapper.AdminMenuMapper;
 import com.sychina.admin.infra.mapper.AdminUserMapper;
 import com.sychina.admin.service.IAdminUserService;
+import com.sychina.admin.utils.StringGenerator;
 import com.sychina.admin.web.pojo.SelectOption;
 import com.sychina.admin.web.pojo.models.AdminUserInfoModel;
 import com.sychina.admin.web.pojo.models.AdminUserTable;
@@ -211,21 +211,6 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
         });
 
         return ResultModel.succeed(userSelect);
-    }
-
-    public ResultModel<List<SelectOption>> loadMenuList() {
-
-        List<AdminMenu> adminMenus = adminMenuMapper.selectList(new QueryWrapper<>());
-        List<SelectOption> menuSelect = new ArrayList<>();
-
-        adminMenus.forEach(adminMenu -> {
-            SelectOption selectOption = new SelectOption();
-            selectOption.setLabel(adminMenu.getName());
-            selectOption.setValue(adminMenu.getId() + "");
-            menuSelect.add(selectOption);
-        });
-
-        return ResultModel.succeed(menuSelect);
     }
 
     @Autowired

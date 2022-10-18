@@ -27,9 +27,6 @@ public class HallTodayStaModel {
     @ApiModelProperty(value = "今日充值总额")
     private BigDecimal tTotalRecharge;
 
-    @ApiModelProperty(value = "今日注册用户")
-    private Integer tRegisterUserNum;
-
     @ApiModelProperty(value = "今日提现笔数")
     private Integer tWithdrawCount;
 
@@ -44,6 +41,9 @@ public class HallTodayStaModel {
 
     @ApiModelProperty(value = "今日已提现金额")
     private BigDecimal tCompleteWithdraw;
+
+    @ApiModelProperty(value = "今日注册用户")
+    private Integer tRegisterUserNum;
 
     @ApiModelProperty(value = "今日登录人数")
     private Integer loginUserNum;

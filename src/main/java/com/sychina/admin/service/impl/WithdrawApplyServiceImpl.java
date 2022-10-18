@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sychina.admin.common.RedisLock;
 import com.sychina.admin.infra.domain.AccountChanges;
 import com.sychina.admin.infra.domain.Players;
+import com.sychina.admin.infra.domain.ProjectRecords;
 import com.sychina.admin.infra.domain.WithdrawApply;
 import com.sychina.admin.infra.mapper.WithdrawApplyMapper;
 import com.sychina.admin.service.IWithdrawApplyService;
@@ -30,6 +31,8 @@ import java.util.List;
 public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, WithdrawApply> implements IWithdrawApplyService {
 
     private PlayerServiceImpl playerService;
+
+    private ProjectRecordServiceImpl projectRecordService;
 
     private AccountChangeServiceImpl accountChangeService;
 
@@ -80,18 +83,50 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
     public void actionAmount(WithdrawApply withdrawApply, WithdrawApplyParam withdrawApplyParam) {
 
         if (!withdrawApply.getStatus().equals(withdrawApplyParam.getStatus())) {
+            BigDecimal balance = BigDecimal.ZERO;
+            AccountChanges accountChanges = null;
+            Players players = null;
+            ProjectRecords projectRecords= null;
+            // 返现金额提现 和 推广金提现
             if (withdrawApplyParam.getStatus() == 2) {
-
-                Players players = playerService.getById(withdrawApply.getPlayer());
-                BigDecimal acBalance = players.getWithdrawBalance().subtract(withdrawApply.getAmount());
-                if (acBalance.compareTo(BigDecimal.ZERO) < 0){
+                switch (withdrawApply.getWdType()){
+                    case 0:
+                        projectRecords = projectRecordService.getById(withdrawApply.getWdConn());
+                        if (projectRecords.getStatus() == 0){
+                            balance = projectRecords.getWithdrawAmount().subtract(withdrawApply.getAmount());
+                        }else if (projectRecords.getStatus() == 1){
+                            balance = projectRecords.getSmGrandWithdraw().subtract(withdrawApply.getAmount());
+                        }
+                        accountChanges = convert(withdrawApply, players, withdrawApplyParam, balance,3);
+                        projectRecords.setWithdrawAmount(balance);
+                        break;
+                    case 1:
+                        players = playerService.getById(withdrawApply.getPlayer());
+                        balance = players.getPromoteBalance().subtract(withdrawApply.getAmount());
+                        accountChanges = convert(withdrawApply, players, withdrawApplyParam, balance,2);
+                        players.setPromoteBalance(balance);
+                        break;
+                    case 2:
+                        players = playerService.getById(withdrawApply.getPlayer());
+                        balance = players.getWithdrawBalance().subtract(withdrawApply.getAmount());
+                        accountChanges = convert(withdrawApply, players, withdrawApplyParam, balance,1);
+                        players.setWithdrawBalance(balance);
+                        break;
+                }
+                if (balance.compareTo(BigDecimal.ZERO) < 0){
                     return;
                 }
-                AccountChanges accountChanges = convert(withdrawApply, players, withdrawApplyParam, acBalance);
-                players.setWithdrawBalance(acBalance);
+                //
+                if (projectRecords != null){
+                    projectRecordService.saveOrUpdate(projectRecords);
+                } else if (players != null){
+                    playerService.saveOrUpdate(players);
+                }
 
-                playerService.saveOrUpdate(players);
-                accountChangeService.saveOrUpdate(accountChanges);
+                //
+                if (accountChanges != null){
+                    accountChangeService.saveOrUpdate(accountChanges);
+                }
             }
             withdrawApply.setStatus(withdrawApplyParam.getStatus());
         }
@@ -100,15 +135,17 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
         saveOrUpdate(withdrawApply);
     }
 
-    private AccountChanges convert(WithdrawApply withdrawApply, Players players, WithdrawApplyParam withdrawApplyParam, BigDecimal acBalance) {
+    private AccountChanges convert(WithdrawApply withdrawApply, Players players,
+                                   WithdrawApplyParam withdrawApplyParam, BigDecimal balance,
+                                   Integer amountType) {
 
         AccountChanges accountChanges = new AccountChanges()
                 .setPlayer(players.getId())
                 .setPlayerName(players.getAccount())
-                .setAmountType(1)
+                .setAmountType(amountType)
                 .setBcBalance(players.getWithdrawBalance())
                 .setAmount(withdrawApply.getAmount())
-                .setAcBalance(acBalance)
+                .setAcBalance(balance)
                 .setChangeType(1)
                 .setChangeDescribe(withdrawApplyParam.getRemark())
                 .setConnId(withdrawApply.getId().toString());
@@ -125,6 +162,11 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
     @Autowired
     public void setPlayerService(PlayerServiceImpl playerService) {
         this.playerService = playerService;
+    }
+
+    @Autowired
+    public void setProjectRecordService(ProjectRecordServiceImpl projectRecordService) {
+        this.projectRecordService = projectRecordService;
     }
 
     @Autowired

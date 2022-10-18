@@ -80,6 +80,11 @@ public class WithdrawApply {
     private String remark;
 
     /**
+     * 提现关联记录ID
+     */
+    private Long wdConn;
+
+    /**
      * '创建时间'
      */
     @TableField("`create`")
