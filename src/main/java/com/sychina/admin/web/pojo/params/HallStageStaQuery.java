@@ -6,8 +6,9 @@ import lombok.Data;
 import org.springframework.util.Assert;
 
 import javax.validation.constraints.NotNull;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Description:
@@ -28,8 +29,9 @@ public class HallStageStaQuery {
     public Long startTime() {
         Long startTime = TimeUtil.getFirstDayOfWeek();
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        Assert.isTrue(this.getCount() == 1 || this.getCount() == 0, "阶段查询参数错误");
+        calendar.setTimeInMillis(ZonedDateTime.now(ZoneId.of("Asia/Shanghai")).toInstant().toEpochMilli());
+        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+        Assert.isTrue(this.getStage() == 1 || this.getStage() == 0, "阶段查询参数错误");
         switch (this.getStage()) {
             case 0:
                 calendar.set(Calendar.DAY_OF_WEEK, 2);
@@ -37,7 +39,6 @@ public class HallStageStaQuery {
                 startTime = calendar.getTimeInMillis();
                 break;
             case 1:
-                calendar.set(Calendar.MONTH, 0);
                 calendar.set(Calendar.DAY_OF_MONTH, 1);
                 calendar.add(Calendar.MONTH, this.getCount());
                 startTime = calendar.getTimeInMillis();
@@ -53,19 +54,21 @@ public class HallStageStaQuery {
 
         Long endTime = TimeUtil.getLastDayOfWeek();
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        Assert.isTrue(this.getCount() == 1 || this.getCount() == 0, "阶段查询参数错误");
+        calendar.setTimeInMillis(ZonedDateTime.now(ZoneId.of("Asia/Shanghai")).toInstant().toEpochMilli());
+        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
+        Assert.isTrue(this.getStage() == 1 || this.getStage() == 0, "阶段查询参数错误");
         switch (this.getStage()) {
             case 0:
-                calendar.set(Calendar.DAY_OF_WEEK, 2);
-                calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + 6);
                 calendar.add(Calendar.WEEK_OF_YEAR, this.getCount());
+                calendar.set(Calendar.DAY_OF_WEEK, 2);
+                calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + 5);
                 endTime = calendar.getTimeInMillis();
                 break;
             case 1:
+                calendar.add(Calendar.MONTH, this.getCount());
                 calendar.add(Calendar.MONTH, 1);
                 calendar.set(Calendar.DAY_OF_MONTH, 0);
-                calendar.add(Calendar.MONTH, this.getCount());
+                calendar.add(Calendar.DAY_OF_MONTH, -1);
                 endTime = calendar.getTimeInMillis();
                 break;
             default:

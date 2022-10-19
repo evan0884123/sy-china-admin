@@ -1,5 +1,6 @@
 package com.sychina.admin.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -18,6 +19,7 @@ import com.sychina.admin.web.pojo.params.PlayerQuery;
 import com.sychina.admin.web.pojo.params.TopScoreParam;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -34,6 +36,8 @@ import java.util.List;
 public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implements IPlayerService {
 
     private AccountChangeServiceImpl accountChangeService;
+
+    private RedisTemplate redisTemplate;
 
     private RedisLockUtil lockUtil;
 
@@ -73,6 +77,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
                 .setUpdate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
 
         baseMapper.updateById(players);
+        redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players.getId(), JSON.toJSONString(players));
 
         return ResultModel.succeed();
     }
@@ -80,6 +85,8 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
     public ResultModel delete(Long id) {
 
         baseMapper.deleteById(id);
+
+        redisTemplate.opsForHash().delete(RedisLock.PlayersIDMap, id);
 
         return ResultModel.succeed();
     }
@@ -108,6 +115,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
             lockUtil.tryLock(lockKey, 15);
             try {
                 actionAmount(players, topScoreParam);
+                redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players.getId(), JSON.toJSONString(players));
             } catch (Exception e) {
                 log.error("[WITHDRAW_APPLY][ERROR] action amount error", e);
             } finally {
@@ -155,5 +163,10 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
     @Autowired
     public void setLockUtil(RedisLockUtil lockUtil) {
         this.lockUtil = lockUtil;
+    }
+
+    @Autowired
+    public void setRedisTemplate(RedisTemplate redisTemplate) {
+        this.redisTemplate = redisTemplate;
     }
 }

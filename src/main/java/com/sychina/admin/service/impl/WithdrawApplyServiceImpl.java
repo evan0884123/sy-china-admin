@@ -1,5 +1,6 @@
 package com.sychina.admin.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -17,6 +18,7 @@ import com.sychina.admin.web.pojo.params.WithdrawApplyParam;
 import com.sychina.admin.web.pojo.params.WithdrawApplyQuery;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +37,8 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
     private ProjectRecordServiceImpl projectRecordService;
 
     private AccountChangeServiceImpl accountChangeService;
+
+    private RedisTemplate redisTemplate;
 
     private RedisLockUtil lockUtil;
 
@@ -86,45 +90,46 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
             BigDecimal balance = BigDecimal.ZERO;
             AccountChanges accountChanges = null;
             Players players = null;
-            ProjectRecords projectRecords= null;
+            ProjectRecords projectRecords = null;
             // 返现金额提现 和 推广金提现
             if (withdrawApplyParam.getStatus() == 2) {
-                switch (withdrawApply.getWdType()){
+                switch (withdrawApply.getWdType()) {
                     case 0:
                         projectRecords = projectRecordService.getById(withdrawApply.getWdConn());
-                        if (projectRecords.getStatus() == 0){
+                        if (projectRecords.getStatus() == 0) {
                             balance = projectRecords.getWithdrawAmount().subtract(withdrawApply.getAmount());
-                        }else if (projectRecords.getStatus() == 1){
+                        } else if (projectRecords.getStatus() == 1) {
                             balance = projectRecords.getSmGrandWithdraw().subtract(withdrawApply.getAmount());
                         }
-                        accountChanges = convert(withdrawApply, players, withdrawApplyParam, balance,3);
+                        accountChanges = convert(withdrawApply, players, withdrawApplyParam, balance, 3);
                         projectRecords.setWithdrawAmount(balance);
                         break;
                     case 1:
                         players = playerService.getById(withdrawApply.getPlayer());
                         balance = players.getPromoteBalance().subtract(withdrawApply.getAmount());
-                        accountChanges = convert(withdrawApply, players, withdrawApplyParam, balance,2);
+                        accountChanges = convert(withdrawApply, players, withdrawApplyParam, balance, 2);
                         players.setPromoteBalance(balance);
                         break;
                     case 2:
                         players = playerService.getById(withdrawApply.getPlayer());
                         balance = players.getWithdrawBalance().subtract(withdrawApply.getAmount());
-                        accountChanges = convert(withdrawApply, players, withdrawApplyParam, balance,1);
+                        accountChanges = convert(withdrawApply, players, withdrawApplyParam, balance, 1);
                         players.setWithdrawBalance(balance);
                         break;
                 }
-                if (balance.compareTo(BigDecimal.ZERO) < 0){
+                if (balance.compareTo(BigDecimal.ZERO) < 0) {
                     return;
                 }
                 //
-                if (projectRecords != null){
+                if (projectRecords != null) {
                     projectRecordService.saveOrUpdate(projectRecords);
-                } else if (players != null){
+                } else if (players != null) {
                     playerService.saveOrUpdate(players);
+                    redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players.getId(), JSON.toJSONString(players));
                 }
 
                 //
-                if (accountChanges != null){
+                if (accountChanges != null) {
                     accountChangeService.saveOrUpdate(accountChanges);
                 }
             }
@@ -172,5 +177,10 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
     @Autowired
     public void setAccountChangeService(AccountChangeServiceImpl accountChangeService) {
         this.accountChangeService = accountChangeService;
+    }
+
+    @Autowired
+    public void setRedisTemplate(RedisTemplate redisTemplate) {
+        this.redisTemplate = redisTemplate;
     }
 }
