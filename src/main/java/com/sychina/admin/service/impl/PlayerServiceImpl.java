@@ -77,7 +77,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
                 .setUpdate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
 
         baseMapper.updateById(players);
-        redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players.getId(), JSON.toJSONString(players));
+        redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
 
         return ResultModel.succeed();
     }
@@ -86,7 +86,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 
         baseMapper.deleteById(id);
 
-        redisTemplate.opsForHash().delete(RedisLock.PlayersIDMap, id);
+        redisTemplate.opsForHash().delete(RedisLock.PlayersIDMap, id.toString());
 
         return ResultModel.succeed();
     }
@@ -115,7 +115,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
             lockUtil.tryLock(lockKey, 15);
             try {
                 actionAmount(players, scoreParam);
-                redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players.getId(), JSON.toJSONString(players));
+                redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
             } catch (Exception e) {
                 log.error("[WITHDRAW_APPLY][ERROR] action amount error", e);
             } finally {

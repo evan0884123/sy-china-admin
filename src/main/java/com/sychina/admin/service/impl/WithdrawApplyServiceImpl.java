@@ -109,7 +109,7 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
                     return;
                 }
                 playerService.saveOrUpdate(players);
-                redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players.getId(), JSON.toJSONString(players));
+                redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
 
                 AccountChanges accountChanges = convert(withdrawApply, players, withdrawApplyParam, balance, amountType);
                 accountChangeService.saveOrUpdate(accountChanges);
