@@ -13,11 +13,9 @@ import com.sychina.admin.service.IAdminUserService;
 import com.sychina.admin.utils.StringGenerator;
 import com.sychina.admin.web.pojo.SelectOption;
 import com.sychina.admin.web.pojo.models.AdminMenuModel;
-import com.sychina.admin.web.pojo.models.AdminUserInfoModel;
 import com.sychina.admin.web.pojo.models.AdminUserTable;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.AdminUserParam;
-import com.sychina.admin.web.pojo.params.AdminUserProfileQuery;
 import com.sychina.admin.web.pojo.params.AdminUserQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -45,7 +43,7 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
     /**
      * 从token获取用户名，并组合成页面需要的用户信息
      */
-    public ResultModel<AdminUserInfoModel> buildUserInfo() {
+    public ResultModel<AdminUserTable> buildUserInfo() {
 
         AdminUser adminUser = requestContext.getRequestUser();
         Assert.notNull(adminUser, "未找到该用户");
@@ -55,16 +53,11 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
         String[] menuId = adminRole.getMenus().split(",");
         List<AdminMenu> adminMenuList = adminMenuMapper.selectBatchIds(Arrays.asList(menuId));
 
-        AdminUserInfoModel adminUserInfo = new AdminUserInfoModel(adminUser).setAdminMenus(new AdminMenuModel().convert(adminMenuList));
+        AdminUserTable adminUserTable = new AdminUserTable(adminUser)
+                .setRoleName(adminRole.getName())
+                .setAdminMenus(new AdminMenuModel().convert(adminMenuList));
 
-        return ResultModel.succeed(adminUserInfo);
-    }
-
-    public ResultModel<AdminUserTable> getProfile(AdminUserProfileQuery profileQuery) {
-
-        AdminUserTable userTable = baseMapper.findByLoginName(profileQuery);
-
-        return ResultModel.succeed(userTable);
+        return ResultModel.succeed(adminUserTable);
     }
 
     /**

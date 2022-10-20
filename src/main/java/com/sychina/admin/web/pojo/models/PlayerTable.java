@@ -58,7 +58,7 @@ public class PlayerTable {
     @ApiModelProperty(value = "最后登陆IP")
     private String ip;
 
-    @ApiModelProperty(value = "是否认证经理人(0-否 1-是)")
+    @ApiModelProperty(value = "是否认证经理人(0-未提交 1-审核中 2-已验证)")
     private Integer isVerifyManager;
 
     @ApiModelProperty(value = "邀请码")

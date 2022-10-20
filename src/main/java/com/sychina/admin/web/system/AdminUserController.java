@@ -2,11 +2,9 @@ package com.sychina.admin.web.system;
 
 import com.sychina.admin.service.impl.AdminUserServiceImpl;
 import com.sychina.admin.web.pojo.SelectOption;
-import com.sychina.admin.web.pojo.models.AdminUserInfoModel;
 import com.sychina.admin.web.pojo.models.AdminUserTable;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.AdminUserParam;
-import com.sychina.admin.web.pojo.params.AdminUserProfileQuery;
 import com.sychina.admin.web.pojo.params.AdminUserQuery;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,15 +29,9 @@ public class AdminUserController {
 
     @PostMapping("/info")
     @ApiOperation("获取个人信息")
-    public ResultModel<AdminUserInfoModel> info() {
+    public ResultModel<AdminUserTable> info() {
 
         return userServiceImpl.buildUserInfo();
-    }
-
-    @PostMapping("/getProfile")
-    @ApiOperation("获取用户信息")
-    public ResultModel<AdminUserTable> getProfile(@Validated AdminUserProfileQuery profileQuery) {
-        return userServiceImpl.getProfile(profileQuery);
     }
 
     @PostMapping("/updateProfile")
@@ -53,7 +45,6 @@ public class AdminUserController {
     public ResultModel updatePassword(@RequestParam String id, String password, String oldPassword) {
         return userServiceImpl.updatePassword(id, password, oldPassword);
     }
-
 
 
     @PostMapping("/addUser")

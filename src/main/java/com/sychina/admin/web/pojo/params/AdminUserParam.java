@@ -16,7 +16,7 @@ public class AdminUserParam {
     @ApiModelProperty(value = "id")
     private String id;
 
-    @ApiModelProperty(value = "id", required = true)
+    @ApiModelProperty(value = "登录名", required = true)
     @NotEmpty
     private String loginName;
 

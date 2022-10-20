@@ -101,7 +101,7 @@ public class Players {
     private String ip;
 
     /**
-     * '是否认证经理人(0-否 1-是)'
+     * '是否认证经理人(0-未提交 1-审核中 2-已验证)'
      */
     private Integer isVerifyManager;
 
