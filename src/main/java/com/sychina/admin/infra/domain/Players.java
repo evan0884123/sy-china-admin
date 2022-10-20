@@ -61,6 +61,11 @@ public class Players {
     private BigDecimal totalRecharge;
 
     /**
+     * '项目可提现收益'
+     */
+    private BigDecimal projectBalance;
+
+    /**
      * 'VIP等级'
      */
     private Long vIp;

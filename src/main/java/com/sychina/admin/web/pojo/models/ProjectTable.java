@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 
 /**
@@ -70,10 +69,10 @@ public class ProjectTable {
                 .setDebtName(record.getDebtName())
                 .setInvestThreshold(record.getInvestThreshold())
                 .setLifeCycle(record.getLifeCycle())
-                .setDir(record.getDir())
+                .setDir(record.getDir() != null ? record.getDir().substring(1, record.getDir().length() - 1) : "")
                 .setFbBalance(record.getFbBalance())
                 .setFbWithdraw(record.getFbWithdraw())
-                .setWithdrawLc(record.getWithdrawLc())
+                .setWithdrawLc(record.getWithdrawLc() != null ? record.getWithdrawLc().substring(1, record.getWithdrawLc().length() - 1) : "")
                 .setWithdrawRate(record.getWithdrawRate())
                 .setWithdrawThreshold(record.getWithdrawThreshold())
                 .setStatus(record.getStatus())

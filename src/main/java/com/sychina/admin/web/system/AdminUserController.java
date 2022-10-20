@@ -30,7 +30,7 @@ public class AdminUserController {
     private AdminUserServiceImpl userServiceImpl;
 
     @PostMapping("/info")
-    @ApiOperation("获取用户信息")
+    @ApiOperation("获取个人信息")
     public ResultModel<AdminUserInfoModel> info() {
 
         return userServiceImpl.buildUserInfo();
@@ -53,6 +53,7 @@ public class AdminUserController {
     public ResultModel updatePassword(@RequestParam String id, String password, String oldPassword) {
         return userServiceImpl.updatePassword(id, password, oldPassword);
     }
+
 
 
     @PostMapping("/addUser")
@@ -86,7 +87,7 @@ public class AdminUserController {
     }
 
     @PostMapping("/fetchUserOptions")
-    @ApiOperation("获取用户")
+    @ApiOperation("获取用户SelectOption")
     public ResultModel<List<SelectOption>> fetchUserOptions() {
         return userServiceImpl.fetchUserOptions();
     }

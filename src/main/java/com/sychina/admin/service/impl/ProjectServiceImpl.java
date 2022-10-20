@@ -33,7 +33,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Projects> imp
 
     private DebtServiceImpl debtService;
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public ResultModel add(ProjectParam projectParam) {
 
         Debts debts = debtService.getOne(new QueryWrapper<Debts>().eq("numbering", projectParam.getDebtNumbering()));
@@ -52,7 +52,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Projects> imp
             String substring = mount.substring(1, mount.length() - 1);
             joiner.add(substring);
         }
-        debts.setMount(joiner.add(id + "").toString());
+        debts.setMount(joiner.add(projects.getId() + "").toString());
         debtService.updateById(debts);
 
         return ResultModel.succeed();

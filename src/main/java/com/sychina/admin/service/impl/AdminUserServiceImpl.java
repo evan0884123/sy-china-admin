@@ -12,6 +12,7 @@ import com.sychina.admin.infra.mapper.AdminUserMapper;
 import com.sychina.admin.service.IAdminUserService;
 import com.sychina.admin.utils.StringGenerator;
 import com.sychina.admin.web.pojo.SelectOption;
+import com.sychina.admin.web.pojo.models.AdminMenuModel;
 import com.sychina.admin.web.pojo.models.AdminUserInfoModel;
 import com.sychina.admin.web.pojo.models.AdminUserTable;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
@@ -54,7 +55,7 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
         String[] menuId = adminRole.getMenus().split(",");
         List<AdminMenu> adminMenuList = adminMenuMapper.selectBatchIds(Arrays.asList(menuId));
 
-        AdminUserInfoModel adminUserInfo = new AdminUserInfoModel(adminUser).setAdminMenus(adminMenuList);
+        AdminUserInfoModel adminUserInfo = new AdminUserInfoModel(adminUser).setAdminMenus(new AdminMenuModel().convert(adminMenuList));
 
         return ResultModel.succeed(adminUserInfo);
     }

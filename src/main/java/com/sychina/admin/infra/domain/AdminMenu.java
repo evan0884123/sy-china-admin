@@ -23,6 +23,16 @@ public class AdminMenu {
     /**
      * 菜单code
      */
+    private String parentCode;
+
+    /**
+     * 菜单名称
+     */
+    private String parentName;
+
+    /**
+     * 菜单code
+     */
     private String code;
 
     /**

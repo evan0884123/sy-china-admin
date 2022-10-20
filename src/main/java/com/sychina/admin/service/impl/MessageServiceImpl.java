@@ -17,7 +17,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -33,9 +32,13 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Messages> imp
 
     public ResultModel add(MessageAddParam messageParam) {
 
-        QueryWrapper<Players> wrapper = new QueryWrapper<Players>()
-                .in(!CollectionUtils.isEmpty(messageParam.getPlayerNames()), "account", messageParam.getPlayerNames());
-        List<Players> players = playerService.list(wrapper);
+        List<Players> players;
+        if (StringUtils.isBlank(messageParam.getPlayerNames())) {
+            players = playerService.list();
+        } else {
+            QueryWrapper<Players> wrapper = new QueryWrapper<Players>().in("account", messageParam.getPlayerNames().split(","));
+            players = playerService.list(wrapper);
+        }
 
         List<Messages> messagesList = new ArrayList<>();
         players.forEach(player -> {

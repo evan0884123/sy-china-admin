@@ -65,10 +65,10 @@ public class ProjectParam {
         projects.setName(this.getName())
                 .setInvestThreshold(this.getInvestThreshold())
                 .setLifeCycle(this.getLifeCycle())
-                .setDir(JSONObject.toJSONString(dirs))
+                .setDir("[" + this.getDir() + "]")
                 .setFbBalance(this.getFbBalance())
                 .setFbWithdraw(this.getFbWithdraw())
-                .setWithdrawLc(JSONObject.toJSONString(wdls))
+                .setWithdrawLc("[" + this.getWithdrawLc() + "]")
                 .setWithdrawRate(this.getWithdrawRate())
                 .setWithdrawThreshold(this.getWithdrawThreshold())
                 .setStatus(this.getStatus());

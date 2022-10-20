@@ -37,7 +37,7 @@ public class DebtParam {
     private String total;
 
     @ApiModelProperty(value = "状态(0-关闭 1-启用)")
-    private String status;
+    private Integer status;
 
     public Debts convert() {
 

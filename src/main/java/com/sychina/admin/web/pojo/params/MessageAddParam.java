@@ -7,7 +7,6 @@ import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * Description:
@@ -18,13 +17,14 @@ import java.util.List;
 public class MessageAddParam {
 
     @ApiModelProperty(value = "玩家账号list ")
-    @NotNull
-    private List<String> playerNames;
+    private String playerNames;
 
     @ApiModelProperty(value = "标题")
+    @NotNull
     private String title;
 
     @ApiModelProperty(value = "内容")
+    @NotNull
     private String content;
 
     public Messages convert() {

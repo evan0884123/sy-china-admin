@@ -33,6 +33,10 @@ public class DebtServiceImpl extends ServiceImpl<DebtMapper, Debts> implements I
 
     public ResultModel add(DebtParam debtParam) {
 
+        Assert.isTrue(StringUtils.isNotBlank(debtParam.getNumbering()), "编号不能为空");
+        Debts selectOne = baseMapper.selectOne(new QueryWrapper<Debts>().eq("numbering", debtParam.getNumbering()));
+        Assert.isNull(selectOne, "编号重复");
+
         Debts debts = debtParam.convert()
                 .setName(debtParam.getName())
                 .setNumbering(debtParam.getNumbering())

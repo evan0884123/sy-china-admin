@@ -16,7 +16,7 @@ import com.sychina.admin.web.pojo.models.PlayerTable;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.PlayerParam;
 import com.sychina.admin.web.pojo.params.PlayerQuery;
-import com.sychina.admin.web.pojo.params.TopScoreParam;
+import com.sychina.admin.web.pojo.params.TopOrLowerScoreParam;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -106,15 +106,15 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
         return ResultModel.succeed(playerSelect);
     }
 
-    public ResultModel topScore(TopScoreParam topScoreParam) {
+    public ResultModel topOrLowerScore(TopOrLowerScoreParam scoreParam) {
 
-        List<Players> playersList = baseMapper.selectBatchIds(topScoreParam.getIds());
+        List<Players> playersList = baseMapper.selectBatchIds(scoreParam.getIds());
         playersList.forEach(players -> {
 
             String lockKey = RedisLock.playBalanceChange + players.getId();
             lockUtil.tryLock(lockKey, 15);
             try {
-                actionAmount(players, topScoreParam);
+                actionAmount(players, scoreParam);
                 redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players.getId(), JSON.toJSONString(players));
             } catch (Exception e) {
                 log.error("[WITHDRAW_APPLY][ERROR] action amount error", e);
@@ -127,28 +127,65 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void actionAmount(Players players, TopScoreParam topScoreParam) {
-
-        BigDecimal useBalance = players.getUseBalance().add(topScoreParam.getScore());
-        AccountChanges accountChanges = convert(players, topScoreParam, useBalance);
-        players.setUseBalance(useBalance);
+    public void actionAmount(Players players, TopOrLowerScoreParam scoreParam) {
+        BigDecimal balance = BigDecimal.ZERO;
+        switch (scoreParam.getType()) {
+            case 0:
+                BigDecimal totalRecharge = BigDecimal.ZERO;
+                if (scoreParam.getOperationType() == 0) {
+                    balance = players.getUseBalance().add(scoreParam.getScore());
+                    totalRecharge = players.getTotalRecharge().add(scoreParam.getScore());
+                } else {
+                    balance = players.getUseBalance().subtract(scoreParam.getScore());
+                    totalRecharge = players.getTotalRecharge().subtract(scoreParam.getScore());
+                }
+                players.setUseBalance(balance);
+                players.setTotalRecharge(totalRecharge);
+                break;
+            case 1:
+                if (scoreParam.getOperationType() == 0) {
+                    balance = players.getWithdrawBalance().add(scoreParam.getScore());
+                } else {
+                    balance = players.getWithdrawBalance().subtract(scoreParam.getScore());
+                }
+                players.setWithdrawBalance(balance);
+                break;
+            case 2:
+                if (scoreParam.getOperationType() == 0) {
+                    balance = players.getPromoteBalance().add(scoreParam.getScore());
+                } else {
+                    balance = players.getPromoteBalance().subtract(scoreParam.getScore());
+                }
+                players.setPromoteBalance(balance);
+                break;
+            case 3:
+                if (scoreParam.getOperationType() == 0) {
+                    balance = players.getProjectBalance().add(scoreParam.getScore());
+                } else {
+                    balance = players.getProjectBalance().subtract(scoreParam.getScore());
+                }
+                players.setProjectBalance(balance);
+                break;
+        }
+        AccountChanges accountChanges = convert(players, scoreParam, balance, scoreParam.getType(), scoreParam.getOperationType());
 
         saveOrUpdate(players);
         accountChangeService.saveOrUpdate(accountChanges);
 
     }
 
-    private AccountChanges convert(Players players, TopScoreParam topScoreParam, BigDecimal useBalance) {
+    private AccountChanges convert(Players players, TopOrLowerScoreParam scoreParam, BigDecimal useBalance,
+                                   Integer amountType, Integer chargeType) {
 
         AccountChanges accountChanges = new AccountChanges()
                 .setPlayer(players.getId())
                 .setPlayerName(players.getAccount())
-                .setAmountType(0)
+                .setAmountType(amountType)
                 .setBcBalance(players.getUseBalance())
-                .setAmount(topScoreParam.getScore())
+                .setAmount(scoreParam.getScore())
                 .setAcBalance(useBalance)
-                .setChangeType(0)
-                .setChangeDescribe(topScoreParam.getRemark())
+                .setChangeType(chargeType)
+                .setChangeDescribe(scoreParam.getRemark())
                 .setConnId(players.getId().toString());
 
         return accountChanges;

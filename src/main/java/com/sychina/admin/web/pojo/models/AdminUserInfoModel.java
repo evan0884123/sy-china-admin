@@ -1,6 +1,5 @@
 package com.sychina.admin.web.pojo.models;
 
-import com.sychina.admin.infra.domain.AdminMenu;
 import com.sychina.admin.infra.domain.AdminUser;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -27,7 +26,7 @@ public class AdminUserInfoModel {
     private String fullName;
 
     @ApiModelProperty(value = "菜单list")
-    private List<AdminMenu> adminMenus;
+    private List<AdminMenuModel> adminMenus;
 
     public AdminUserInfoModel(AdminUser record) {
 

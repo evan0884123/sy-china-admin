@@ -71,7 +71,7 @@ public class Debts {
     /**
      * '状态(0-关闭 1-启用)'
      */
-    private String status;
+    private Integer status;
 
     /**
      * '创建时间'

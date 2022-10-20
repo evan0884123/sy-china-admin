@@ -51,7 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.cors().and().csrf().disable().logout().disable().formLogin().disable().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().exceptionHandling()
                 .authenticationEntryPoint((req, rsp, e) -> {
-                    rsp.getWriter().println(JSON.toJSONString(ResultModel.unauthorized("token过期，请重新登录")));
+                    rsp.getWriter().println(JSON.toJSONString(ResultModel.unauthorized("token invalidation")));
                     rsp.getWriter().flush();
                 })
                 .and()

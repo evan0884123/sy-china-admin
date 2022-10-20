@@ -42,7 +42,7 @@ public class DebtTable {
     private String mount;
 
     @ApiModelProperty(value = "状态(0-关闭 1-启用)")
-    private String status;
+    private Integer status;
 
     @ApiModelProperty(value = "创建时间")
     private Long create;
@@ -60,7 +60,7 @@ public class DebtTable {
                 .setApr(record.getApr())
                 .setTerm(record.getTerm())
                 .setTotal(record.getTotal())
-                .setMount(record.getMount())
+                .setMount(record.getMount() != null ? record.getMount().substring(1, record.getMount().length() - 1) : "")
                 .setStatus(record.getStatus())
                 .setCreate(record.getCreate())
                 .setUpdate(record.getUpdate());

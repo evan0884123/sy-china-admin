@@ -8,6 +8,7 @@ import com.sychina.admin.infra.domain.AdminRole;
 import com.sychina.admin.infra.mapper.AdminMenuMapper;
 import com.sychina.admin.infra.mapper.AdminRoleMapper;
 import com.sychina.admin.web.pojo.SelectOption;
+import com.sychina.admin.web.pojo.models.AdminMenuModel;
 import com.sychina.admin.web.pojo.models.AdminRoleTable;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.AdminRoleParam;
@@ -62,7 +63,7 @@ public class AdminRoleServiceImpl extends ServiceImpl<AdminRoleMapper, AdminRole
 
             String[] menuId = adminRole.getMenus().split(",");
             List<AdminMenu> adminMenuList = adminMenuMapper.selectBatchIds(Arrays.asList(menuId));
-            adminRoleTable.setAdminMenus(adminMenuList);
+            adminRoleTable.setAdminMenus(new AdminMenuModel().convert(adminMenuList));
 
             adminRoleTables.add(adminRoleTable);
         });
@@ -116,19 +117,12 @@ public class AdminRoleServiceImpl extends ServiceImpl<AdminRoleMapper, AdminRole
         return ResultModel.succeed(roleSelect);
     }
 
-    public ResultModel<List<SelectOption>> loadMenuList() {
+    public ResultModel<List<AdminMenuModel>> loadMenuList() {
 
         List<AdminMenu> adminMenus = adminMenuMapper.selectList(new QueryWrapper<>());
-        List<SelectOption> menuSelect = new ArrayList<>();
+        List<AdminMenuModel> adminMenuModels = new AdminMenuModel().convert(adminMenus);
 
-        adminMenus.forEach(adminMenu -> {
-            SelectOption selectOption = new SelectOption();
-            selectOption.setLabel(adminMenu.getName());
-            selectOption.setValue(adminMenu.getId() + "");
-            menuSelect.add(selectOption);
-        });
-
-        return ResultModel.succeed(menuSelect);
+        return ResultModel.succeed(adminMenuModels);
     }
 
     @Autowired

@@ -2,6 +2,7 @@ package com.sychina.admin.web.system;
 
 import com.sychina.admin.service.impl.AdminRoleServiceImpl;
 import com.sychina.admin.web.pojo.SelectOption;
+import com.sychina.admin.web.pojo.models.AdminMenuModel;
 import com.sychina.admin.web.pojo.models.AdminRoleTable;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.AdminRoleParam;
@@ -55,7 +56,7 @@ public class AdminRoleController {
 
     @PostMapping("/loadMenuList")
     @ApiOperation("获取菜单信息")
-    public ResultModel<List<SelectOption>> loadMenuList() {
+    public ResultModel<List<AdminMenuModel>> loadMenuList() {
         return adminRoleServiceImpl.loadMenuList();
     }
 

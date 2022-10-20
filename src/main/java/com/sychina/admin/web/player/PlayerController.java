@@ -5,7 +5,7 @@ import com.sychina.admin.web.pojo.SelectOption;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.PlayerParam;
 import com.sychina.admin.web.pojo.params.PlayerQuery;
-import com.sychina.admin.web.pojo.params.TopScoreParam;
+import com.sychina.admin.web.pojo.params.TopOrLowerScoreParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,10 +51,10 @@ public class PlayerController {
         return playerService.fetchPlayerOptions(account);
     }
 
-    @PostMapping("/topScore")
+    @PostMapping("/topOrLowerScore")
     @ApiOperation("用户上分")
-    public ResultModel topScore(@Validated TopScoreParam topScoreParam) {
-        return playerService.topScore(topScoreParam);
+    public ResultModel topOrLowerScore(@Validated TopOrLowerScoreParam scoreParam) {
+        return playerService.topOrLowerScore(scoreParam);
     }
 
     @Autowired
