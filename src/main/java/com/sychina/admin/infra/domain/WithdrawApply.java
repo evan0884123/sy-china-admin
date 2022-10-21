@@ -45,7 +45,7 @@ public class WithdrawApply {
     private Integer type;
 
     /**
-     * '充值支付方式(0-人工客服 1-微信 2-支付宝 3-云闪付)'
+     * '充值支付方式(0-人工客服 1-微信 2-支付宝 3-云闪付 4-注册赠送 5-认购返可用 6-认购返可提现)'
      */
     private Integer chargeChannel;
 

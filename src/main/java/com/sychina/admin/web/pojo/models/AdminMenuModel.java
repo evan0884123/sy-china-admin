@@ -48,6 +48,7 @@ public class AdminMenuModel {
                     return;
                 }
                 Menu menu1 = new Menu()
+                        .setId(menu.getId())
                         .setCode(menu.getCode())
                         .setName(menu.getName());
 
@@ -68,6 +69,9 @@ public class AdminMenuModel {
     @Data
     @Accessors(chain = true)
     class Menu {
+
+        @ApiModelProperty(value = "id", hidden = true)
+        private Integer id;
 
         @ApiModelProperty(value = "菜单code")
         private String code;

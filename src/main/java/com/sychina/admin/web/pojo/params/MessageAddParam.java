@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class MessageAddParam {
 
     @ApiModelProperty(value = "玩家账号list ")
-    private String playerNames;
+    private String player;
 
     @ApiModelProperty(value = "标题")
     @NotNull

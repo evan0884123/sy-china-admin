@@ -33,10 +33,10 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Messages> imp
     public ResultModel add(MessageAddParam messageParam) {
 
         List<Players> players;
-        if (StringUtils.isBlank(messageParam.getPlayerNames())) {
+        if (StringUtils.isBlank(messageParam.getPlayer())) {
             players = playerService.list();
         } else {
-            QueryWrapper<Players> wrapper = new QueryWrapper<Players>().in("account", messageParam.getPlayerNames().split(","));
+            QueryWrapper<Players> wrapper = new QueryWrapper<Players>().in("account", messageParam.getPlayer().split(","));
             players = playerService.list(wrapper);
         }
 

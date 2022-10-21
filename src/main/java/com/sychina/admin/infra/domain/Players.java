@@ -124,7 +124,7 @@ public class Players {
     private String ip;
 
     /**
-     * '是否认证经理人(0-未提交 1-审核中 2-已验证)'
+     * '是否认证经理人(是否认证经理人(0-未提交 1-审核中 2-已验证 3-审核不通过))'
      */
     @JSONField(name = "is_verify_manager")
     private Integer isVerifyManager;

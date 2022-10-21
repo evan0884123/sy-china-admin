@@ -34,7 +34,7 @@ public class PlayerParam {
     @ApiModelProperty(value = "手机号码")
     private String phoneNumber;
 
-    @ApiModelProperty(value = "是否认证经理人(0-未提交 1-审核中 2-已验证)")
+    @ApiModelProperty(value = "是否认证经理人(0-未提交 1-审核中 2-已验证 3-审核不通过)")
     private Integer isVerifyManager;
 
     @ApiModelProperty(value = "状态(0-禁用 1-正常)")

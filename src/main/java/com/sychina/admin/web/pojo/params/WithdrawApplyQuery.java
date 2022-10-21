@@ -18,7 +18,7 @@ public class WithdrawApplyQuery extends PageQuery {
     @ApiModelProperty(value = "玩家名称")
     private String playerName;
 
-    @ApiModelProperty(value = "充值支付方式(0-人工客服 1-微信 2-支付宝 3-云闪付)")
+    @ApiModelProperty(value = "充值支付方式(0-人工客服 1-微信 2-支付宝 3-云闪付 4-注册赠送 5-认购返可用 6-认购返可提现)")
     private Integer chargeChannel;
 
     @ApiModelProperty(value = "提现类型(0-收益提现 1-推广金提现 2-返现金额提现)")
