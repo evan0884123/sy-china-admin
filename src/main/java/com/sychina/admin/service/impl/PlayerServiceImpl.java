@@ -1,9 +1,12 @@
 package com.sychina.admin.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.PropertyNamingStrategy;
+import com.alibaba.fastjson.serializer.SerializeConfig;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.sychina.admin.common.RedisLock;
 import com.sychina.admin.infra.domain.AccountChanges;
 import com.sychina.admin.infra.domain.Players;
@@ -77,7 +80,8 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
                 .setUpdate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
 
         baseMapper.updateById(players);
-        redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
+        redisTemplate.opsForHash()
+                .put(RedisLock.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
 
         return ResultModel.succeed();
     }
@@ -115,7 +119,8 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
             lockUtil.tryLock(lockKey, 15);
             try {
                 actionAmount(players, scoreParam);
-                redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
+                redisTemplate.opsForHash()
+                        .put(RedisLock.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
             } catch (Exception e) {
                 log.error("[WITHDRAW_APPLY][ERROR] action amount error", e);
             } finally {
@@ -186,7 +191,8 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
                 .setAcBalance(useBalance)
                 .setChangeType(chargeType)
                 .setChangeDescribe(scoreParam.getRemark())
-                .setConnId(players.getId().toString());
+                .setConnId(players.getId().toString())
+                .setCreate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
 
         return accountChanges;
 
