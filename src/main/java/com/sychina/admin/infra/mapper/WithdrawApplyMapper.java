@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,16 +25,16 @@ public interface WithdrawApplyMapper extends BaseMapper<WithdrawApply> {
             "SELECT player_name, COUNT(id) times, SUM(amount) totalAmount " +
             "FROM charge_withdraw_reply " +
             "WHERE type = 1 " +
-            "AND `create` BETWEEN unix_timestamp(TIMESTAMP(CURDATE())) " +
-            "AND unix_timestamp(TIMESTAMPADD(MICROSECOND, -1, DATE_ADD(CURDATE(), INTERVAL 1 DAY))) GROUP BY player_name ) a;")
+            "AND `create` BETWEEN unix_timestamp(TIMESTAMP(CURDATE())) * 1000 " +
+            "AND unix_timestamp(TIMESTAMPADD(MICROSECOND, -1, DATE_ADD(CURDATE(), INTERVAL 1 DAY))) * 1000  GROUP BY player_name ) a;")
     HallTodayStaModel staTodayWithdraw();
 
     @Select("SELECT `status`, IFNULL(SUM(amount),0) totalAmount " +
             "FROM charge_withdraw_reply " +
             "WHERE type = 1 " +
-            "AND `create` BETWEEN unix_timestamp(TIMESTAMP(CURDATE())) " +
-            "AND unix_timestamp(TIMESTAMPADD(MICROSECOND, -1, DATE_ADD(CURDATE(), INTERVAL 1 DAY))) GROUP BY `status`;")
-    Map<Integer, BigDecimal> staTodayFinishWithdraw();
+            "AND `create` BETWEEN unix_timestamp(TIMESTAMP(CURDATE())) * 1000 " +
+            "AND unix_timestamp(TIMESTAMPADD(MICROSECOND, -1, DATE_ADD(CURDATE(), INTERVAL 1 DAY))) * 1000  GROUP BY `status`;")
+    List<Map<String, Object>> staTodayFinishWithdraw();
 
     @Select("SELECT IFNULL(COUNT(player_name),0) totalWithdrawalUserNum, " +
             "IFNULL(SUM(times),0) totalWithdrawalCount, " +

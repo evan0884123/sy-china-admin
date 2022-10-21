@@ -1,8 +1,6 @@
 package com.sychina.admin.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.PropertyNamingStrategy;
-import com.alibaba.fastjson.serializer.SerializeConfig;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -87,34 +85,48 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
 
         if (!withdrawApply.getStatus().equals(withdrawApplyParam.getStatus())) {
             if (withdrawApplyParam.getStatus() == 2) {
-                BigDecimal balance = BigDecimal.ZERO;
-                Integer amountType = null;
                 Players players = playerService.getById(withdrawApply.getPlayer());
-                switch (withdrawApply.getWdType()) {
-                    case 0:
-                        balance = players.getProjectBalance().subtract(withdrawApply.getAmount());
-                        players.setProjectBalance(balance);
-                        amountType = 3;
-                        break;
-                    case 1:
-                        balance = players.getPromoteBalance().subtract(withdrawApply.getAmount());
-                        players.setPromoteBalance(balance);
-                        amountType = 2;
-                        break;
-                    case 2:
-                        balance = players.getWithdrawBalance().subtract(withdrawApply.getAmount());
-                        players.setWithdrawBalance(balance);
-                        amountType = 1;
-                        break;
+                AccountChanges accountChanges = null;
+                BigDecimal balance = BigDecimal.ZERO;
+                if (withdrawApply.getType() == 0) {
+                    balance = players.getUseBalance().add(withdrawApply.getAmount());
+                    BigDecimal totalRecharge = players.getTotalRecharge().add(withdrawApply.getAmount());
+
+                    accountChanges = convert(withdrawApply, players, withdrawApplyParam, players.getUseBalance(), balance, 0, 0);
+                    players.setUseBalance(balance);
+                    players.setTotalRecharge(totalRecharge);
+
+                } else if (withdrawApply.getType() == 1) {
+                    Integer amountType = null;
+                    switch (withdrawApply.getWdType()) {
+                        case 0:
+                            balance = players.getProjectBalance().subtract(withdrawApply.getAmount());
+                            amountType = 3;
+                            accountChanges = convert(withdrawApply, players, withdrawApplyParam, players.getProjectBalance(), balance, amountType, 1);
+                            players.setProjectBalance(balance);
+                            break;
+                        case 1:
+                            balance = players.getPromoteBalance().subtract(withdrawApply.getAmount());
+                            amountType = 2;
+                            accountChanges = convert(withdrawApply, players, withdrawApplyParam, players.getPromoteBalance(), balance, amountType, 1);
+                            players.setPromoteBalance(balance);
+                            break;
+                        case 2:
+                            balance = players.getWithdrawBalance().subtract(withdrawApply.getAmount());
+                            amountType = 1;
+                            accountChanges = convert(withdrawApply, players, withdrawApplyParam, players.getWithdrawBalance(), balance, amountType, 1);
+                            players.setWithdrawBalance(balance);
+                            break;
+                    }
+                    if (balance.compareTo(BigDecimal.ZERO) < 0) {
+                        return;
+                    }
                 }
-                if (balance.compareTo(BigDecimal.ZERO) < 0) {
-                    return;
-                }
+
+                accountChangeService.saveOrUpdate(accountChanges);
                 playerService.saveOrUpdate(players);
                 redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
 
-                AccountChanges accountChanges = convert(withdrawApply, players, withdrawApplyParam, balance, amountType);
-                accountChangeService.saveOrUpdate(accountChanges);
             }
             withdrawApply.setStatus(withdrawApplyParam.getStatus());
         }
@@ -124,17 +136,17 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
     }
 
     private AccountChanges convert(WithdrawApply withdrawApply, Players players,
-                                   WithdrawApplyParam withdrawApplyParam, BigDecimal balance,
-                                   Integer amountType) {
+                                   WithdrawApplyParam withdrawApplyParam, BigDecimal bcBalance, BigDecimal balance,
+                                   Integer amountType, Integer chargeType) {
 
         AccountChanges accountChanges = new AccountChanges()
                 .setPlayer(players.getId())
                 .setPlayerName(players.getAccount())
                 .setAmountType(amountType)
-                .setBcBalance(players.getWithdrawBalance())
+                .setBcBalance(bcBalance)
                 .setAmount(withdrawApply.getAmount())
                 .setAcBalance(balance)
-                .setChangeType(1)
+                .setChangeType(chargeType)
                 .setChangeDescribe(withdrawApplyParam.getRemark())
                 .setConnId(withdrawApply.getId().toString());
 

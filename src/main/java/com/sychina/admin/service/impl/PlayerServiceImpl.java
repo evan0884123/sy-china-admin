@@ -1,12 +1,9 @@
 package com.sychina.admin.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.PropertyNamingStrategy;
-import com.alibaba.fastjson.serializer.SerializeConfig;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.sychina.admin.common.RedisLock;
 import com.sychina.admin.infra.domain.AccountChanges;
 import com.sychina.admin.infra.domain.Players;
@@ -133,6 +130,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 
     @Transactional(rollbackFor = Exception.class)
     public void actionAmount(Players players, TopOrLowerScoreParam scoreParam) {
+        AccountChanges accountChanges = null;
         BigDecimal balance = BigDecimal.ZERO;
         switch (scoreParam.getType()) {
             case 0:
@@ -144,6 +142,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
                     balance = players.getUseBalance().subtract(scoreParam.getScore());
                     totalRecharge = players.getTotalRecharge().subtract(scoreParam.getScore());
                 }
+                accountChanges = convert(players, scoreParam, players.getUseBalance(), balance, scoreParam.getType(), scoreParam.getOperationType());
                 players.setUseBalance(balance);
                 players.setTotalRecharge(totalRecharge);
                 break;
@@ -153,6 +152,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
                 } else {
                     balance = players.getWithdrawBalance().subtract(scoreParam.getScore());
                 }
+                accountChanges = convert(players, scoreParam, players.getWithdrawBalance(), balance, scoreParam.getType(), scoreParam.getOperationType());
                 players.setWithdrawBalance(balance);
                 break;
             case 2:
@@ -161,6 +161,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
                 } else {
                     balance = players.getPromoteBalance().subtract(scoreParam.getScore());
                 }
+                accountChanges = convert(players, scoreParam, players.getPromoteBalance(), balance, scoreParam.getType(), scoreParam.getOperationType());
                 players.setPromoteBalance(balance);
                 break;
             case 3:
@@ -169,26 +170,26 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
                 } else {
                     balance = players.getProjectBalance().subtract(scoreParam.getScore());
                 }
+                accountChanges = convert(players, scoreParam, players.getProjectBalance(), balance, scoreParam.getType(), scoreParam.getOperationType());
                 players.setProjectBalance(balance);
                 break;
         }
-        AccountChanges accountChanges = convert(players, scoreParam, balance, scoreParam.getType(), scoreParam.getOperationType());
 
         saveOrUpdate(players);
         accountChangeService.saveOrUpdate(accountChanges);
 
     }
 
-    private AccountChanges convert(Players players, TopOrLowerScoreParam scoreParam, BigDecimal useBalance,
+    private AccountChanges convert(Players players, TopOrLowerScoreParam scoreParam, BigDecimal bcBalance, BigDecimal balance,
                                    Integer amountType, Integer chargeType) {
 
         AccountChanges accountChanges = new AccountChanges()
                 .setPlayer(players.getId())
                 .setPlayerName(players.getAccount())
                 .setAmountType(amountType)
-                .setBcBalance(players.getUseBalance())
+                .setBcBalance(bcBalance)
                 .setAmount(scoreParam.getScore())
-                .setAcBalance(useBalance)
+                .setAcBalance(balance)
                 .setChangeType(chargeType)
                 .setChangeDescribe(scoreParam.getRemark())
                 .setConnId(players.getId().toString())

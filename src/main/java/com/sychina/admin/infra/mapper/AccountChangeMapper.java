@@ -19,8 +19,8 @@ public interface AccountChangeMapper extends BaseMapper<AccountChanges> {
             "FROM account_changes " +
             "WHERE amount_type = 0  " +
             "AND change_type = 0 " +
-            "AND `create` BETWEEN unix_timestamp(TIMESTAMP(CURDATE())) " +
-            "AND unix_timestamp(TIMESTAMPADD(MICROSECOND, -1, DATE_ADD(CURDATE(), INTERVAL 1 DAY))) GROUP BY player_name ) a")
+            "AND `create` BETWEEN unix_timestamp(TIMESTAMP(CURDATE())) * 1000  " +
+            "AND unix_timestamp(TIMESTAMPADD(MICROSECOND, -1, DATE_ADD(CURDATE(), INTERVAL 1 DAY))) * 1000  GROUP BY player_name ) a")
     Integer staTodayFirstRecharge();
 
     @Select("SELECT IFNULL(COUNT(player_name),0) tRechargeUserNum, " +
@@ -30,8 +30,8 @@ public interface AccountChangeMapper extends BaseMapper<AccountChanges> {
             "FROM account_changes " +
             "WHERE amount_type = 0  " +
             "AND change_type = 0 " +
-            "AND `create` BETWEEN unix_timestamp(TIMESTAMP(CURDATE())) " +
-            "AND unix_timestamp(TIMESTAMPADD(MICROSECOND, -1, DATE_ADD(CURDATE(), INTERVAL 1 DAY))) GROUP BY player_name ) a;")
+            "AND `create` BETWEEN unix_timestamp(TIMESTAMP(CURDATE())) * 1000 " +
+            "AND unix_timestamp(TIMESTAMPADD(MICROSECOND, -1, DATE_ADD(CURDATE(), INTERVAL 1 DAY))) * 1000  GROUP BY player_name ) a;")
     HallTodayStaModel staTodayRecharge();
 
     @Select("SELECT IFNULL(COUNT(player_name),0) totalRechargeUserNum, " +

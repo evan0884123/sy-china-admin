@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
@@ -66,20 +67,21 @@ public class AsyncStatistics {
     public void staTodayFinishWithdraw(HallTodayStaModel todayStaModel, CountDownLatch latch) {
 
         try {
-            Map<Integer, BigDecimal> map = withdrawApplyMapper.staTodayFinishWithdraw();
+            List<Map<String, Object>> mapList = withdrawApplyMapper.staTodayFinishWithdraw();
 
-            if (!CollectionUtils.isEmpty(map)){
-                map.forEach((k, v) -> {
-                    if (k == 0 || k == 1) {
-                        BigDecimal add = todayStaModel.getTReadyWithdraw().add(v);
+            todayStaModel.setTReadyWithdraw(BigDecimal.ZERO)
+                    .setTCompleteWithdraw(BigDecimal.ZERO);
+            if (!CollectionUtils.isEmpty(mapList)) {
+                mapList.forEach(map -> {
+                    Integer status = Math.toIntExact((Long) map.get("status"));
+                    BigDecimal totalAmount = new BigDecimal((Double) map.get("totalAmount"));
+                    if (status == 0 || status == 1) {
+                        BigDecimal add = todayStaModel.getTReadyWithdraw().add(totalAmount);
                         todayStaModel.setTReadyWithdraw(add);
-                    } else if (k == 2) {
-                        todayStaModel.setTCompleteWithdraw(v);
+                    } else if (status == 2) {
+                        todayStaModel.setTCompleteWithdraw(totalAmount);
                     }
                 });
-            }else {
-                todayStaModel.setTReadyWithdraw(BigDecimal.ZERO)
-                        .setTCompleteWithdraw(BigDecimal.ZERO);
             }
         } finally {
             latch.countDown();

@@ -23,8 +23,8 @@ public interface PlayerMapper extends BaseMapper<Players> {
 
     @Select("SELECT IFNULL(COUNT(id),0) " +
             "FROM players " +
-            "WHERE  `last_login_time` BETWEEN unix_timestamp(TIMESTAMP(CURDATE())) " +
-            "AND unix_timestamp(TIMESTAMPADD(MICROSECOND, -1, DATE_ADD(CURDATE(), INTERVAL 1 DAY)));")
+            "WHERE  `last_login_time` BETWEEN unix_timestamp(TIMESTAMP(CURDATE())) * 1000 " +
+            "AND unix_timestamp(TIMESTAMPADD(MICROSECOND, -1, DATE_ADD(CURDATE(), INTERVAL 1 DAY))) * 1000 ;")
     Integer staTodayLogin();
 
     @Select("SELECT IFNULL(COUNT(id),0) " +
