@@ -85,8 +85,11 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 
     public ResultModel delete(Long id) {
 
-        baseMapper.deleteById(id);
+        Players players = baseMapper.selectById(id);
+        Assert.notNull(players, "未查到此玩家");
+        players.setStatus(0);
 
+        updateById(players);
         redisTemplate.opsForHash().delete(RedisLock.PlayersIDMap, id.toString());
 
         return ResultModel.succeed();
@@ -115,7 +118,23 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
             String lockKey = RedisLock.playBalanceChange + players.getId();
             lockUtil.tryLock(lockKey, 15);
             try {
-                actionAmount(players, scoreParam);
+                switch (scoreParam.getType()) {
+                    case 0:
+                        updateUseBalance(players, scoreParam);
+                        break;
+                    case 1:
+                        updateWithdrawBalance(players, scoreParam);
+                        break;
+                    case 2:
+                        updatePromoteBalance(players, scoreParam);
+                        break;
+                    case 3:
+                        updateProjectBalance(players, scoreParam);
+                        break;
+                    case 4:
+                        updateShareMoneyProfit(players, scoreParam);
+                        break;
+                }
                 redisTemplate.opsForHash()
                         .put(RedisLock.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
             } catch (Exception e) {
@@ -129,69 +148,146 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void actionAmount(Players players, TopOrLowerScoreParam scoreParam) {
-        AccountChanges accountChanges = null;
-        BigDecimal balance = BigDecimal.ZERO;
-        switch (scoreParam.getType()) {
-            case 0:
-                BigDecimal totalRecharge = BigDecimal.ZERO;
-                if (scoreParam.getOperationType() == 0) {
-                    balance = players.getUseBalance().add(scoreParam.getScore());
-                    totalRecharge = players.getTotalRecharge().add(scoreParam.getScore());
-                } else {
-                    balance = players.getUseBalance().subtract(scoreParam.getScore());
-                    totalRecharge = players.getTotalRecharge().subtract(scoreParam.getScore());
+    public void updateUseBalance(Players players, TopOrLowerScoreParam scoreParam) {
+
+        BigDecimal totalRecharge, acBalance;
+        List<Players> playersList = new ArrayList<>();
+        List<AccountChanges> changesList = new ArrayList<>();
+        if (scoreParam.getOperationType() == 0) {
+            acBalance = players.getUseBalance().add(scoreParam.getScore());
+            totalRecharge = players.getTotalRecharge().add(scoreParam.getScore());
+
+            if (StringUtils.isNotBlank(players.getLevelInfo())) {
+                String[] split = players.getLevelInfo().split("/");
+                // 一级返佣 20%
+                Players superior = baseMapper.selectById(Long.valueOf(split[split.length - 1]));
+                BigDecimal superiorRebate = scoreParam.getScore().multiply(new BigDecimal("0.2"));
+                BigDecimal superiorBalance = superior.getPromoteBalance().add(superiorRebate);
+                changesList.add(convert(superior, superior.getPromoteBalance(), superiorRebate, superiorBalance, 2, 5, "推广返佣"));
+                superior.setPromoteBalance(superiorBalance);
+                playersList.add(superior);
+
+                if (split.length >= 2) {
+                    // 二级返佣 10%
+                    Players superiorTwo = baseMapper.selectById(Long.valueOf(split[split.length - 2]));
+                    BigDecimal superiorTwoRebate = scoreParam.getScore().multiply(new BigDecimal("0.1"));
+                    BigDecimal superiorTwoBalance = superiorTwo.getPromoteBalance().add(superiorTwoRebate);
+                    changesList.add(convert(superiorTwo, superiorTwo.getPromoteBalance(), superiorTwoRebate, superiorTwoBalance, 2, 5, "推广返佣"));
+                    superiorTwo.setPromoteBalance(superiorTwoBalance);
+                    playersList.add(superiorTwo);
                 }
-                accountChanges = convert(players, scoreParam, players.getUseBalance(), balance, scoreParam.getType(), scoreParam.getOperationType());
-                players.setUseBalance(balance);
-                players.setTotalRecharge(totalRecharge);
-                break;
-            case 1:
-                if (scoreParam.getOperationType() == 0) {
-                    balance = players.getWithdrawBalance().add(scoreParam.getScore());
-                } else {
-                    balance = players.getWithdrawBalance().subtract(scoreParam.getScore());
-                }
-                accountChanges = convert(players, scoreParam, players.getWithdrawBalance(), balance, scoreParam.getType(), scoreParam.getOperationType());
-                players.setWithdrawBalance(balance);
-                break;
-            case 2:
-                if (scoreParam.getOperationType() == 0) {
-                    balance = players.getPromoteBalance().add(scoreParam.getScore());
-                } else {
-                    balance = players.getPromoteBalance().subtract(scoreParam.getScore());
-                }
-                accountChanges = convert(players, scoreParam, players.getPromoteBalance(), balance, scoreParam.getType(), scoreParam.getOperationType());
-                players.setPromoteBalance(balance);
-                break;
-            case 3:
-                if (scoreParam.getOperationType() == 0) {
-                    balance = players.getProjectBalance().add(scoreParam.getScore());
-                } else {
-                    balance = players.getProjectBalance().subtract(scoreParam.getScore());
-                }
-                accountChanges = convert(players, scoreParam, players.getProjectBalance(), balance, scoreParam.getType(), scoreParam.getOperationType());
-                players.setProjectBalance(balance);
-                break;
+
+            }
+        } else {
+            acBalance = players.getUseBalance().subtract(scoreParam.getScore());
+            totalRecharge = players.getTotalRecharge().subtract(scoreParam.getScore());
         }
+        changesList.add(convert(players, scoreParam, players.getUseBalance(), acBalance));
+        players.setUseBalance(acBalance);
+        players.setTotalRecharge(totalRecharge);
+        playersList.add(players);
+
+        saveOrUpdateBatch(playersList);
+        accountChangeService.saveOrUpdateBatch(changesList);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void updateWithdrawBalance(Players players, TopOrLowerScoreParam scoreParam) {
+
+        BigDecimal acBalance;
+        if (scoreParam.getOperationType() == 0) {
+            acBalance = players.getWithdrawBalance().add(scoreParam.getScore());
+        } else {
+            acBalance = players.getWithdrawBalance().subtract(scoreParam.getScore());
+        }
+        AccountChanges accountChanges = convert(players, scoreParam, players.getWithdrawBalance(), acBalance);
+        players.setWithdrawBalance(acBalance);
 
         saveOrUpdate(players);
         accountChangeService.saveOrUpdate(accountChanges);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void updatePromoteBalance(Players players, TopOrLowerScoreParam scoreParam) {
+
+        BigDecimal acBalance;
+        if (scoreParam.getOperationType() == 0) {
+            acBalance = players.getPromoteBalance().add(scoreParam.getScore());
+        } else {
+            acBalance = players.getPromoteBalance().subtract(scoreParam.getScore());
+        }
+        AccountChanges accountChanges = convert(players, scoreParam, players.getPromoteBalance(), acBalance);
+        players.setPromoteBalance(acBalance);
+
+        saveOrUpdate(players);
+        accountChangeService.saveOrUpdate(accountChanges);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void updateProjectBalance(Players players, TopOrLowerScoreParam scoreParam) {
+
+        BigDecimal totalRecharge, acBalance;
+        if (scoreParam.getOperationType() == 0) {
+            acBalance = players.getProjectBalance().add(scoreParam.getScore());
+            totalRecharge = players.getProjectTotalBalance().add(scoreParam.getScore());
+        } else {
+            acBalance = players.getProjectBalance().subtract(scoreParam.getScore());
+            totalRecharge = players.getProjectTotalBalance().subtract(scoreParam.getScore());
+        }
+        AccountChanges accountChanges = convert(players, scoreParam, players.getProjectBalance(), acBalance);
+        players.setProjectBalance(acBalance);
+        players.setProjectTotalBalance(totalRecharge);
+
+        saveOrUpdate(players);
+        accountChangeService.saveOrUpdate(accountChanges);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void updateShareMoneyProfit(Players players, TopOrLowerScoreParam scoreParam) {
+
+        BigDecimal acBalance;
+        if (scoreParam.getOperationType() == 0) {
+            acBalance = players.getShareMoneyProfit().add(scoreParam.getScore());
+        } else {
+            acBalance = players.getShareMoneyProfit().subtract(scoreParam.getScore());
+        }
+        AccountChanges accountChanges = convert(players, scoreParam, players.getShareMoneyProfit(), acBalance);
+        players.setShareMoneyProfit(acBalance);
+
+        saveOrUpdate(players);
+        accountChangeService.saveOrUpdate(accountChanges);
+    }
+
+    private AccountChanges convert(Players players, TopOrLowerScoreParam scoreParam, BigDecimal bcBalance, BigDecimal acBalance) {
+
+        AccountChanges accountChanges = new AccountChanges()
+                .setPlayer(players.getId())
+                .setPlayerName(players.getAccount())
+                .setAmountType(scoreParam.getType())
+                .setBcBalance(bcBalance)
+                .setAmount(scoreParam.getScore())
+                .setAcBalance(acBalance)
+                .setChangeType(scoreParam.getOperationType())
+                .setChangeDescribe(scoreParam.getRemark())
+                .setConnId(players.getId().toString())
+                .setCreate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
+
+        return accountChanges;
 
     }
 
-    private AccountChanges convert(Players players, TopOrLowerScoreParam scoreParam, BigDecimal bcBalance, BigDecimal balance,
-                                   Integer amountType, Integer chargeType) {
+    private AccountChanges convert(Players players, BigDecimal bcBalance, BigDecimal balance, BigDecimal acBalance,
+                                   Integer amountType, Integer chargeType, String remark) {
 
         AccountChanges accountChanges = new AccountChanges()
                 .setPlayer(players.getId())
                 .setPlayerName(players.getAccount())
                 .setAmountType(amountType)
                 .setBcBalance(bcBalance)
-                .setAmount(scoreParam.getScore())
-                .setAcBalance(balance)
+                .setAmount(balance)
+                .setAcBalance(acBalance)
                 .setChangeType(chargeType)
-                .setChangeDescribe(scoreParam.getRemark())
+                .setChangeDescribe(remark)
                 .setConnId(players.getId().toString())
                 .setCreate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
 

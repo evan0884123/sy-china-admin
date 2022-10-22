@@ -23,7 +23,7 @@ public class TopOrLowerScoreParam {
     @NotNull
     private Integer operationType;
 
-    @ApiModelProperty(value = "操作金额类型，0-可用余额，1-可提余额，2-推广余额，3-项目可提现收益 ", required = true)
+    @ApiModelProperty(value = "操作金额类型，0-可用余额，1-可提余额，2-推广余额，3-项目收益 4-共享金收益 ", required = true)
     @NotNull
     private Integer type;
 

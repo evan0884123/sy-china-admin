@@ -64,16 +64,34 @@ public class Players {
     private BigDecimal promoteBalance;
 
     /**
-     * '今日收益'
+     * '共享金余额'
      */
-    @JSONField(name = "today_promote")
-    private BigDecimal todayPromote;
+    @JSONField(name = "share_money_balance")
+    private BigDecimal shareMoneyBalance;
+
+    /**
+     * '共享金收益'
+     */
+    @JSONField(name = "share_money_profit")
+    private BigDecimal shareMoneyProfit;
 
     /**
      * '项目可提现收益'
      */
     @JSONField(name = "project_balance")
     private BigDecimal projectBalance;
+
+    /**
+     * '项目总收益'
+     */
+    @JSONField(name = "project_total_balance")
+    private BigDecimal projectTotalBalance;
+
+    /**
+     * '今日收益'
+     */
+    @JSONField(name = "today_promote")
+    private BigDecimal todayPromote;
 
     /**
      * '累计充值'

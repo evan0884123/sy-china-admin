@@ -1,5 +1,6 @@
 package com.sychina.admin.web.pojo.models;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.sychina.admin.infra.domain.Players;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -34,6 +35,21 @@ public class PlayerTable {
     @ApiModelProperty(value = "推广余额")
     private BigDecimal promoteBalance;
 
+    @ApiModelProperty(value = "共享金余额")
+    private BigDecimal shareMoneyBalance;
+
+    @ApiModelProperty(value = "共享金收益")
+    private BigDecimal shareMoneyProfit;
+
+    @ApiModelProperty(value = "项目可提现收益")
+    private BigDecimal projectBalance;
+
+    @ApiModelProperty(value = "项目总收益")
+    private BigDecimal projectTotalBalance;
+
+    @ApiModelProperty(value = "今日收益")
+    private BigDecimal todayPromote;
+
     @ApiModelProperty(value = "累计充值")
     private BigDecimal totalRecharge;
 
@@ -67,9 +83,6 @@ public class PlayerTable {
     @ApiModelProperty(value = "状态(0-禁用 1-正常)")
     private Integer status;
 
-    @ApiModelProperty(value = "今日收益")
-    private BigDecimal todayPromote;
-
     @ApiModelProperty(value = "身份证正面照")
     private String idFrontImg;
 
@@ -99,6 +112,11 @@ public class PlayerTable {
                 .setUseBalance(record.getUseBalance())
                 .setWithdrawBalance(record.getWithdrawBalance())
                 .setPromoteBalance(record.getPromoteBalance())
+                .setShareMoneyBalance(record.getShareMoneyBalance())
+                .setShareMoneyProfit(record.getShareMoneyProfit())
+                .setProjectBalance(record.getProjectBalance())
+                .setProjectTotalBalance(record.getProjectTotalBalance())
+                .setTodayPromote(record.getTodayPromote())
                 .setTotalRecharge(record.getTotalRecharge())
                 .setVIp(record.getVIp())
                 .setSuperior(record.getSuperior())
@@ -110,7 +128,6 @@ public class PlayerTable {
                 .setIsVerifyManager(record.getIsVerifyManager())
                 .setInviteCode(record.getInviteCode())
                 .setStatus(record.getStatus())
-                .setTodayPromote(record.getTodayPromote())
                 .setIdFrontImg(record.getIdFrontImg())
                 .setIdBackImg(record.getIdBackImg())
                 .setPeopleImg(record.getPeopleImg())
