@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.math.BigDecimal;
+
 /**
  * Description:
  *
@@ -53,6 +55,9 @@ public class ConfigTable {
     @ApiModelProperty(value = "共享金提现生命周期(单位:月)")
     private String smWithdrawLifeCycle;
 
+    @ApiModelProperty(value = "共享金提现比例")
+    private BigDecimal smWithdrawRate;
+
     @ApiModelProperty(value = "共享金开关(0-关 1-开)")
     private Integer smSwitch;
 
@@ -87,6 +92,7 @@ public class ConfigTable {
                 .setSmYearRate(record.getSmYearRate())
                 .setSmWithdrawThreshold(record.getSmWithdrawThreshold())
                 .setSmWithdrawLifeCycle(record.getSmWithdrawLifeCycle())
+                .setSmWithdrawRate(record.getSmWithdrawRate())
                 .setSmSwitch(record.getSmSwitch())
                 .setDownloadQrCodeImg(record.getDownloadQrCodeImg())
                 .setPromoteRegisterRule(record.getPromoteRegisterRule())

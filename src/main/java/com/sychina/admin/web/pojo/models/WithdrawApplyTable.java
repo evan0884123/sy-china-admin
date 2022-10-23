@@ -37,7 +37,7 @@ public class WithdrawApplyTable {
     @ApiModelProperty(value = "人工审核图片")
     private String chargeImg;
 
-    @ApiModelProperty(value = "提现类型(0-收益提现 1-推广金提现 2-返现金额提现)")
+    @ApiModelProperty(value = "提现类型(0-收益提现 1-推广金提现 2-返现金额提现 3-共享金提现)")
     private Integer wdType;
 
     @ApiModelProperty(value = "提现银行卡真实姓名")

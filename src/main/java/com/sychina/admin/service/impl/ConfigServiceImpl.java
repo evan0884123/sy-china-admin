@@ -27,12 +27,10 @@ public class ConfigServiceImpl extends ServiceImpl<ConfigMapper, Config> impleme
 
     public ResultModel loadTable() {
 
-        List<Config> configs = baseMapper.selectList(new QueryWrapper<>());
+        Config config = baseMapper.selectById(1L);
 
         List<ConfigTable> configTables = new ArrayList<>();
-        configs.forEach(config -> {
-            configTables.add(new ConfigTable(config));
-        });
+        configTables.add(new ConfigTable(config));
 
         return ResultModel.succeed(configTables);
     }

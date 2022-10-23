@@ -4,6 +4,8 @@ import com.sychina.admin.infra.domain.Config;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 /**
  * Description:
  *
@@ -51,6 +53,9 @@ public class ConfigParam {
     @ApiModelProperty(value = "共享金提现生命周期(单位:月)")
     private String smWithdrawLifeCycle;
 
+    @ApiModelProperty(value = "共享金提现比例")
+    private BigDecimal smWithdrawRate;
+
     @ApiModelProperty(value = "共享金开关(0-关 1-开)")
     private Integer smSwitch;
 
@@ -79,6 +84,7 @@ public class ConfigParam {
                 .setSmYearRate(this.getSmYearRate())
                 .setSmWithdrawThreshold(this.getSmWithdrawThreshold())
                 .setSmWithdrawLifeCycle(this.getSmWithdrawLifeCycle())
+                .setSmWithdrawRate(this.getSmWithdrawRate())
                 .setSmSwitch(this.getSmSwitch())
                 .setDownloadQrCodeImg(this.getDownloadQrCodeImg())
                 .setPromoteRegisterRule(this.getPromoteRegisterRule())

@@ -8,6 +8,8 @@ import io.swagger.models.auth.In;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.math.BigDecimal;
+
 /**
  * 配置信息
  *
@@ -83,6 +85,11 @@ public class Config {
      * 共享金提现生命周期(单位:月)
      */
     private String smWithdrawLifeCycle;
+
+    /**
+     * 共享金提现比例
+     */
+    private BigDecimal smWithdrawRate;
 
     /**
      * 共享金开关(0-关 1-开)

@@ -162,18 +162,18 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
                 // 一级返佣 20%
                 Players superior = baseMapper.selectById(Long.valueOf(split[split.length - 1]));
                 BigDecimal superiorRebate = scoreParam.getScore().multiply(new BigDecimal("0.2"));
-                BigDecimal superiorBalance = superior.getWithdrawBalance().add(superiorRebate);
-                changesList.add(convert(superior, superior.getWithdrawBalance(), superiorRebate, superiorBalance, 2, 5, "推广返佣"));
-                superior.setWithdrawBalance(superiorBalance);
+                BigDecimal superiorBalance = superior.getPromoteBalance().add(superiorRebate);
+                changesList.add(convert(superior, superior.getPromoteBalance(), superiorRebate, superiorBalance, 2, 5, "推广返佣"));
+                superior.setPromoteBalance(superiorBalance);
                 playersList.add(superior);
 
                 if (split.length >= 2) {
                     // 二级返佣 10%
                     Players superiorTwo = baseMapper.selectById(Long.valueOf(split[split.length - 2]));
                     BigDecimal superiorTwoRebate = scoreParam.getScore().multiply(new BigDecimal("0.1"));
-                    BigDecimal superiorTwoBalance = superiorTwo.getWithdrawBalance().add(superiorTwoRebate);
-                    changesList.add(convert(superiorTwo, superiorTwo.getWithdrawBalance(), superiorTwoRebate, superiorTwoBalance, 2, 5, "推广返佣"));
-                    superiorTwo.setWithdrawBalance(superiorTwoBalance);
+                    BigDecimal superiorTwoBalance = superiorTwo.getPromoteBalance().add(superiorTwoRebate);
+                    changesList.add(convert(superiorTwo, superiorTwo.getPromoteBalance(), superiorTwoRebate, superiorTwoBalance, 2, 5, "推广返佣"));
+                    superiorTwo.setPromoteBalance(superiorTwoBalance);
                     playersList.add(superiorTwo);
                 }
 

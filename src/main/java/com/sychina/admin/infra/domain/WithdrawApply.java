@@ -54,7 +54,7 @@ public class WithdrawApply {
     private String chargeImg;
 
     /**
-     * '提现类型(0-收益提现 1-推广金提现 2-返现金额提现)'
+     * '提现类型(0-收益提现 1-推广金提现 2-返现金额提现 3-共享金提现)'
      */
     private Integer wdType;
 
