@@ -10,7 +10,6 @@ import lombok.experimental.Accessors;
 import java.math.BigDecimal;
 
 /**
- *
  * @author Administrator
  */
 @Data
@@ -50,6 +49,11 @@ public class WithdrawApply {
     private Integer chargeChannel;
 
     /**
+     * 人工审核图片
+     */
+    private String chargeImg;
+
+    /**
      * '提现类型(0-收益提现 1-推广金提现 2-返现金额提现)'
      */
     private Integer wdType;
@@ -70,6 +74,11 @@ public class WithdrawApply {
     private String wdBank;
 
     /**
+     * 提现关联记录ID
+     */
+    private Long wdConn;
+
+    /**
      * '状态(0-申请 1-操作中 2-通过 3-拒绝)'
      */
     private Integer status;
@@ -78,11 +87,6 @@ public class WithdrawApply {
      * '备注'
      */
     private String remark;
-
-    /**
-     * 提现关联记录ID
-     */
-    private Long wdConn;
 
     /**
      * '创建时间'

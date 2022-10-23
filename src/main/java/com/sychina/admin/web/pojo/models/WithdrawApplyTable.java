@@ -34,6 +34,9 @@ public class WithdrawApplyTable {
     @ApiModelProperty(value = "充值支付方式(0-人工客服 1-微信 2-支付宝 3-云闪付 4-注册赠送 5-认购返可用 6-认购返可提现)")
     private Integer chargeChannel;
 
+    @ApiModelProperty(value = "人工审核图片")
+    private String chargeImg;
+
     @ApiModelProperty(value = "提现类型(0-收益提现 1-推广金提现 2-返现金额提现)")
     private Integer wdType;
 
@@ -45,6 +48,9 @@ public class WithdrawApplyTable {
 
     @ApiModelProperty(value = "提现银行")
     private String wdBank;
+
+    @ApiModelProperty(value = "提现关联记录ID")
+    private Long wdConn;
 
     @ApiModelProperty(value = "状态(0-申请 1-操作中 2-通过 3-拒绝)")
     private Integer status;
@@ -66,10 +72,12 @@ public class WithdrawApplyTable {
                 .setAmount(record.getAmount())
                 .setType(record.getType())
                 .setChargeChannel(record.getChargeChannel())
+                .setChargeImg(record.getChargeImg())
                 .setWdType(record.getWdType())
                 .setWdCardMaster(record.getWdCardMaster())
                 .setWdCardNumber(record.getWdCardNumber())
                 .setWdBank(record.getWdBank())
+                .setWdConn(record.getWdConn())
                 .setStatus(record.getStatus())
                 .setRemark(record.getRemark())
                 .setCreate(record.getCreate())

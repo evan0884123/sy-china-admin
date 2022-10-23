@@ -34,8 +34,9 @@ public class HallStageStaQuery {
         Assert.isTrue(this.getStage() == 1 || this.getStage() == 0, "阶段查询参数错误");
         switch (this.getStage()) {
             case 0:
+                calendar.add(Calendar.DAY_OF_WEEK,-1);
                 calendar.set(Calendar.DAY_OF_WEEK, 2);
-                calendar.add(Calendar.WEEK_OF_YEAR, this.getCount());
+                calendar.add(Calendar.WEEK_OF_YEAR, -this.getCount());
                 startTime = calendar.getTimeInMillis();
                 break;
             case 1:
@@ -59,6 +60,7 @@ public class HallStageStaQuery {
         Assert.isTrue(this.getStage() == 1 || this.getStage() == 0, "阶段查询参数错误");
         switch (this.getStage()) {
             case 0:
+                calendar.add(Calendar.DAY_OF_WEEK,-1);
                 calendar.add(Calendar.WEEK_OF_YEAR, this.getCount());
                 calendar.set(Calendar.DAY_OF_WEEK, 2);
                 calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + 5);
