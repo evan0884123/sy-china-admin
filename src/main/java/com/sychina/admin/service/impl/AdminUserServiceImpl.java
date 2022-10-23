@@ -91,7 +91,7 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
 
         AdminUser adminUser = baseMapper.selectById(id);
         Assert.notNull(adminUser, "未找到该用户");
-        Assert.isTrue(!bCryptPasswordEncoder.matches(oldPassword, adminUser.getPassword()), "旧密码不正确");
+        Assert.isTrue(bCryptPasswordEncoder.matches(oldPassword, adminUser.getPassword()), "旧密码不正确");
 
         adminUser.setPassword(bCryptPasswordEncoder.encode(password));
         baseMapper.updateById(adminUser);

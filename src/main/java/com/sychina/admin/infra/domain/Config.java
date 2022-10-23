@@ -95,6 +95,16 @@ public class Config {
     private String downloadQrCodeImg;
 
     /**
+     * 推广邀请注册奖励规则
+     */
+    private String promoteRegisterRule;
+
+    /**
+     * 推广邀请认购奖励规则
+     */
+    private String promoteBuyRule;
+
+    /**
      * '创建时间'
      */
     @TableField("`create`")

@@ -2,7 +2,7 @@ jwt:
   secret: sychina-admin@@1234
   prefix: sychina
   # 60 * 60
-  expiration: 3600
+  expiration: 43200
 server:
   shutdown: graceful
   port: 7004

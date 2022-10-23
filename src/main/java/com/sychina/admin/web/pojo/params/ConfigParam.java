@@ -6,6 +6,7 @@ import lombok.Data;
 
 /**
  * Description:
+ *
  * @author Administrator
  */
 @Data
@@ -56,6 +57,12 @@ public class ConfigParam {
     @ApiModelProperty(value = "下载二维码图片地址")
     private String downloadQrCodeImg;
 
+    @ApiModelProperty(value = "推广邀请注册奖励规则")
+    private String promoteRegisterRule;
+
+    @ApiModelProperty(value = "推广邀请认购奖励规则")
+    private String promoteBuyRule;
+
     public Config convert() {
 
         Config config = new Config();
@@ -73,7 +80,9 @@ public class ConfigParam {
                 .setSmWithdrawThreshold(this.getSmWithdrawThreshold())
                 .setSmWithdrawLifeCycle(this.getSmWithdrawLifeCycle())
                 .setSmSwitch(this.getSmSwitch())
-                .setDownloadQrCodeImg(this.getDownloadQrCodeImg());
+                .setDownloadQrCodeImg(this.getDownloadQrCodeImg())
+                .setPromoteRegisterRule(this.getPromoteRegisterRule())
+                .setPromoteBuyRule(this.getPromoteBuyRule());
 
         return config;
     }

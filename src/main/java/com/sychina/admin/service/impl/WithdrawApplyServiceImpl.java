@@ -101,18 +101,18 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
                         // 一级返佣 20%
                         Players superior = playerService.getById(Long.valueOf(split[split.length - 1]));
                         BigDecimal superiorRebate = withdrawApply.getAmount().multiply(new BigDecimal("0.2"));
-                        BigDecimal superiorBalance = superior.getPromoteBalance().add(superiorRebate);
-                        changesList.add(convert(superior, superior.getPromoteBalance(), superiorRebate, superiorBalance, 2, 5, "推广返佣"));
-                        superior.setPromoteBalance(superiorBalance);
+                        BigDecimal superiorBalance = superior.getWithdrawBalance().add(superiorRebate);
+                        changesList.add(convert(superior, superior.getWithdrawBalance(), superiorRebate, superiorBalance, 2, 5, "推广返佣"));
+                        superior.setWithdrawBalance(superiorBalance);
                         playersList.add(superior);
 
                         if (split.length >= 2) {
                             // 二级返佣 10%
                             Players superiorTwo = playerService.getById(Long.valueOf(split[split.length - 2]));
                             BigDecimal superiorTwoRebate = withdrawApply.getAmount().multiply(new BigDecimal("0.1"));
-                            BigDecimal superiorTwoBalance = superiorTwo.getPromoteBalance().add(superiorTwoRebate);
-                            changesList.add(convert(superiorTwo, superiorTwo.getPromoteBalance(), superiorTwoRebate, superiorTwoBalance, 2, 5, "推广返佣"));
-                            superiorTwo.setPromoteBalance(superiorTwoBalance);
+                            BigDecimal superiorTwoBalance = superiorTwo.getWithdrawBalance().add(superiorTwoRebate);
+                            changesList.add(convert(superiorTwo, superiorTwo.getWithdrawBalance(), superiorTwoRebate, superiorTwoBalance, 2, 5, "推广返佣"));
+                            superiorTwo.setWithdrawBalance(superiorTwoBalance);
                             playersList.add(superiorTwo);
                         }
 
@@ -160,6 +160,38 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
                     redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
                 }
 
+
+            }else if (withdrawApplyParam.getStatus() == 3){
+                Players players = playerService.getById(withdrawApply.getPlayer());
+                AccountChanges accountChanges = null;
+                BigDecimal balance = BigDecimal.ZERO;
+                Integer amountType = null;
+                switch (withdrawApply.getWdType()) {
+                    case 0:
+                        balance = players.getProjectBalance().add(withdrawApply.getAmount());
+                        amountType = 3;
+                        accountChanges = convert(players, withdrawApply, withdrawApplyParam, players.getProjectBalance(), balance, amountType, 15);
+                        players.setProjectBalance(balance);
+                        break;
+                    case 1:
+                        balance = players.getPromoteBalance().add(withdrawApply.getAmount());
+                        amountType = 2;
+                        accountChanges = convert(players, withdrawApply, withdrawApplyParam, players.getPromoteBalance(), balance, amountType, 15);
+                        players.setPromoteBalance(balance);
+                        break;
+                    case 2:
+                        balance = players.getWithdrawBalance().add(withdrawApply.getAmount());
+                        amountType = 1;
+                        accountChanges = convert(players, withdrawApply, withdrawApplyParam, players.getWithdrawBalance(), balance, amountType, 15);
+                        players.setWithdrawBalance(balance);
+                        break;
+                }
+                if (balance.compareTo(BigDecimal.ZERO) < 0) {
+                    return;
+                }
+                accountChangeService.saveOrUpdate(accountChanges);
+                playerService.saveOrUpdate(players);
+                redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
 
             }
             withdrawApply.setStatus(withdrawApplyParam.getStatus());

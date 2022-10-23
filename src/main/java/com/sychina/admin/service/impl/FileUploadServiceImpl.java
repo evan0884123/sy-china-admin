@@ -36,7 +36,7 @@ public class FileUploadServiceImpl {
     /**
      *
      */
-    private static final String[] IMAGE_TYPE = new String[]{".bmp", ".jpg", ".jpeg", ".gif", ".png"};
+//    private static final String[] IMAGE_TYPE = new String[]{".bmp", ".jpg", ".jpeg", ".gif", ".png"};
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -49,19 +49,19 @@ public class FileUploadServiceImpl {
      */
     public ResultModel<FileUploadModel> upload(MultipartFile uploadFile) {
         // 校验图片格式
-        boolean isLegal = false;
-        for (String type : IMAGE_TYPE) {
-            if (StringUtils.endsWithIgnoreCase(uploadFile.getOriginalFilename(), type)) {
-                isLegal = true;
-                break;
-            }
-        }
+//        boolean isLegal = false;
+//        for (String type : IMAGE_TYPE) {
+//            if (StringUtils.endsWithIgnoreCase(uploadFile.getOriginalFilename(), type)) {
+//                isLegal = true;
+//                break;
+//            }
+//        }
         // 封装Result对象，并且将文件的byte数组放置到result对象中
         FileUploadModel fileUploadModel = new FileUploadModel();
-        if (!isLegal) {
-            fileUploadModel.setStatus("error");
-            return ResultModel.failed(fileUploadModel);
-        }
+//        if (!isLegal) {
+//            fileUploadModel.setStatus("error");
+//            return ResultModel.failed(fileUploadModel);
+//        }
         // 文件新路径
         String fileName = uploadFile.getOriginalFilename();
         String filePath = getFilePath(fileName);

@@ -25,7 +25,7 @@ public class JwtAuthenticationConfig {
     /**
      * 默认1小时超时
      */
-    private int expiration = 60 * 60;
+    private int expiration = 60 * 60 * 12;
 
     private String secret;
 }

@@ -162,18 +162,18 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
                 // 一级返佣 20%
                 Players superior = baseMapper.selectById(Long.valueOf(split[split.length - 1]));
                 BigDecimal superiorRebate = scoreParam.getScore().multiply(new BigDecimal("0.2"));
-                BigDecimal superiorBalance = superior.getPromoteBalance().add(superiorRebate);
-                changesList.add(convert(superior, superior.getPromoteBalance(), superiorRebate, superiorBalance, 2, 5, "推广返佣"));
-                superior.setPromoteBalance(superiorBalance);
+                BigDecimal superiorBalance = superior.getWithdrawBalance().add(superiorRebate);
+                changesList.add(convert(superior, superior.getWithdrawBalance(), superiorRebate, superiorBalance, 2, 5, "推广返佣"));
+                superior.setWithdrawBalance(superiorBalance);
                 playersList.add(superior);
 
                 if (split.length >= 2) {
                     // 二级返佣 10%
                     Players superiorTwo = baseMapper.selectById(Long.valueOf(split[split.length - 2]));
                     BigDecimal superiorTwoRebate = scoreParam.getScore().multiply(new BigDecimal("0.1"));
-                    BigDecimal superiorTwoBalance = superiorTwo.getPromoteBalance().add(superiorTwoRebate);
-                    changesList.add(convert(superiorTwo, superiorTwo.getPromoteBalance(), superiorTwoRebate, superiorTwoBalance, 2, 5, "推广返佣"));
-                    superiorTwo.setPromoteBalance(superiorTwoBalance);
+                    BigDecimal superiorTwoBalance = superiorTwo.getWithdrawBalance().add(superiorTwoRebate);
+                    changesList.add(convert(superiorTwo, superiorTwo.getWithdrawBalance(), superiorTwoRebate, superiorTwoBalance, 2, 5, "推广返佣"));
+                    superiorTwo.setWithdrawBalance(superiorTwoBalance);
                     playersList.add(superiorTwo);
                 }
 
@@ -189,6 +189,10 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 
         saveOrUpdateBatch(playersList);
         accountChangeService.saveOrUpdateBatch(changesList);
+
+        playersList.forEach(players1 -> {
+            redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players1.getId().toString(), JSON.toJSONString(players1));
+        });
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -205,6 +209,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 
         saveOrUpdate(players);
         accountChangeService.saveOrUpdate(accountChanges);
+        redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -221,6 +226,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 
         saveOrUpdate(players);
         accountChangeService.saveOrUpdate(accountChanges);
+        redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -240,6 +246,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 
         saveOrUpdate(players);
         accountChangeService.saveOrUpdate(accountChanges);
+        redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -256,6 +263,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 
         saveOrUpdate(players);
         accountChangeService.saveOrUpdate(accountChanges);
+        redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
     }
 
     private AccountChanges convert(Players players, TopOrLowerScoreParam scoreParam, BigDecimal bcBalance, BigDecimal acBalance) {

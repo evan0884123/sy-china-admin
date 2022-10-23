@@ -59,6 +59,12 @@ public class ConfigTable {
     @ApiModelProperty(value = "下载二维码图片地址")
     private String downloadQrCodeImg;
 
+    @ApiModelProperty(value = "推广邀请注册奖励规则")
+    private String promoteRegisterRule;
+
+    @ApiModelProperty(value = "推广邀请认购奖励规则")
+    private String promoteBuyRule;
+
     @ApiModelProperty(value = "创建时间")
     private Long create;
 
@@ -83,6 +89,8 @@ public class ConfigTable {
                 .setSmWithdrawLifeCycle(record.getSmWithdrawLifeCycle())
                 .setSmSwitch(record.getSmSwitch())
                 .setDownloadQrCodeImg(record.getDownloadQrCodeImg())
+                .setPromoteRegisterRule(record.getPromoteRegisterRule())
+                .setPromoteBuyRule(record.getPromoteBuyRule())
                 .setCreate(record.getCreate())
                 .setUpdate(record.getUpdate());
     }
