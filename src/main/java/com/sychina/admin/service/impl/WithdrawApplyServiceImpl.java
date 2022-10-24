@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -90,118 +89,18 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
 
         if (!withdrawApply.getStatus().equals(withdrawApplyParam.getStatus())) {
             if (withdrawApplyParam.getStatus() == 2) {
+
                 Players players = playerService.getById(withdrawApply.getPlayer());
-                AccountChanges accountChanges = null;
-                BigDecimal balance = BigDecimal.ZERO;
                 if (withdrawApply.getType() == 0) {
-                    balance = players.getUseBalance().add(withdrawApply.getAmount());
-                    BigDecimal totalRecharge = players.getTotalRecharge().add(withdrawApply.getAmount());
 
-                    List<Players> playersList = new ArrayList<>();
-                    List<AccountChanges> changesList = new ArrayList<>();
-                    if (StringUtils.isNotBlank(players.getLevelInfo())) {
-                        String[] split = players.getLevelInfo().split("/");
-                        // 一级返佣 20%
-                        Players superior = playerService.getById(Long.valueOf(split[split.length - 1]));
-                        BigDecimal superiorRebate = withdrawApply.getAmount().multiply(new BigDecimal("0.2"));
-                        BigDecimal superiorBalance = superior.getPromoteBalance().add(superiorRebate);
-                        changesList.add(convert(superior, superior.getPromoteBalance(), superiorRebate, superiorBalance, 2, 5, "推广返佣"));
-                        superior.setPromoteBalance(superiorBalance);
-                        playersList.add(superior);
-
-                        if (split.length >= 2) {
-                            // 二级返佣 10%
-                            Players superiorTwo = playerService.getById(Long.valueOf(split[split.length - 2]));
-                            BigDecimal superiorTwoRebate = withdrawApply.getAmount().multiply(new BigDecimal("0.1"));
-                            BigDecimal superiorTwoBalance = superiorTwo.getPromoteBalance().add(superiorTwoRebate);
-                            changesList.add(convert(superiorTwo, superiorTwo.getPromoteBalance(), superiorTwoRebate, superiorTwoBalance, 2, 5, "推广返佣"));
-                            superiorTwo.setPromoteBalance(superiorTwoBalance);
-                            playersList.add(superiorTwo);
-                        }
-
-                    }
-
-                    changesList.add(convert(players, withdrawApply, withdrawApplyParam, players.getUseBalance(), balance, 0, 0));
-                    players.setUseBalance(balance);
-                    players.setTotalRecharge(totalRecharge);
-                    playersList.add(players);
-
-                    accountChangeService.saveOrUpdateBatch(changesList);
-                    playerService.saveOrUpdateBatch(playersList);
-
-                    playersList.forEach(players1 -> {
-                        redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players1.getId().toString(), JSON.toJSONString(players1));
-                    });
-
+                    rechargeApproved(players, withdrawApply);
                 } else if (withdrawApply.getType() == 1) {
-                    Integer amountType = null;
-                    switch (withdrawApply.getWdType()) {
-                        case 0:
-                            balance = players.getProjectBalance().subtract(withdrawApply.getAmount());
-                            amountType = 3;
-                            accountChanges = convert(players, withdrawApply, withdrawApplyParam, players.getProjectBalance(), balance, amountType, 1);
-                            players.setProjectBalance(balance);
-                            break;
-                        case 1:
-                            balance = players.getPromoteBalance().subtract(withdrawApply.getAmount());
-                            amountType = 2;
-                            accountChanges = convert(players, withdrawApply, withdrawApplyParam, players.getPromoteBalance(), balance, amountType, 1);
-                            players.setPromoteBalance(balance);
-                            break;
-                        case 2:
-                            balance = players.getWithdrawBalance().subtract(withdrawApply.getAmount());
-                            amountType = 1;
-                            accountChanges = convert(players, withdrawApply, withdrawApplyParam, players.getWithdrawBalance(), balance, amountType, 1);
-                            players.setWithdrawBalance(balance);
-                            break;
-                        case 3:
-                            balance = players.getShareMoneyProfit().subtract(withdrawApply.getAmount());
-                            amountType = 1;
-                            accountChanges = convert(players, withdrawApply, withdrawApplyParam, players.getShareMoneyProfit(), balance, amountType, 1);
-                            players.setShareMoneyProfit(balance);
-                            break;
-                    }
-                    Assert.isTrue(balance.compareTo(BigDecimal.ZERO) >= 0, "变动后金额不能成负数");
-                    accountChangeService.saveOrUpdate(accountChanges);
-                    playerService.saveOrUpdate(players);
-                    redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
+
+                    withdrawApproved(players, withdrawApply);
                 }
             } else if (withdrawApplyParam.getStatus() == 3) {
-                Players players = playerService.getById(withdrawApply.getPlayer());
-                AccountChanges accountChanges = null;
-                BigDecimal balance = BigDecimal.ZERO;
-                Integer amountType = null;
-                switch (withdrawApply.getWdType()) {
-                    case 0:
-                        balance = players.getProjectBalance().add(withdrawApply.getAmount());
-                        amountType = 3;
-                        accountChanges = convert(players, withdrawApply, withdrawApplyParam, players.getProjectBalance(), balance, amountType, 15);
-                        players.setProjectBalance(balance);
-                        break;
-                    case 1:
-                        balance = players.getPromoteBalance().add(withdrawApply.getAmount());
-                        amountType = 2;
-                        accountChanges = convert(players, withdrawApply, withdrawApplyParam, players.getPromoteBalance(), balance, amountType, 15);
-                        players.setPromoteBalance(balance);
-                        break;
-                    case 2:
-                        balance = players.getWithdrawBalance().add(withdrawApply.getAmount());
-                        amountType = 1;
-                        accountChanges = convert(players, withdrawApply, withdrawApplyParam, players.getWithdrawBalance(), balance, amountType, 15);
-                        players.setWithdrawBalance(balance);
-                        break;
-                    case 3:
-                        balance = players.getShareMoneyProfit().add(withdrawApply.getAmount());
-                        amountType = 1;
-                        accountChanges = convert(players, withdrawApply, withdrawApplyParam, players.getShareMoneyProfit(), balance, amountType, 1);
-                        players.setShareMoneyProfit(balance);
-                        break;
-                }
-                Assert.isTrue(balance.compareTo(BigDecimal.ZERO) >= 0, "变动后金额不能成负数");
-                accountChangeService.saveOrUpdate(accountChanges);
-                playerService.saveOrUpdate(players);
-                redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
 
+                withdrawReject(withdrawApply);
             }
             withdrawApply.setStatus(withdrawApplyParam.getStatus());
         }
@@ -210,9 +109,109 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
         saveOrUpdate(withdrawApply);
     }
 
-    private AccountChanges convert(Players players, WithdrawApply withdrawApply,
-                                   WithdrawApplyParam withdrawApplyParam, BigDecimal bcBalance, BigDecimal balance,
-                                   Integer amountType, Integer chargeType) {
+    private void rechargeApproved(Players players, WithdrawApply withdrawApply) {
+        BigDecimal balance = players.getUseBalance().add(withdrawApply.getAmount());
+        BigDecimal totalRecharge = players.getTotalRecharge().add(withdrawApply.getAmount());
+
+        List<Players> playersList = new ArrayList<>();
+        List<AccountChanges> changesList = new ArrayList<>();
+        if (StringUtils.isNotBlank(players.getLevelInfo())) {
+            String[] split = players.getLevelInfo().split("/");
+            // 一级返佣 20%
+            Players superior = playerService.getById(Long.valueOf(split[split.length - 1]));
+            BigDecimal superiorRebate = withdrawApply.getAmount().multiply(new BigDecimal("0.2"));
+            BigDecimal superiorBalance = superior.getPromoteBalance().add(superiorRebate);
+            changesList.add(convert(superior, superior.getPromoteBalance(), superiorRebate, superiorBalance, 2, 5, "推广返佣"));
+            superior.setPromoteBalance(superiorBalance);
+            playersList.add(superior);
+
+            if (split.length >= 2) {
+                // 二级返佣 10%
+                Players superiorTwo = playerService.getById(Long.valueOf(split[split.length - 2]));
+                BigDecimal superiorTwoRebate = withdrawApply.getAmount().multiply(new BigDecimal("0.1"));
+                BigDecimal superiorTwoBalance = superiorTwo.getPromoteBalance().add(superiorTwoRebate);
+                changesList.add(convert(superiorTwo, superiorTwo.getPromoteBalance(), superiorTwoRebate, superiorTwoBalance, 2, 5, "推广返佣"));
+                superiorTwo.setPromoteBalance(superiorTwoBalance);
+                playersList.add(superiorTwo);
+            }
+
+        }
+
+        changesList.add(convert(players, withdrawApply, players.getUseBalance(), balance, 0, 0, "充值"));
+        players.setUseBalance(balance);
+        players.setTotalRecharge(totalRecharge);
+        playersList.add(players);
+
+        accountChangeService.saveOrUpdateBatch(changesList);
+        playerService.saveOrUpdateBatch(playersList);
+
+        playersList.forEach(players1 -> {
+            redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players1.getId().toString(), JSON.toJSONString(players1));
+        });
+    }
+
+    private void withdrawApproved(Players players, WithdrawApply withdrawApply) {
+        AccountChanges accountChanges = null;
+        BigDecimal balance;
+        switch (withdrawApply.getWdType()) {
+            case 0:
+                balance = players.getProjectBalance().add(withdrawApply.getAmount());
+                accountChanges = convert(players, withdrawApply, balance, players.getProjectBalance(), 3, 1, "收益提现");
+                break;
+            case 1:
+                balance = players.getPromoteBalance().add(withdrawApply.getAmount());
+                accountChanges = convert(players, withdrawApply, balance, players.getPromoteBalance(), 2, 1, "推广金提现");
+                break;
+            case 2:
+                balance = players.getWithdrawBalance().add(withdrawApply.getAmount());
+                accountChanges = convert(players, withdrawApply, balance, players.getWithdrawBalance(), 1, 1, "返现金额提现");
+                break;
+            case 3:
+                balance = players.getShareMoneyProfit().add(withdrawApply.getAmount());
+                accountChanges = convert(players, withdrawApply, balance, players.getShareMoneyProfit(), 0, 1, "共享金提现");
+                break;
+        }
+        accountChangeService.saveOrUpdate(accountChanges);
+    }
+
+    private void withdrawReject(WithdrawApply withdrawApply) {
+        Players players = playerService.getById(withdrawApply.getPlayer());
+        AccountChanges accountChanges = null;
+        BigDecimal balance;
+        Integer amountType = null;
+        switch (withdrawApply.getWdType()) {
+            case 0:
+                balance = players.getProjectBalance().add(withdrawApply.getAmount());
+                amountType = 3;
+                accountChanges = convert(players, withdrawApply, players.getProjectBalance(), balance, amountType, 15, "收益提现");
+                players.setProjectBalance(balance);
+                break;
+            case 1:
+                balance = players.getPromoteBalance().add(withdrawApply.getAmount());
+                amountType = 2;
+                accountChanges = convert(players, withdrawApply, players.getPromoteBalance(), balance, amountType, 15, "推广金提现");
+                players.setPromoteBalance(balance);
+                break;
+            case 2:
+                balance = players.getWithdrawBalance().add(withdrawApply.getAmount());
+                amountType = 1;
+                accountChanges = convert(players, withdrawApply, players.getWithdrawBalance(), balance, amountType, 15, "返现金额提现");
+                players.setWithdrawBalance(balance);
+                break;
+            case 3:
+                balance = players.getShareMoneyProfit().add(withdrawApply.getAmount());
+                amountType = 1;
+                accountChanges = convert(players, withdrawApply, players.getShareMoneyProfit(), balance, amountType, 1, "共享金提现");
+                players.setShareMoneyProfit(balance);
+                break;
+        }
+        accountChangeService.saveOrUpdate(accountChanges);
+        playerService.saveOrUpdate(players);
+        redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
+    }
+
+    private AccountChanges convert(Players players, WithdrawApply withdrawApply, BigDecimal bcBalance, BigDecimal balance,
+                                   Integer amountType, Integer chargeType, String changeDes) {
 
         AccountChanges accountChanges = new AccountChanges()
                 .setPlayer(players.getId())
@@ -222,7 +221,7 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
                 .setAmount(withdrawApply.getAmount())
                 .setAcBalance(balance)
                 .setChangeType(chargeType)
-                .setChangeDescribe(withdrawApplyParam.getRemark())
+                .setChangeDescribe(changeDes)
                 .setConnId(withdrawApply.getId().toString());
 
         return accountChanges;
