@@ -12,15 +12,12 @@ import javax.validation.constraints.NotNull;
  * @author Administrator
  */
 @Data
-public class NewsQuery extends PageQuery {
+public class AccessLogQuery extends PageQuery {
 
-    @ApiModelProperty(value = "类型(0-纯文字 1-图文 2-视频)")
-    private Integer type;
+    @ApiModelProperty(value = "用户名")
+    private String adminUserName;
 
-    @ApiModelProperty(value = "标签(0-首页 1-资讯)")
-    private Integer tab;
-
-    @ApiModelProperty(value = "0-创建时间, 1-修改时间",required = true)
+    @ApiModelProperty(value = "0-操作时间",required = true)
     @NotNull
     private Integer timeType;
 }

@@ -1,6 +1,7 @@
 package com.sychina.admin.utils;
 
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /**
@@ -37,6 +38,13 @@ public final class LocalDateTimeHelper {
 
     public static Long toLong(LocalDateTime localDateTime) {
         return localDateTime.toInstant(ZoneOffset.of("+8")).toEpochMilli();
+    }
+
+
+    public static String toStr(LocalDateTime localDateTime) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.of("Asia/Shanghai"));
+        return formatter.format(localDateTime);
     }
 
 }

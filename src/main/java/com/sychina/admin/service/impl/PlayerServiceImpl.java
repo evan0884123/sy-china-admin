@@ -11,6 +11,7 @@ import com.sychina.admin.infra.mapper.PlayerMapper;
 import com.sychina.admin.service.IPlayerService;
 import com.sychina.admin.utils.LocalDateTimeHelper;
 import com.sychina.admin.utils.RedisLockUtil;
+import com.sychina.admin.utils.StringGenerator;
 import com.sychina.admin.web.pojo.SelectOption;
 import com.sychina.admin.web.pojo.models.PlayerTable;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
@@ -23,8 +24,10 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.DigestUtils;
 
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -145,6 +148,25 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
         });
 
         return ResultModel.succeed();
+    }
+
+    public ResultModel resetPassword(String id) {
+
+        Players players = baseMapper.selectById(id);
+        Assert.notNull(players, "未查到此玩家");
+
+        String password = StringGenerator.genRandom(8);;
+        players.setPassword(DigestUtils.md5DigestAsHex(password.getBytes(StandardCharsets.UTF_8)));
+
+        updateById(players);
+        redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
+
+        return ResultModel.succeed(password);
+    }
+
+    public static void main(String[] args) {
+        String a = DigestUtils.md5DigestAsHex("123456".getBytes(StandardCharsets.UTF_8));
+        System.out.println(a);
     }
 
     @Transactional(rollbackFor = Exception.class)

@@ -1,5 +1,6 @@
-package com.sychina.admin.web.system;
+package com.sychina.admin.web.router.system;
 
+import com.sychina.admin.aop.Access;
 import com.sychina.admin.service.impl.AdminUserServiceImpl;
 import com.sychina.admin.web.pojo.SelectOption;
 import com.sychina.admin.web.pojo.models.AdminUserTable;
@@ -29,6 +30,7 @@ public class AdminUserController {
 
     @PostMapping("/info")
     @ApiOperation("获取个人信息")
+    @Access
     public ResultModel<AdminUserTable> info() {
 
         return userServiceImpl.buildUserInfo();
@@ -36,12 +38,14 @@ public class AdminUserController {
 
     @PostMapping("/updateProfile")
     @ApiOperation("更新个人信息")
+    @Access(recordLog = true)
     public ResultModel updateProfile(@Validated AdminUserParam adminUserParam) {
         return userServiceImpl.updateProfile(adminUserParam);
     }
 
     @PostMapping("/updatePassword")
     @ApiOperation("更新个人密码")
+    @Access(recordLog = true)
     public ResultModel updatePassword(@RequestParam String id, String password, String oldPassword) {
         return userServiceImpl.updatePassword(id, password, oldPassword);
     }
@@ -49,36 +53,42 @@ public class AdminUserController {
 
     @PostMapping("/addUser")
     @ApiOperation("新增用户")
+    @Access(recordLog = true)
     public ResultModel addUser(@Validated AdminUserParam adminUserParam) {
         return userServiceImpl.addUser(adminUserParam);
     }
 
     @PostMapping("/query")
     @ApiOperation("查询所有用户")
+    @Access
     public ResultModel query(@Validated AdminUserQuery userQuery) {
         return userServiceImpl.query(userQuery);
     }
 
     @PostMapping("/editUser")
     @ApiOperation("编辑用户")
+    @Access(recordLog = true)
     public ResultModel editUser(@Validated AdminUserParam adminUserParam) {
         return userServiceImpl.editUser(adminUserParam);
     }
 
     @PostMapping("/deleteUser")
     @ApiOperation("删除用户")
+    @Access(recordLog = true)
     public ResultModel deleteUser(@RequestParam String id) {
         return userServiceImpl.deleteUser(id);
     }
 
     @PostMapping("/resetPassword")
     @ApiOperation("重置用户密码")
+    @Access(recordLog = true)
     public ResultModel<String> resetPassword(@RequestParam String id) {
         return userServiceImpl.resetPassword(id);
     }
 
     @PostMapping("/fetchUserOptions")
     @ApiOperation("获取用户SelectOption")
+    @Access
     public ResultModel<List<SelectOption>> fetchUserOptions() {
         return userServiceImpl.fetchUserOptions();
     }

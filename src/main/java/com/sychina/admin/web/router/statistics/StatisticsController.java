@@ -1,5 +1,6 @@
-package com.sychina.admin.web.statistics;
+package com.sychina.admin.web.router.statistics;
 
+import com.sychina.admin.aop.Access;
 import com.sychina.admin.service.impl.StatisticsServiceImpl;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.HallStageStaQuery;
@@ -23,12 +24,14 @@ public class StatisticsController {
 
     @PostMapping("/hallTodaySta")
     @ApiOperation("首页今日统计")
+    @Access
     public ResultModel hallTodaySta() {
         return statisticsService.hallTodaySta();
     }
 
     @PostMapping("/hallStageSta")
     @ApiOperation("首页周/月统计")
+    @Access
     public ResultModel hallStageSta(@Validated HallStageStaQuery query) {
         return statisticsService.hallStageSta(query);
     }

@@ -33,15 +33,19 @@ public class NewsParam {
     @ApiModelProperty(value = "出处")
     private String author;
 
+    @ApiModelProperty(value = "标签(0-首页 1-资讯)")
+    private Integer tab;
+
     public News convert() {
 
         News news = new News();
         news.setTitle(this.getTitle())
                 .setThumbnail(this.getThumbnail())
-                .setType(this.type)
+                .setType(this.getType())
                 .setContent(this.getContent())
-                .setVideoLink(this.videoLink)
-                .setAuthor(this.author);
+                .setVideoLink(this.getVideoLink())
+                .setAuthor(this.getAuthor())
+                .setTab(this.getTab());
 
         return news;
     }

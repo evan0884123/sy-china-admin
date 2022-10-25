@@ -1,6 +1,7 @@
 package com.sychina.admin.infra.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.sychina.admin.utils.UUIDGenerator;
@@ -62,6 +63,18 @@ public class AdminUser {
      * 用户类型
      */
     private String type;
+
+    /**
+     * '创建时间'
+     */
+    @TableField("`create`")
+    private Long create;
+
+    /**
+     * '修改时间'
+     */
+    @TableField("`update`")
+    private Long update;
 
     public AdminUser(AdminUser adminUser) {
         this.id = adminUser.getId();

@@ -1,6 +1,7 @@
-package com.sychina.admin.web.system;
+package com.sychina.admin.web.router.system;
 
 import com.aliyun.oss.model.OSSObjectSummary;
+import com.sychina.admin.aop.Access;
 import com.sychina.admin.service.impl.FileUploadServiceImpl;
 import com.sychina.admin.web.pojo.models.FileUploadModel;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
@@ -25,27 +26,31 @@ public class FileUploadController {
 
     @PostMapping("/upload")
     @ApiOperation("上传")
+    @Access
     public ResultModel<FileUploadModel> upload(@RequestParam("file") MultipartFile uploadFile) {
 
         return fileUploadService.upload(uploadFile);
     }
 
-    @PostMapping("/delete")
+//    @PostMapping("/delete")
     @ApiOperation("删除")
+    @Access
     public ResultModel<FileUploadModel> delete(@RequestParam("fileName") String fileName) {
 
         return fileUploadService.delete(fileName);
     }
 
-    @PostMapping("/list")
+//    @PostMapping("/list")
     @ApiOperation("获取文件list")
+    @Access
     public ResultModel<List<OSSObjectSummary>> list() {
 
         return fileUploadService.list();
     }
 
-    @PostMapping("file/download")
+//    @PostMapping("file/download")
     @ApiOperation("下载")
+    @Access
     public void download(@RequestParam("fileName") String fileName, HttpServletResponse response) {
 
         this.fileUploadService.exportOssFile(response, fileName);

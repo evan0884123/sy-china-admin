@@ -1,5 +1,6 @@
-package com.sychina.admin.web.player;
+package com.sychina.admin.web.router.player;
 
+import com.sychina.admin.aop.Access;
 import com.sychina.admin.service.impl.MessageServiceImpl;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.MessageAddParam;
@@ -23,24 +24,28 @@ public class MessageController {
 
     @PostMapping("/add")
     @ApiOperation("新增通知消息")
+    @Access(recordLog = true)
     public ResultModel add(@Validated MessageAddParam messageParam) {
         return messageService.add(messageParam);
     }
 
     @PostMapping("/loadTable")
     @ApiOperation("获取所有通知消息")
+    @Access
     public ResultModel loadTable(@Validated MessageQuery messageQuery) {
         return messageService.loadTable(messageQuery);
     }
 
     @PostMapping("/edit")
     @ApiOperation("编辑通知消息")
+    @Access(recordLog = true)
     public ResultModel edit(@Validated MessageUpdateParam messageParam) {
         return messageService.edit(messageParam);
     }
 
     @PostMapping("/delete")
     @ApiOperation("删除通知消息")
+    @Access(recordLog = true)
     public ResultModel delete(@RequestParam Long id) {
         return messageService.delete(id);
     }

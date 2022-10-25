@@ -1,5 +1,6 @@
-package com.sychina.admin.web.project;
+package com.sychina.admin.web.router.project;
 
+import com.sychina.admin.aop.Access;
 import com.sychina.admin.service.impl.ProjectServiceImpl;
 import com.sychina.admin.web.pojo.SelectOption;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
@@ -25,24 +26,28 @@ public class ProjectController {
 
     @PostMapping("/add")
     @ApiOperation("新增项目")
+    @Access(recordLog = true)
     public ResultModel add(@Validated ProjectParam projectParam) {
         return projectService.add(projectParam);
     }
 
     @PostMapping("/loadTable")
     @ApiOperation("获取所有项目信息")
+    @Access
     public ResultModel loadTable(@Validated ProjectQuery projectQuery) {
         return projectService.loadTable(projectQuery);
     }
 
     @PostMapping("/edit")
     @ApiOperation("编辑项目信息")
+    @Access(recordLog = true)
     public ResultModel edit(@Validated ProjectParam projectParam) {
         return projectService.edit(projectParam);
     }
 
     @PostMapping("/delete")
     @ApiOperation("删除项目信息")
+    @Access(recordLog = true)
     public ResultModel delete(@RequestParam Long id) {
         return projectService.delete(id);
     }

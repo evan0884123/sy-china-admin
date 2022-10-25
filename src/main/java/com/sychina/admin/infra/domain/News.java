@@ -54,6 +54,11 @@ public class News {
     private String author;
 
     /**
+     * '标签(0-首页 1-资讯)'
+     */
+    private Integer tab;
+
+    /**
      * '创建时间'
      */
     @TableField("`create`")

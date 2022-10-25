@@ -1,4 +1,4 @@
-package com.sychina.admin.web.system;
+package com.sychina.admin.web.router.system;
 
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import io.swagger.annotations.Api;

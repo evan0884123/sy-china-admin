@@ -1,5 +1,6 @@
-package com.sychina.admin.web.news;
+package com.sychina.admin.web.router.news;
 
+import com.sychina.admin.aop.Access;
 import com.sychina.admin.service.impl.NewsServiceImpl;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.NewsParam;
@@ -22,24 +23,28 @@ public class NewsController {
 
     @PostMapping("/add")
     @ApiOperation("新增资讯")
+    @Access(recordLog = true)
     public ResultModel add(@Validated NewsParam newsParam) {
         return newsService.add(newsParam);
     }
 
     @PostMapping("/loadTable")
     @ApiOperation("获取资讯")
+    @Access
     public ResultModel loadTable(@Validated NewsQuery newsQuery) {
         return newsService.loadTable(newsQuery);
     }
 
     @PostMapping("/edit")
     @ApiOperation("编辑资讯")
+    @Access(recordLog = true)
     public ResultModel edit(@Validated NewsParam newsParam) {
         return newsService.edit(newsParam);
     }
 
     @PostMapping("/delete")
     @ApiOperation("删除资讯")
+    @Access(recordLog = true)
     public ResultModel delete(@RequestParam Long id) {
         return newsService.delete(id);
     }

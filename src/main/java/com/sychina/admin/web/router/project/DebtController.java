@@ -1,5 +1,6 @@
-package com.sychina.admin.web.project;
+package com.sychina.admin.web.router.project;
 
+import com.sychina.admin.aop.Access;
 import com.sychina.admin.service.impl.DebtServiceImpl;
 import com.sychina.admin.web.pojo.SelectOption;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
@@ -28,24 +29,28 @@ public class DebtController {
 
     @PostMapping("/add")
     @ApiOperation("新增国债")
+    @Access(recordLog = true)
     public ResultModel add(@Validated DebtParam debtParam) {
         return debtService.add(debtParam);
     }
 
     @PostMapping("/loadTable")
     @ApiOperation("获取所有国债")
+    @Access
     public ResultModel loadTable(@Validated DebtQuery debtQuery) {
         return debtService.loadTable(debtQuery);
     }
 
     @PostMapping("/edit")
     @ApiOperation("编辑国债")
+    @Access(recordLog = true)
     public ResultModel edit(@Validated DebtParam debtParam) {
         return debtService.edit(debtParam);
     }
 
     @PostMapping("/delete")
     @ApiOperation("删除国债")
+    @Access(recordLog = true)
     public ResultModel delete(@RequestParam Long id) {
         return debtService.delete(id);
     }

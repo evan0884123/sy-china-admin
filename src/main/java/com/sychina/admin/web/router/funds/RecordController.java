@@ -1,5 +1,6 @@
-package com.sychina.admin.web.funds;
+package com.sychina.admin.web.router.funds;
 
+import com.sychina.admin.aop.Access;
 import com.sychina.admin.service.impl.*;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.*;
@@ -31,30 +32,35 @@ public class RecordController {
 
     @PostMapping("/projectRecord")
     @ApiOperation("获取项目购买信息")
+    @Access
     public ResultModel getProjectRecord(@Validated ProjectRecordQuery recordQuery) {
         return projectRecordService.loadTable(recordQuery);
     }
 
     @PostMapping("/debtRecord")
     @ApiOperation("获取国债购买信息")
+    @Access
     public ResultModel getDebtRecord(@Validated DebtRecordQuery recordQuery) {
         return debtRecordService.loadTable(recordQuery);
     }
 
     @PostMapping("/equities")
     @ApiOperation("获取股权购买信息")
+    @Access
     public ResultModel getEquities(@Validated EquitiesQuery recordQuery) {
         return equitiesService.loadTable(recordQuery);
     }
 
     @PostMapping("/chicken")
     @ApiOperation("获取农场鸡信息")
+    @Access
     public ResultModel getChicken(@Validated ChickenQuery recordQuery) {
         return chickenService.loadTable(recordQuery);
     }
 
     @PostMapping("/accountChange")
     @ApiOperation("获取用户金额流水")
+    @Access
     public ResultModel getAccountChange(@Validated AccountChangeQuery recordQuery) {
         return accountChangeService.loadTable(recordQuery);
     }

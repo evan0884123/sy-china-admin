@@ -1,5 +1,6 @@
-package com.sychina.admin.web.system;
+package com.sychina.admin.web.router.system;
 
+import com.sychina.admin.aop.Access;
 import com.sychina.admin.service.impl.AdminRoleServiceImpl;
 import com.sychina.admin.web.pojo.SelectOption;
 import com.sychina.admin.web.pojo.models.AdminMenuModel;
@@ -26,36 +27,42 @@ public class AdminRoleController {
 
     @PostMapping("/addRole")
     @ApiOperation("新增角色")
+    @Access(recordLog = true)
     public ResultModel addRole(@Validated AdminRoleParam adminRoleParam) {
         return adminRoleServiceImpl.addRole(adminRoleParam);
     }
 
     @PostMapping("/loadRoleTable")
     @ApiOperation("获取所有角色")
+    @Access
     public ResultModel<List<AdminRoleTable>> loadRoleTable() {
         return adminRoleServiceImpl.loadRoleTable();
     }
 
     @PostMapping("/editRole")
     @ApiOperation("编辑角色")
+    @Access(recordLog = true)
     public ResultModel editRole(@Validated AdminRoleParam adminRoleParam) {
         return adminRoleServiceImpl.editRole(adminRoleParam);
     }
 
     @PostMapping("/deleteRole")
     @ApiOperation("删除角色")
+    @Access(recordLog = true)
     public ResultModel deleteRole(@RequestParam Integer id) {
         return adminRoleServiceImpl.deleteRole(id);
     }
 
     @PostMapping("/fetchRoleOption")
     @ApiOperation("获取角色")
+    @Access
     public ResultModel<List<SelectOption>> fetchRoleOption() {
         return adminRoleServiceImpl.fetchRoleOption();
     }
 
     @PostMapping("/loadMenuList")
     @ApiOperation("获取菜单信息")
+    @Access
     public ResultModel<List<AdminMenuModel>> loadMenuList() {
         return adminRoleServiceImpl.loadMenuList();
     }

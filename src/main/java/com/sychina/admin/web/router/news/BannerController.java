@@ -1,5 +1,6 @@
-package com.sychina.admin.web.news;
+package com.sychina.admin.web.router.news;
 
+import com.sychina.admin.aop.Access;
 import com.sychina.admin.service.impl.BannerServiceImpl;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.BannerParam;
@@ -22,24 +23,28 @@ public class BannerController {
 
     @PostMapping("/add")
     @ApiOperation("新增banner")
+    @Access(recordLog = true)
     public ResultModel add(@Validated BannerParam bannerParam) {
         return bannerService.add(bannerParam);
     }
 
     @PostMapping("/loadTable")
     @ApiOperation("获取所有banner")
+    @Access
     public ResultModel loadTable(@Validated BannerQuery bannerQuery) {
         return bannerService.loadTable(bannerQuery);
     }
 
     @PostMapping("/edit")
     @ApiOperation("编辑banner")
+    @Access(recordLog = true)
     public ResultModel edit(@Validated BannerParam bannerParam) {
         return bannerService.edit(bannerParam);
     }
 
     @PostMapping("/delete")
     @ApiOperation("删除banner")
+    @Access(recordLog = true)
     public ResultModel delete(@RequestParam Long id) {
         return bannerService.delete(id);
     }

@@ -1,5 +1,6 @@
-package com.sychina.admin.web.player;
+package com.sychina.admin.web.router.player;
 
+import com.sychina.admin.aop.Access;
 import com.sychina.admin.service.impl.PlayerServiceImpl;
 import com.sychina.admin.web.pojo.SelectOption;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
@@ -29,18 +30,21 @@ public class PlayerController {
 
     @PostMapping("/loadTable")
     @ApiOperation("获取所有玩家信息")
+    @Access
     public ResultModel loadTable(@Validated PlayerQuery playerQuery) {
         return playerService.loadTable(playerQuery);
     }
 
     @PostMapping("/edit")
     @ApiOperation("编辑玩家信息")
+    @Access(recordLog = true)
     public ResultModel edit(@Validated PlayerParam playerParam) {
         return playerService.edit(playerParam);
     }
 
     @PostMapping("/delete")
     @ApiOperation("删除玩家信息")
+    @Access(recordLog = true)
     public ResultModel delete(@RequestParam Long id) {
         return playerService.delete(id);
     }
@@ -53,8 +57,16 @@ public class PlayerController {
 
     @PostMapping("/topOrLowerScore")
     @ApiOperation("用户上分")
+    @Access(recordLog = true)
     public ResultModel topOrLowerScore(@Validated TopOrLowerScoreParam scoreParam) {
         return playerService.topOrLowerScore(scoreParam);
+    }
+
+    @PostMapping("/resetPassword")
+    @ApiOperation("重置玩密码")
+    @Access(recordLog = true)
+    public ResultModel resetPassword(@RequestParam String id) {
+        return playerService.resetPassword(id);
     }
 
     @Autowired

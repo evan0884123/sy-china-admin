@@ -35,6 +35,9 @@ public class NewsTable {
     @ApiModelProperty(value = "出处")
     private String author;
 
+    @ApiModelProperty(value = "标签(0-首页 1-资讯)")
+    private Integer tab;
+
     @ApiModelProperty(value = "创建时间")
     private Long create;
 
@@ -50,6 +53,7 @@ public class NewsTable {
                 .setContent(record.getContent())
                 .setVideoLink(record.getVideoLink())
                 .setAuthor(record.getAuthor())
+                .setTab(record.getTab())
                 .setCreate(record.getCreate())
                 .setUpdate(record.getUpdate());
     }
