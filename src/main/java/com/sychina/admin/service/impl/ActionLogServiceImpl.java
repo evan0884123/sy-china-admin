@@ -27,6 +27,7 @@ public class ActionLogServiceImpl extends ServiceImpl<ActionLogMapper, ActionLog
         QueryWrapper<ActionLog> wrapper = new QueryWrapper<>();
         wrapper.likeRight(StringUtils.isNotBlank(query.getAdminUserName()), "admin_user_name", query.getAdminUserName());
         wrapper.between("`create`", query.getStartTime(), query.getEndTime());
+        wrapper.orderByDesc("`create`");
 
         IPage page = baseMapper.selectPage(query.page(), wrapper);
 
