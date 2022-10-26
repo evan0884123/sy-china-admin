@@ -226,7 +226,8 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
                 .setAcBalance(balance)
                 .setChangeType(chargeType)
                 .setChangeDescribe(changeDes)
-                .setConnId(withdrawApply.getId().toString());
+                .setConnId(withdrawApply.getId().toString())
+                .setCreate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
 
         return accountChanges;
 

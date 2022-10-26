@@ -40,9 +40,8 @@ public class PlayerParam {
     @ApiModelProperty(value = "状态(0-禁用 1-正常)")
     private Integer status;
 
-    public Players convert() {
+    public Players convert(Players player) {
 
-        Players player = new Players();
         player.setNickname(this.getNickname())
                 .setVIp(this.getVIp())
                 .setRealName(this.getRealName())

@@ -74,9 +74,10 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 
     public ResultModel edit(PlayerParam playerParam) {
 
-        Assert.notNull(playerParam.getId(), "id不能为空");
+        Players players = getById(playerParam.getId());
+        Assert.notNull(players, "未找到相关用户信息");
 
-        Players players = playerParam.convert()
+        playerParam.convert(players)
                 .setId(playerParam.getId())
                 .setUpdate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
 
