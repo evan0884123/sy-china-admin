@@ -4,8 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.sychina.admin.common.RedisLock;
+import com.sychina.admin.common.RedisKeys;
 import com.sychina.admin.infra.domain.AccountChanges;
+import com.sychina.admin.infra.domain.Equities;
 import com.sychina.admin.infra.domain.Players;
 import com.sychina.admin.infra.domain.WithdrawApply;
 import com.sychina.admin.infra.mapper.WithdrawApplyMapper;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -36,6 +38,8 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
     private PlayerServiceImpl playerService;
 
     private AccountChangeServiceImpl accountChangeService;
+
+    private EquitiesServiceImpl equitiesService;
 
     private RedisTemplate redisTemplate;
 
@@ -69,7 +73,7 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
         List<WithdrawApply> withdrawApplies = baseMapper.selectBatchIds(withdrawApplyParam.getIds());
         withdrawApplies.forEach(withdrawApply -> {
 
-            String lockKey = RedisLock.playBalanceChange + withdrawApply.getPlayer();
+            String lockKey = RedisKeys.playBalanceChange + withdrawApply.getPlayer();
             lockUtil.tryLock(lockKey, 15);
             try {
                 actionAmount(withdrawApply, withdrawApplyParam);
@@ -147,10 +151,11 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
         playersList.add(players);
 
         accountChangeService.saveOrUpdateBatch(changesList);
+        equitiesService.saveOrUpdate(convert(players, withdrawApply.getAmount().divide(new BigDecimal("20"))));
         playerService.saveOrUpdateBatch(playersList);
 
         playersList.forEach(players1 -> {
-            redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players1.getId().toString(), JSON.toJSONString(players1));
+            redisTemplate.opsForHash().put(RedisKeys.PlayersIDMap, players1.getId().toString(), JSON.toJSONString(players1));
         });
     }
 
@@ -211,7 +216,7 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
         }
         accountChangeService.saveOrUpdate(accountChanges);
         playerService.saveOrUpdate(players);
-        redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
+        redisTemplate.opsForHash().put(RedisKeys.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
     }
 
     private AccountChanges convert(Players players, WithdrawApply withdrawApply, BigDecimal bcBalance, BigDecimal balance,
@@ -252,6 +257,20 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
 
     }
 
+    private Equities convert(Players players, BigDecimal amount) {
+
+        String company = (String) redisTemplate.opsForSet().randomMember(RedisKeys.Companies);
+        Assert.isTrue(StringUtils.isNotBlank(company), "没有公司信息无法配置股权");
+        Equities equities = new Equities()
+                .setPlayer(players.getId())
+                .setPlayerName(players.getAccount())
+                .setAmount(amount)
+                .setCompany(company)
+                .setCreate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
+
+        return equities;
+    }
+
     @Autowired
     public void setLockUtil(RedisLockUtil lockUtil) {
         this.lockUtil = lockUtil;
@@ -270,5 +289,9 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
     @Autowired
     public void setRedisTemplate(RedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
+    }
+
+    public void setEquitiesService(EquitiesServiceImpl equitiesService) {
+        this.equitiesService = equitiesService;
     }
 }

@@ -3,7 +3,7 @@ package com.sychina.admin.common;
 /**
  * @author Administrator
  */
-public interface RedisLock {
+public interface RedisKeys {
 
     /**
      * redisLock 的锁名
@@ -14,4 +14,10 @@ public interface RedisLock {
      * 用户信息的缓存
      */
     String PlayersIDMap = "PlayersIDMap";
+
+
+    /**
+     * 公司信息的缓存
+     */
+    String Companies = "Companies";
 }

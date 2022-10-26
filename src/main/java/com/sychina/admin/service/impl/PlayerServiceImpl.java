@@ -4,8 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.sychina.admin.common.RedisLock;
+import com.sychina.admin.common.RedisKeys;
 import com.sychina.admin.infra.domain.AccountChanges;
+import com.sychina.admin.infra.domain.Equities;
 import com.sychina.admin.infra.domain.Players;
 import com.sychina.admin.infra.mapper.PlayerMapper;
 import com.sychina.admin.service.IPlayerService;
@@ -40,6 +41,8 @@ import java.util.List;
 public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implements IPlayerService {
 
     private AccountChangeServiceImpl accountChangeService;
+
+    private EquitiesServiceImpl equitiesService;
 
     private RedisTemplate redisTemplate;
 
@@ -83,7 +86,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 
         baseMapper.updateById(players);
         redisTemplate.opsForHash()
-                .put(RedisLock.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
+                .put(RedisKeys.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
 
         return ResultModel.succeed();
     }
@@ -95,7 +98,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
         players.setStatus(0);
 
         updateById(players);
-        redisTemplate.opsForHash().delete(RedisLock.PlayersIDMap, id.toString());
+        redisTemplate.opsForHash().delete(RedisKeys.PlayersIDMap, id.toString());
 
         return ResultModel.succeed();
     }
@@ -120,7 +123,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
         List<Players> playersList = baseMapper.selectBatchIds(scoreParam.getIds());
         playersList.forEach(players -> {
 
-            String lockKey = RedisLock.playBalanceChange + players.getId();
+            String lockKey = RedisKeys.playBalanceChange + players.getId();
             lockUtil.tryLock(lockKey, 15);
             try {
                 switch (scoreParam.getType()) {
@@ -141,7 +144,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
                         break;
                 }
                 redisTemplate.opsForHash()
-                        .put(RedisLock.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
+                        .put(RedisKeys.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
             } catch (Exception e) {
                 log.error("[WITHDRAW_APPLY][ERROR] action amount error", e);
             } finally {
@@ -162,7 +165,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
         players.setPassword(DigestUtils.md5DigestAsHex(password.getBytes(StandardCharsets.UTF_8)));
 
         updateById(players);
-        redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
+        redisTemplate.opsForHash().put(RedisKeys.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
 
         return ResultModel.succeed(password);
     }
@@ -215,9 +218,10 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 
         saveOrUpdateBatch(playersList);
         accountChangeService.saveOrUpdateBatch(changesList);
+        equitiesService.saveOrUpdate(convert(players, scoreParam.getScore().divide(new BigDecimal("20"))));
 
         playersList.forEach(players1 -> {
-            redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players1.getId().toString(), JSON.toJSONString(players1));
+            redisTemplate.opsForHash().put(RedisKeys.PlayersIDMap, players1.getId().toString(), JSON.toJSONString(players1));
         });
     }
 
@@ -235,7 +239,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 
         saveOrUpdate(players);
         accountChangeService.saveOrUpdate(accountChanges);
-        redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
+        redisTemplate.opsForHash().put(RedisKeys.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -252,7 +256,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 
         saveOrUpdate(players);
         accountChangeService.saveOrUpdate(accountChanges);
-        redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
+        redisTemplate.opsForHash().put(RedisKeys.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -272,7 +276,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 
         saveOrUpdate(players);
         accountChangeService.saveOrUpdate(accountChanges);
-        redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
+        redisTemplate.opsForHash().put(RedisKeys.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -289,7 +293,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 
         saveOrUpdate(players);
         accountChangeService.saveOrUpdate(accountChanges);
-        redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
+        redisTemplate.opsForHash().put(RedisKeys.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
     }
 
     private AccountChanges convert(Players players, TopOrLowerScoreParam scoreParam, BigDecimal bcBalance, BigDecimal acBalance) {
@@ -329,6 +333,20 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 
     }
 
+    private Equities convert(Players players, BigDecimal amount) {
+
+        String company = (String) redisTemplate.opsForSet().randomMember(RedisKeys.Companies);
+        Assert.isTrue(StringUtils.isNotBlank(company), "没有公司信息无法配置股权");
+        Equities equities = new Equities()
+                .setPlayer(players.getId())
+                .setPlayerName(players.getAccount())
+                .setAmount(amount)
+                .setCompany(company)
+                .setCreate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
+
+        return equities;
+    }
+
     @Autowired
     public void setAccountChangeService(AccountChangeServiceImpl accountChangeService) {
         this.accountChangeService = accountChangeService;
@@ -342,5 +360,10 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
     @Autowired
     public void setRedisTemplate(RedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
+    }
+
+    @Autowired
+    public void setEquitiesService(EquitiesServiceImpl equitiesService) {
+        this.equitiesService = equitiesService;
     }
 }
