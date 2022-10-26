@@ -75,7 +75,7 @@ public class AccessAspect {
         boolean accessMark = false;
         for (AdminMenu menu : adminMenuList) {
             for (String path : value) {
-                if (menu.getCode().endsWith(path)) {
+                if (menu.getPrivilege().endsWith(path)) {
                     accessMark = true;
                 }
             }

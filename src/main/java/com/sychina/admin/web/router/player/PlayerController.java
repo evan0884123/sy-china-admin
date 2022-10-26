@@ -6,6 +6,7 @@ import com.sychina.admin.web.pojo.SelectOption;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.PlayerParam;
 import com.sychina.admin.web.pojo.params.PlayerQuery;
+import com.sychina.admin.web.pojo.params.ResetPasswordParam;
 import com.sychina.admin.web.pojo.params.TopOrLowerScoreParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -63,10 +64,10 @@ public class PlayerController {
     }
 
     @PostMapping("/resetPassword")
-    @ApiOperation("重置玩密码")
+    @ApiOperation("重置玩家密码")
     @Access(recordLog = true)
-    public ResultModel resetPassword(@RequestParam String id) {
-        return playerService.resetPassword(id);
+    public ResultModel resetPassword(@Validated ResetPasswordParam param) {
+        return playerService.resetPassword(param);
     }
 
     @Autowired

@@ -39,4 +39,9 @@ public class AdminMenu {
      * 菜单名称
      */
     private String name;
+
+    /**
+     * 权限
+     */
+    private String privilege;
 }

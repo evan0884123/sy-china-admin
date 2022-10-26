@@ -17,6 +17,7 @@ import com.sychina.admin.web.pojo.models.PlayerTable;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.PlayerParam;
 import com.sychina.admin.web.pojo.params.PlayerQuery;
+import com.sychina.admin.web.pojo.params.ResetPasswordParam;
 import com.sychina.admin.web.pojo.params.TopOrLowerScoreParam;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -150,23 +151,19 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
         return ResultModel.succeed();
     }
 
-    public ResultModel resetPassword(String id) {
+    public ResultModel resetPassword(ResetPasswordParam param) {
 
-        Players players = baseMapper.selectById(id);
+        Players players = baseMapper.selectById(param.getId());
         Assert.notNull(players, "未查到此玩家");
 
-        String password = StringGenerator.genRandom(8);;
+        String password = param.getNewPassword() == null ? StringGenerator.genRandom(8) :
+                param.getNewPassword();
         players.setPassword(DigestUtils.md5DigestAsHex(password.getBytes(StandardCharsets.UTF_8)));
 
         updateById(players);
         redisTemplate.opsForHash().put(RedisLock.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
 
         return ResultModel.succeed(password);
-    }
-
-    public static void main(String[] args) {
-        String a = DigestUtils.md5DigestAsHex("123456".getBytes(StandardCharsets.UTF_8));
-        System.out.println(a);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -183,20 +180,26 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
                 String[] split = players.getLevelInfo().split("/");
                 // 一级返佣 20%
                 Players superior = baseMapper.selectById(Long.valueOf(split[split.length - 1]));
-                BigDecimal superiorRebate = scoreParam.getScore().multiply(new BigDecimal("0.2"));
-                BigDecimal superiorBalance = superior.getPromoteBalance().add(superiorRebate);
-                changesList.add(convert(superior, superior.getPromoteBalance(), superiorRebate, superiorBalance, 2, 5, "推广返佣"));
-                superior.setPromoteBalance(superiorBalance);
-                playersList.add(superior);
+                if (superior != null) {
 
-                if (split.length >= 2) {
-                    // 二级返佣 10%
-                    Players superiorTwo = baseMapper.selectById(Long.valueOf(split[split.length - 2]));
-                    BigDecimal superiorTwoRebate = scoreParam.getScore().multiply(new BigDecimal("0.1"));
-                    BigDecimal superiorTwoBalance = superiorTwo.getPromoteBalance().add(superiorTwoRebate);
-                    changesList.add(convert(superiorTwo, superiorTwo.getPromoteBalance(), superiorTwoRebate, superiorTwoBalance, 2, 5, "推广返佣"));
-                    superiorTwo.setPromoteBalance(superiorTwoBalance);
-                    playersList.add(superiorTwo);
+                    BigDecimal superiorRebate = scoreParam.getScore().multiply(new BigDecimal("0.2"));
+                    BigDecimal superiorBalance = superior.getPromoteBalance().add(superiorRebate);
+                    changesList.add(convert(superior, superior.getPromoteBalance(), superiorRebate, superiorBalance, 2, 5, "推广返佣"));
+                    superior.setPromoteBalance(superiorBalance);
+                    playersList.add(superior);
+
+                    if (split.length >= 2) {
+                        // 二级返佣 10%
+                        Players superiorTwo = baseMapper.selectById(Long.valueOf(split[split.length - 2]));
+                        if (superiorTwo != null) {
+
+                            BigDecimal superiorTwoRebate = scoreParam.getScore().multiply(new BigDecimal("0.1"));
+                            BigDecimal superiorTwoBalance = superiorTwo.getPromoteBalance().add(superiorTwoRebate);
+                            changesList.add(convert(superiorTwo, superiorTwo.getPromoteBalance(), superiorTwoRebate, superiorTwoBalance, 2, 5, "推广返佣"));
+                            superiorTwo.setPromoteBalance(superiorTwoBalance);
+                            playersList.add(superiorTwo);
+                        }
+                    }
                 }
 
             }
