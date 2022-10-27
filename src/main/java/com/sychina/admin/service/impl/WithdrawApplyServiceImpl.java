@@ -27,6 +27,7 @@ import org.springframework.util.Assert;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -68,18 +69,19 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
         return ResultModel.succeed(page);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public ResultModel edit(WithdrawApplyParam withdrawApplyParam) {
 
         List<WithdrawApply> withdrawApplies = baseMapper.selectBatchIds(withdrawApplyParam.getIds());
         withdrawApplies.forEach(withdrawApply -> {
 
+            if (Arrays.asList(1, 2).contains(withdrawApply.getStatus())) {
+                return;
+            }
             String lockKey = RedisKeys.playBalanceChange + withdrawApply.getPlayer();
             lockUtil.tryLock(lockKey, 15);
             try {
                 actionAmount(withdrawApply, withdrawApplyParam);
-            } catch (Exception e) {
-                log.error("[WITHDRAW_APPLY][ERROR] action amount error", e);
-                throw e;
             } finally {
                 lockUtil.unlock(lockKey);
             }
@@ -88,7 +90,6 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
         return ResultModel.succeed();
     }
 
-    @Transactional(rollbackFor = Exception.class)
     public void actionAmount(WithdrawApply withdrawApply, WithdrawApplyParam withdrawApplyParam) {
 
         if (!withdrawApply.getStatus().equals(withdrawApplyParam.getStatus())) {
@@ -113,7 +114,7 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
         saveOrUpdate(withdrawApply);
     }
 
-    private void rechargeApproved(Players players, WithdrawApply withdrawApply) {
+    public void rechargeApproved(Players players, WithdrawApply withdrawApply) {
         BigDecimal balance = players.getUseBalance().add(withdrawApply.getAmount());
         BigDecimal totalRecharge = players.getTotalRecharge().add(withdrawApply.getAmount());
 
@@ -159,7 +160,7 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
         });
     }
 
-    private void withdrawApproved(Players players, WithdrawApply withdrawApply) {
+    public void withdrawApproved(Players players, WithdrawApply withdrawApply) {
         AccountChanges accountChanges = null;
         BigDecimal balance;
         switch (withdrawApply.getWdType()) {
@@ -183,7 +184,7 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
         accountChangeService.saveOrUpdate(accountChanges);
     }
 
-    private void withdrawReject(WithdrawApply withdrawApply) {
+    public void withdrawReject(WithdrawApply withdrawApply) {
         Players players = playerService.getById(withdrawApply.getPlayer());
         AccountChanges accountChanges = null;
         BigDecimal balance;
@@ -291,6 +292,7 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
         this.redisTemplate = redisTemplate;
     }
 
+    @Autowired
     public void setEquitiesService(EquitiesServiceImpl equitiesService) {
         this.equitiesService = equitiesService;
     }

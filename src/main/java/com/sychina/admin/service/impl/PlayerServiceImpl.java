@@ -118,6 +118,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
         return ResultModel.succeed(playerSelect);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public ResultModel topOrLowerScore(TopOrLowerScoreParam scoreParam) {
 
         List<Players> playersList = baseMapper.selectBatchIds(scoreParam.getIds());
@@ -170,15 +171,16 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
         return ResultModel.succeed(password);
     }
 
-    @Transactional(rollbackFor = Exception.class)
     public void updateUseBalance(Players players, TopOrLowerScoreParam scoreParam) {
 
         BigDecimal totalRecharge, acBalance;
         List<Players> playersList = new ArrayList<>();
         List<AccountChanges> changesList = new ArrayList<>();
+        Equities equities = null;
         if (scoreParam.getOperationType() == 0) {
             acBalance = players.getUseBalance().add(scoreParam.getScore());
             totalRecharge = players.getTotalRecharge().add(scoreParam.getScore());
+            equities = convert(players, scoreParam.getScore().divide(new BigDecimal("20")));
 
             if (StringUtils.isNotBlank(players.getLevelInfo())) {
                 String[] split = players.getLevelInfo().split("/");
@@ -218,14 +220,13 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 
         saveOrUpdateBatch(playersList);
         accountChangeService.saveOrUpdateBatch(changesList);
-        equitiesService.saveOrUpdate(convert(players, scoreParam.getScore().divide(new BigDecimal("20"))));
+        equitiesService.saveOrUpdate(equities);
 
         playersList.forEach(players1 -> {
             redisTemplate.opsForHash().put(RedisKeys.PlayersIDMap, players1.getId().toString(), JSON.toJSONString(players1));
         });
     }
 
-    @Transactional(rollbackFor = Exception.class)
     public void updateWithdrawBalance(Players players, TopOrLowerScoreParam scoreParam) {
 
         BigDecimal acBalance;
@@ -242,7 +243,6 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
         redisTemplate.opsForHash().put(RedisKeys.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
     }
 
-    @Transactional(rollbackFor = Exception.class)
     public void updatePromoteBalance(Players players, TopOrLowerScoreParam scoreParam) {
 
         BigDecimal acBalance;
@@ -259,7 +259,6 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
         redisTemplate.opsForHash().put(RedisKeys.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
     }
 
-    @Transactional(rollbackFor = Exception.class)
     public void updateProjectBalance(Players players, TopOrLowerScoreParam scoreParam) {
 
         BigDecimal totalRecharge, acBalance;
@@ -279,7 +278,6 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
         redisTemplate.opsForHash().put(RedisKeys.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
     }
 
-    @Transactional(rollbackFor = Exception.class)
     public void updateShareMoneyProfit(Players players, TopOrLowerScoreParam scoreParam) {
 
         BigDecimal acBalance;
