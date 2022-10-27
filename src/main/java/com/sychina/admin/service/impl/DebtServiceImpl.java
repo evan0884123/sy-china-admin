@@ -55,6 +55,7 @@ public class DebtServiceImpl extends ServiceImpl<DebtMapper, Debts> implements I
         wrapper.eq(debtQuery.getStatus() != null, "`status`", debtQuery.getStatus());
         wrapper.between(debtQuery.getTimeType() == 0, "`create`", debtQuery.getStartTime(), debtQuery.getEndTime());
         wrapper.between(debtQuery.getTimeType() == 1, "`update`", debtQuery.getStartTime(), debtQuery.getEndTime());
+        wrapper.orderByDesc("`create`");
 
         IPage page = baseMapper.selectPage(debtQuery.page(), wrapper);
 

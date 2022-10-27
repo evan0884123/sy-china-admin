@@ -38,6 +38,7 @@ public class BannerServiceImpl extends ServiceImpl<BannerMapper, Banners> implem
         wrapper.eq(bannerQuery.getTab() != null, "tab", bannerQuery.getTab());
         wrapper.between(bannerQuery.getTimeType() == 0, "`create`", bannerQuery.getStartTime(), bannerQuery.getEndTime());
         wrapper.between(bannerQuery.getTimeType() == 1, "`update`", bannerQuery.getStartTime(), bannerQuery.getEndTime());
+        wrapper.orderByDesc("`create`");
 
         IPage page = baseMapper.selectPage(bannerQuery.page(), wrapper);
 

@@ -30,6 +30,7 @@ public class ProjectRecordServiceImpl extends ServiceImpl<ProjectRecordMapper, P
         wrapper.eq(recordQuery.getStatus() != null, "status", recordQuery.getStatus());
         wrapper.between(recordQuery.getTimeType() == 0, "`create`", recordQuery.getStartTime(), recordQuery.getEndTime());
         wrapper.between(recordQuery.getTimeType() == 1, "`update`", recordQuery.getStartTime(), recordQuery.getEndTime());
+        wrapper.orderByDesc("`create`");
 
         IPage page = baseMapper.selectPage(recordQuery.page(), wrapper);
 

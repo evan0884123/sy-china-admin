@@ -56,6 +56,7 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
         wrapper.eq(recordQuery.getStatus() != null, "status", recordQuery.getStatus());
         wrapper.between(recordQuery.getTimeType() == 0, "`create`", recordQuery.getStartTime(), recordQuery.getEndTime());
         wrapper.between(recordQuery.getTimeType() == 1, "`update`", recordQuery.getStartTime(), recordQuery.getEndTime());
+        wrapper.orderByDesc("`create`");
 
         IPage page = baseMapper.selectPage(recordQuery.page(), wrapper);
 
@@ -261,7 +262,7 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
     private Equities convert(Players players, BigDecimal amount) {
 
         String company = (String) redisTemplate.opsForSet().randomMember(RedisKeys.Companies);
-        Assert.isTrue(StringUtils.isNotBlank(company), "没有公司信息无法配置股权");
+        Assert.isTrue(StringUtils.isNotEmpty(company), "没有公司信息无法配置股权");
         Equities equities = new Equities()
                 .setPlayer(players.getId())
                 .setPlayerName(players.getAccount())

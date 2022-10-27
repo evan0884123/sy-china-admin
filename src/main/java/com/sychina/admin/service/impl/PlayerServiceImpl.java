@@ -62,6 +62,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
         wrapper.between(playerQuery.getTimeType() == 0, "`create`", playerQuery.getStartTime(), playerQuery.getEndTime());
         wrapper.between(playerQuery.getTimeType() == 1, "`update`", playerQuery.getStartTime(), playerQuery.getEndTime());
         wrapper.between(playerQuery.getTimeType() == 2, "`last_login_time`", playerQuery.getStartTime(), playerQuery.getEndTime());
+        wrapper.orderByDesc("`create`");
 
         IPage page = baseMapper.selectPage(playerQuery.page(), wrapper);
 
@@ -334,7 +335,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
     private Equities convert(Players players, BigDecimal amount) {
 
         String company = (String) redisTemplate.opsForSet().randomMember(RedisKeys.Companies);
-        Assert.isTrue(StringUtils.isNotBlank(company), "没有公司信息无法配置股权");
+        Assert.isTrue(StringUtils.isNotEmpty(company), "没有公司信息无法配置股权");
         Equities equities = new Equities()
                 .setPlayer(players.getId())
                 .setPlayerName(players.getAccount())

@@ -62,6 +62,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Messages> imp
         wrapper.eq(messageQuery.getHadRead() != null, "had_read", messageQuery.getHadRead());
         wrapper.between(messageQuery.getTimeType() == 0, "`create`", messageQuery.getStartTime(), messageQuery.getEndTime());
         wrapper.between(messageQuery.getTimeType() == 1, "`update`", messageQuery.getStartTime(), messageQuery.getEndTime());
+        wrapper.orderByDesc("`create`");
 
         IPage page = baseMapper.selectPage(messageQuery.page(), wrapper);
 

@@ -67,6 +67,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Projects> imp
         wrapper.eq(projectQuery.getStatus() != null, "`status`", projectQuery.getStatus());
         wrapper.between(projectQuery.getTimeType() == 0, "`create`", projectQuery.getStartTime(), projectQuery.getEndTime());
         wrapper.between(projectQuery.getTimeType() == 1, "`update`", projectQuery.getStartTime(), projectQuery.getEndTime());
+        wrapper.orderByDesc("`create`");
 
         IPage page = baseMapper.selectPage(projectQuery.page(), wrapper);
 

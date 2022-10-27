@@ -46,6 +46,7 @@ public class BankInfoServiceImpl extends ServiceImpl<BankInfoMapper, BankInfos> 
         wrapper.eq(bankQuery.getVerified() != null, "verified", bankQuery.getVerified());
         wrapper.between(bankQuery.getTimeType() == 0, "`create`", bankQuery.getStartTime(), bankQuery.getEndTime());
         wrapper.between(bankQuery.getTimeType() == 1, "`update`", bankQuery.getStartTime(), bankQuery.getEndTime());
+        wrapper.orderByDesc("`create`");
 
         IPage page = baseMapper.selectPage(bankQuery.page(), wrapper);
 

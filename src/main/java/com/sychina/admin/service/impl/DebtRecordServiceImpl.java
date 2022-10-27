@@ -30,6 +30,7 @@ public class DebtRecordServiceImpl extends ServiceImpl<DebtRecordMapper, DebtRec
         wrapper.eq(recordQuery.getInvest() != null, "invest", recordQuery.getInvest());
         wrapper.between(recordQuery.getTimeType() == 0, "`create`", recordQuery.getStartTime(), recordQuery.getEndTime());
         wrapper.between(recordQuery.getTimeType() == 1, "`update`", recordQuery.getStartTime(), recordQuery.getEndTime());
+        wrapper.orderByDesc("`create`");
 
         IPage page = baseMapper.selectPage(recordQuery.page(), wrapper);
 
