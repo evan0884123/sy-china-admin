@@ -18,6 +18,7 @@ import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.AdminUserParam;
 import com.sychina.admin.web.pojo.params.AdminUserQuery;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -87,6 +88,7 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
      * @param password    新密码
      * @param oldPassword 原密码
      */
+    @CacheEvict(value = "admin", allEntries = true)
     public ResultModel updatePassword(String id, String password, String oldPassword) {
 
         AdminUser adminUser = baseMapper.selectById(id);
@@ -144,6 +146,7 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
      * @param adminUserParam 前端用户表单
      * @return 是否成功
      */
+    @CacheEvict(value = "admin", allEntries = true)
     public ResultModel editUser(AdminUserParam adminUserParam) {
 
         AdminUser adminUser = baseMapper.selectById(adminUserParam.getId());
@@ -167,6 +170,7 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
      * @param id
      * @return
      */
+    @CacheEvict(value = "admin", allEntries = true)
     public ResultModel deleteUser(String id) {
 
         baseMapper.deleteById(id);
@@ -179,6 +183,7 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
      * @param id
      * @return
      */
+    @CacheEvict(value = "admin", allEntries = true)
     public ResultModel<String> resetPassword(String id) {
 
         AdminUser adminUser = baseMapper.selectById(id);

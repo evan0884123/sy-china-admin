@@ -1,6 +1,7 @@
 package com.sychina.admin.common;
 
 import com.sychina.admin.auth.jwt.JwtAuthenticationConfig;
+import com.sychina.admin.cache.AdminUserCache;
 import com.sychina.admin.exception.AuthenticationException;
 import com.sychina.admin.infra.domain.AdminUser;
 import com.sychina.admin.infra.mapper.AdminUserMapper;
@@ -20,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 public class RequestContext {
 
-    private AdminUserMapper adminUserMapper;
+    private AdminUserCache adminUserCache;
 
     private JwtAuthenticationConfig config;
 
@@ -42,17 +43,17 @@ public class RequestContext {
         if (userId == null) {
             throw new AuthenticationException("user id is empty");
         }
-        AdminUser adminUser = adminUserMapper.selectById(userId);
+        AdminUser adminUser = adminUserCache.cacheAdminUser(userId);
         return adminUser;
-    }
-
-    @Autowired
-    public void setUserMapper(AdminUserMapper adminUserMapper) {
-        this.adminUserMapper = adminUserMapper;
     }
 
     @Autowired
     public void setConfig(JwtAuthenticationConfig config) {
         this.config = config;
+    }
+
+    @Autowired
+    public void setAdminUserCache(AdminUserCache adminUserCache) {
+        this.adminUserCache = adminUserCache;
     }
 }

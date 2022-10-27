@@ -1,6 +1,7 @@
 package com.sychina.admin.aop;
 
 import com.alibaba.fastjson.JSON;
+import com.sychina.admin.cache.AdminUserCache;
 import com.sychina.admin.common.RequestContext;
 import com.sychina.admin.infra.domain.ActionLog;
 import com.sychina.admin.infra.domain.AdminMenu;
@@ -20,6 +21,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,9 +43,7 @@ public class AccessAspect {
 
     private ActionLogServiceImpl actionLogService;
 
-    private AdminRoleServiceImpl adminRoleService;
-
-    private AdminMenuMapper adminMenuMapper;
+    private AdminUserCache adminUserCache;
 
     private RequestContext requestContext;
 
@@ -65,11 +65,7 @@ public class AccessAspect {
 
         AdminUser adminUser = requestContext.getRequestUser();
         Assert.notNull(adminUser, "未找到该用户");
-        AdminRole adminRole = adminRoleService.getById(adminUser.getRoleId());
-        Assert.notNull(adminRole, "未找到该用户的关联角色");
-
-        String[] menuId = adminRole.getMenus().split(",");
-        List<AdminMenu> adminMenuList = adminMenuMapper.selectBatchIds(Arrays.asList(menuId));
+        List<AdminMenu> adminMenuList = adminUserCache.cachePrivilege(adminUser);
         Class<?> claaz = joinPoint.getTarget().getClass();
         String[] value = claaz.getDeclaredAnnotation(RequestMapping.class).value();
         boolean accessMark = false;
@@ -141,6 +137,7 @@ public class AccessAspect {
                 methodSignature.getParameterTypes());
     }
 
+
     @Autowired
     public void setActionLogService(ActionLogServiceImpl actionLogService) {
         this.actionLogService = actionLogService;
@@ -152,12 +149,7 @@ public class AccessAspect {
     }
 
     @Autowired
-    public void setAdminRoleService(AdminRoleServiceImpl adminRoleService) {
-        this.adminRoleService = adminRoleService;
-    }
-
-    @Autowired
-    public void setAdminMenuMapper(AdminMenuMapper adminMenuMapper) {
-        this.adminMenuMapper = adminMenuMapper;
+    public void setAdminUserCache(AdminUserCache adminUserCache) {
+        this.adminUserCache = adminUserCache;
     }
 }

@@ -13,6 +13,7 @@ import com.sychina.admin.web.pojo.models.AdminRoleTable;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.AdminRoleParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -75,6 +76,7 @@ public class AdminRoleServiceImpl extends ServiceImpl<AdminRoleMapper, AdminRole
      * @param adminRoleParam
      * @return
      */
+    @CacheEvict(value = "admin", allEntries = true)
     public ResultModel editRole(AdminRoleParam adminRoleParam) {
 
         AdminRole adminRole = baseMapper.selectById(adminRoleParam.getId());
@@ -94,6 +96,7 @@ public class AdminRoleServiceImpl extends ServiceImpl<AdminRoleMapper, AdminRole
      * @param id roleid
      * @return 是否成
      */
+    @CacheEvict(value = "admin", allEntries = true)
     public ResultModel deleteRole(Integer id) {
 
         baseMapper.deleteById(id);

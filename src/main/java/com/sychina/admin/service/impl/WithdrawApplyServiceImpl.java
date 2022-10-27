@@ -103,7 +103,7 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
 
                     withdrawApproved(players, withdrawApply);
                 }
-            } else if (withdrawApplyParam.getStatus() == 3) {
+            } else if (withdrawApplyParam.getStatus() == 3 && withdrawApply.getType() == 1) {
 
                 withdrawReject(withdrawApply);
             }
