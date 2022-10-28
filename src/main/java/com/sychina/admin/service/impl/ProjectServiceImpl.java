@@ -1,5 +1,6 @@
 package com.sychina.admin.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -22,8 +23,6 @@ import org.springframework.util.Assert;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringJoiner;
-import java.util.stream.Stream;
 
 /**
  * @author Administrator
@@ -44,15 +43,10 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Projects> imp
                 .setDebtName(debts.getName())
                 .setCreate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
 
-        int id = baseMapper.insert(projects);
+        baseMapper.insert(projects);
 
-        String mount = debts.getMount();
-        StringJoiner joiner = new StringJoiner(",", "[", "]");
-        if (StringUtils.isNotBlank(mount)) {
-            String substring = mount.substring(1, mount.length() - 1);
-            joiner.add(substring);
-        }
-        debts.setMount(joiner.add(projects.getId() + "").toString());
+        List<Long> mountList = JSON.parseArray(debts.getMount(), Long.class);
+        debts.setMount(JSON.toJSONString(mountList.add(projects.getId())));
         debtService.updateById(debts);
 
         return ResultModel.succeed();
@@ -104,18 +98,10 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Projects> imp
         Assert.notNull(debts, "未找到该国债信息");
 
         String mount = debts.getMount();
-        StringJoiner joiner = new StringJoiner(",", "[", "]");
-        if (StringUtils.isNotBlank(mount)) {
-            String[] split = mount.substring(1, mount.length() - 1).split(",");
-            Stream.of(split).forEach(pid -> {
-                if (Long.valueOf(pid).equals(id)) {
-                    return;
-                }
-                joiner.add(pid);
-            });
-        }
+        List<Long> mountList = JSON.parseArray(debts.getMount(), Long.class);
+        mountList.remove(id);
 
-        debtService.saveOrUpdate(debts.setMount(joiner.toString()));
+        debtService.saveOrUpdate(debts.setMount(JSON.toJSONString(mountList)));
         baseMapper.deleteById(id);
 
         return ResultModel.succeed();

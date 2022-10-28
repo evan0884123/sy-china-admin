@@ -1,5 +1,6 @@
 package com.sychina.admin.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -21,7 +22,6 @@ import org.springframework.util.Assert;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * @author Administrator
@@ -40,6 +40,7 @@ public class DebtServiceImpl extends ServiceImpl<DebtMapper, Debts> implements I
         Debts debts = debtParam.convert()
                 .setName(debtParam.getName())
                 .setNumbering(debtParam.getNumbering())
+                .setMount(JSON.toJSONString(new ArrayList<Long>()))
                 .setCreate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
 
         baseMapper.insert(debts);
@@ -88,13 +89,10 @@ public class DebtServiceImpl extends ServiceImpl<DebtMapper, Debts> implements I
         Debts debts = baseMapper.selectById(id);
         Assert.notNull(debts, "未找到该国债信息");
 
-        String mount = debts.getMount();
-        if (StringUtils.isNotBlank(mount)) {
-            String[] split = mount.substring(1, mount.length() - 1).split(",");
-            Stream.of(split).forEach(pid -> {
-                projectService.delete(Long.valueOf(pid));
-            });
-        }
+        List<Long> longList = JSON.parseArray(debts.getMount(), Long.class);
+        longList.forEach(pid -> {
+            projectService.delete(pid);
+        });
 
         baseMapper.deleteById(id);
         return ResultModel.succeed();
