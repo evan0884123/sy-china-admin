@@ -43,10 +43,11 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Projects> imp
                 .setDebtName(debts.getName())
                 .setCreate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
 
-        baseMapper.insert(projects);
+        int insert = baseMapper.insert(projects);
 
         List<Long> mountList = JSON.parseArray(debts.getMount(), Long.class);
-        debts.setMount(JSON.toJSONString(mountList.add(projects.getId())));
+        mountList.add(projects.getId());
+        debts.setMount(JSON.toJSONString(mountList));
         debtService.updateById(debts);
 
         return ResultModel.succeed();
@@ -97,7 +98,6 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Projects> imp
         Debts debts = debtService.getOne(new QueryWrapper<Debts>().eq("numbering", projects.getDebtNumbering()));
         Assert.notNull(debts, "未找到该国债信息");
 
-        String mount = debts.getMount();
         List<Long> mountList = JSON.parseArray(debts.getMount(), Long.class);
         mountList.remove(id);
 

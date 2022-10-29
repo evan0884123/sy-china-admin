@@ -37,6 +37,13 @@ public class WithdrawApplyController {
         return withdrawApplyService.edit(withdrawApplyParam);
     }
 
+    @PostMapping("/notice")
+    @ApiOperation("申请提醒")
+    @Access
+    public ResultModel applicationNotice() {
+        return withdrawApplyService.applicationNotice();
+    }
+
     @Autowired
     public void setWithdrawApplyService(WithdrawApplyServiceImpl withdrawApplyService) {
         this.withdrawApplyService = withdrawApplyService;
