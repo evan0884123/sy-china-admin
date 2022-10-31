@@ -55,6 +55,9 @@ public class ProjectParam {
     @ApiModelProperty(value = "状态(0-关闭 1-启用)")
     private Integer status;
 
+    @ApiModelProperty(value = "项目介绍")
+    private String detail;
+
     public Projects convert() {
 
         String[] dirs = this.getDir().split(",");
@@ -71,7 +74,8 @@ public class ProjectParam {
                 .setWithdrawLc("[" + this.getWithdrawLc() + "]")
                 .setWithdrawRate(this.getWithdrawRate())
                 .setWithdrawThreshold(this.getWithdrawThreshold())
-                .setStatus(this.getStatus());
+                .setStatus(this.getStatus())
+                .setDetail(this.getDetail());
 
         return projects;
     }

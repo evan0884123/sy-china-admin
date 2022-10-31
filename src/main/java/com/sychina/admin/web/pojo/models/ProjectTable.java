@@ -55,6 +55,9 @@ public class ProjectTable {
     @ApiModelProperty(value = "状态(0-关闭 1-启用)")
     private Integer status;
 
+    @ApiModelProperty(value = "项目介绍")
+    private String detail;
+
     @ApiModelProperty(value = "创建时间")
     private Long create;
 
@@ -76,6 +79,7 @@ public class ProjectTable {
                 .setWithdrawRate(record.getWithdrawRate())
                 .setWithdrawThreshold(record.getWithdrawThreshold())
                 .setStatus(record.getStatus())
+                .setDetail(record.getDetail())
                 .setCreate(record.getCreate())
                 .setUpdate(record.getUpdate());
     }

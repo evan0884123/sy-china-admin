@@ -1,0 +1,62 @@
+jwt:
+  secret: sychina-admin@@1234
+  prefix: sychina
+  # 60 * 60
+  expiration: 43200
+server:
+  shutdown: graceful
+  port: 7004
+  undertow:
+    max-parameters: 10485760
+    max-headers: 10485760
+    max-http-post-size: 10485760
+    threads:
+      io: 16
+      worker: 32
+
+#
+spring:
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 1000MB
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:16033/sy_china?useSSL=false&&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2B8&allowMultiQueries=true
+    username: root
+    password: 20220916@root
+#
+  redis:
+    host: localhost
+    port: 9736
+    password: 20220916@root
+    database: 0
+
+#
+mybatis-plus:
+  mapper-locations: classpath:mybatis/*.xml
+  type-aliases-package: com.sychina.admin.infra.domain
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+#
+aliyun:
+  endpoint: oss-cn-hangzhou.aliyuncs.com
+  accessKeyId: LTAI5tGHqmYUBs9mDN8MganB
+  accessKeySecret: wspz4KxbqpcxrBR2owN0OI3fdrypCZ
+  bucketName: sy-china
+  # https://oss-cn-hangzhou.aliyuncs.com/
+  urlPrefix: https://sy-china.oss-cn-hangzhou.aliyuncs.com/
+
+#
+knife4j:
+  setting:
+    swaggerModelName: API服务
+    description: API服务主要对外提供接口
+    version: 1.0.0
+
+#
+logging:
+  level:
+    com:
+      wesoft: debug
