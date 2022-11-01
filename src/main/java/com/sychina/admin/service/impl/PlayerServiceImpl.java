@@ -62,7 +62,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
         wrapper.between(playerQuery.getTimeType() == 0, "`create`", playerQuery.getStartTime(), playerQuery.getEndTime());
         wrapper.between(playerQuery.getTimeType() == 1, "`update`", playerQuery.getStartTime(), playerQuery.getEndTime());
         wrapper.between(playerQuery.getTimeType() == 2, "`last_login_time`", playerQuery.getStartTime(), playerQuery.getEndTime());
-        wrapper.orderByDesc("`create`");
+        wrapper.orderByAsc("is_verify_manager").orderByDesc("status").orderByDesc("`create`");
 
         IPage page = baseMapper.selectPage(playerQuery.page(), wrapper);
 

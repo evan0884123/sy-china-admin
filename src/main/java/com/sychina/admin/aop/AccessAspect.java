@@ -5,12 +5,10 @@ import com.sychina.admin.cache.AdminUserCache;
 import com.sychina.admin.common.RequestContext;
 import com.sychina.admin.infra.domain.ActionLog;
 import com.sychina.admin.infra.domain.AdminMenu;
-import com.sychina.admin.infra.domain.AdminRole;
 import com.sychina.admin.infra.domain.AdminUser;
-import com.sychina.admin.infra.mapper.AdminMenuMapper;
 import com.sychina.admin.service.impl.ActionLogServiceImpl;
-import com.sychina.admin.service.impl.AdminRoleServiceImpl;
 import com.sychina.admin.utils.LocalDateTimeHelper;
+import com.sychina.admin.web.pojo.models.response.ResponseStatus;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -21,14 +19,12 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -89,25 +85,32 @@ public class AccessAspect {
     private Object recordLog(ProceedingJoinPoint joinPoint, Method method, AdminUser adminUser) throws Throwable {
 
         ActionLog actionLog = new ActionLog();
+        ResultModel resultModel;
+        try {
 
-        actionLog.setUserId(adminUser.getId());
-        actionLog.setAdminUserName(adminUser.getLoginName());
+            actionLog.setUserId(adminUser.getId());
+            actionLog.setAdminUserName(adminUser.getLoginName());
 
-        actionLog.setMethod(method.getDeclaringClass().getName() + "." + method.getName());
-        actionLog.setMethodDes(method.getDeclaredAnnotation(ApiOperation.class).value());
+            actionLog.setMethod(method.getDeclaringClass().getName() + "." + method.getName());
+            actionLog.setMethodDes(method.getDeclaredAnnotation(ApiOperation.class).value());
 
-        String parameters = getMethodParam(joinPoint);
-        actionLog.setParameters(parameters);
+            String parameters = getMethodParam(joinPoint);
+            actionLog.setParameters(parameters);
 
-        ResultModel resultModel = (ResultModel) joinPoint.proceed();
+            resultModel = (ResultModel) joinPoint.proceed();
 
-        actionLog.setResult(resultModel.getCode());
-        actionLog.setReturnValue(JSON.toJSONString(resultModel));
+            actionLog.setResult(resultModel.getCode());
+            actionLog.setReturnValue(JSON.toJSONString(resultModel));
+        } catch (Throwable throwable) {
+            actionLog.setResult(ResponseStatus.SYSTEM_ERROR.code);
+            actionLog.setReturnValue(throwable.toString().substring(1024));
+            throw throwable;
+        } finally {
+            actionLog.setActionTime(LocalDateTimeHelper.toStr(LocalDateTime.now()));
+            actionLog.setCreate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
 
-        actionLog.setActionTime(LocalDateTimeHelper.toStr(LocalDateTime.now()));
-        actionLog.setCreate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
-
-        actionLogService.saveOrUpdate(actionLog);
+            actionLogService.saveOrUpdate(actionLog);
+        }
 
         return resultModel;
     }

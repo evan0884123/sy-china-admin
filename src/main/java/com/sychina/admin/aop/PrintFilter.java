@@ -2,11 +2,11 @@ package com.sychina.admin.aop;
 
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.*;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Map;
@@ -16,7 +16,7 @@ import java.util.Objects;
  * @author Administrator
  */
 @Slf4j
-@WebFilter
+@Component
 public class PrintFilter implements Filter {
 
     @Override
