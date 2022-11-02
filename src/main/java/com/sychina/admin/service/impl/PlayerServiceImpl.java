@@ -3,6 +3,7 @@ package com.sychina.admin.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.conditions.update.UpdateChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sychina.admin.common.RedisKeys;
 import com.sychina.admin.infra.domain.AccountChanges;
@@ -16,10 +17,7 @@ import com.sychina.admin.utils.StringGenerator;
 import com.sychina.admin.web.pojo.SelectOption;
 import com.sychina.admin.web.pojo.models.PlayerTable;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
-import com.sychina.admin.web.pojo.params.PlayerParam;
-import com.sychina.admin.web.pojo.params.PlayerQuery;
-import com.sychina.admin.web.pojo.params.ResetPasswordParam;
-import com.sychina.admin.web.pojo.params.TopOrLowerScoreParam;
+import com.sychina.admin.web.pojo.params.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -170,6 +168,17 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
         redisTemplate.opsForHash().put(RedisKeys.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
 
         return ResultModel.succeed(password);
+    }
+
+    public ResultModel batchAudit(PlayerBatchAuditParam param) {
+
+        UpdateChainWrapper<Players> wrapper = new UpdateChainWrapper<>(baseMapper)
+                .set(param.getStatus() != null, "status", param.getStatus())
+                .set(param.getIsVerifyManager() != null, "is_verify_manager", param.getIsVerifyManager())
+                .in("id", param.getIds());
+        update(wrapper);
+
+        return ResultModel.succeed();
     }
 
     public void updateUseBalance(Players players, TopOrLowerScoreParam scoreParam) {

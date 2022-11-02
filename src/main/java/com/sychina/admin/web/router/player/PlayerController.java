@@ -4,10 +4,7 @@ import com.sychina.admin.aop.Access;
 import com.sychina.admin.service.impl.PlayerServiceImpl;
 import com.sychina.admin.web.pojo.SelectOption;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
-import com.sychina.admin.web.pojo.params.PlayerParam;
-import com.sychina.admin.web.pojo.params.PlayerQuery;
-import com.sychina.admin.web.pojo.params.ResetPasswordParam;
-import com.sychina.admin.web.pojo.params.TopOrLowerScoreParam;
+import com.sychina.admin.web.pojo.params.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +65,13 @@ public class PlayerController {
     @Access(recordLog = true)
     public ResultModel resetPassword(@Validated ResetPasswordParam param) {
         return playerService.resetPassword(param);
+    }
+
+    @PostMapping("/batchAudit")
+    @ApiOperation("批量审核")
+    @Access(recordLog = true)
+    public ResultModel batchAudit(@Validated PlayerBatchAuditParam param) {
+        return playerService.batchAudit(param);
     }
 
     @Autowired
