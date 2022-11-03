@@ -46,7 +46,7 @@ aliyun:
   accessKeySecret: wspz4KxbqpcxrBR2owN0OI3fdrypCZ
   bucketName: sy-china
   # https://oss-cn-hangzhou.aliyuncs.com/
-  urlPrefix: https://sy-china.oss-cn-hangzhou.aliyuncs.com/
+  urlPrefix: https://sy-china.oss-accelerate.aliyuncs.com/
 
 #
 knife4j:
