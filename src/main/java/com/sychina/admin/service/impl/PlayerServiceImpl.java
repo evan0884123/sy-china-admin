@@ -2,9 +2,10 @@ package com.sychina.admin.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.conditions.update.UpdateChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sychina.admin.cache.CompanyCache;
 import com.sychina.admin.common.RedisKeys;
 import com.sychina.admin.infra.domain.AccountChanges;
 import com.sychina.admin.infra.domain.Equities;
@@ -43,6 +44,8 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
     private EquitiesServiceImpl equitiesService;
 
     private RedisTemplate redisTemplate;
+
+    private CompanyCache companyCache;
 
     private RedisLockUtil lockUtil;
 
@@ -172,7 +175,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 
     public ResultModel batchAudit(PlayerBatchAuditParam param) {
 
-        UpdateChainWrapper<Players> wrapper = new UpdateChainWrapper<>(baseMapper)
+        UpdateWrapper<Players> wrapper = new UpdateWrapper<Players>()
                 .set(param.getStatus() != null, "status", param.getStatus())
                 .set(param.getIsVerifyManager() != null, "is_verify_manager", param.getIsVerifyManager())
                 .in("id", param.getIds());
@@ -343,7 +346,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 
     private Equities convert(Players players, BigDecimal amount) {
 
-        String company = (String) redisTemplate.opsForSet().randomMember(RedisKeys.Companies);
+        String company = companyCache.getCompanyInfo();
         Assert.isTrue(StringUtils.isNotEmpty(company), "没有公司信息无法配置股权");
         Equities equities = new Equities()
                 .setPlayer(players.getId())
@@ -373,5 +376,10 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
     @Autowired
     public void setEquitiesService(EquitiesServiceImpl equitiesService) {
         this.equitiesService = equitiesService;
+    }
+
+    @Autowired
+    public void setCompanyCache(CompanyCache companyCache) {
+        this.companyCache = companyCache;
     }
 }

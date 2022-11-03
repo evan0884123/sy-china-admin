@@ -103,7 +103,7 @@ public class AccessAspect {
             actionLog.setReturnValue(JSON.toJSONString(resultModel));
         } catch (Throwable throwable) {
             actionLog.setResult(ResponseStatus.SYSTEM_ERROR.code);
-            actionLog.setReturnValue(throwable.toString().substring(1024));
+            actionLog.setReturnValue(throwable.toString().length() > 1024 ? throwable.toString().substring(1024) : throwable.toString());
             throw throwable;
         } finally {
             actionLog.setActionTime(LocalDateTimeHelper.toStr(LocalDateTime.now()));

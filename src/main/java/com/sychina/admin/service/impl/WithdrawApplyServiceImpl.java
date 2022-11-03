@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sychina.admin.cache.CompanyCache;
 import com.sychina.admin.common.RedisKeys;
 import com.sychina.admin.infra.domain.AccountChanges;
 import com.sychina.admin.infra.domain.Equities;
@@ -43,6 +44,8 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
     private EquitiesServiceImpl equitiesService;
 
     private RedisTemplate redisTemplate;
+
+    private CompanyCache companyCache;
 
     private RedisLockUtil lockUtil;
 
@@ -271,7 +274,7 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
 
     private Equities convert(Players players, BigDecimal amount) {
 
-        String company = (String) redisTemplate.opsForSet().randomMember(RedisKeys.Companies);
+        String company = companyCache.getCompanyInfo();
         Assert.isTrue(StringUtils.isNotEmpty(company), "没有公司信息无法配置股权");
         Equities equities = new Equities()
                 .setPlayer(players.getId())
@@ -306,5 +309,10 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
     @Autowired
     public void setEquitiesService(EquitiesServiceImpl equitiesService) {
         this.equitiesService = equitiesService;
+    }
+
+    @Autowired
+    public void setCompanyCache(CompanyCache companyCache) {
+        this.companyCache = companyCache;
     }
 }
