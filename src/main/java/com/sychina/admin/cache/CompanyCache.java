@@ -22,14 +22,14 @@ public class CompanyCache {
     private RedisTemplate redisTemplate;
 
     public String getCompanyInfo() {
-        String company = (String) redisTemplate.opsForSet().randomMember(RedisKeys.Companies);
+        String company = (String) redisTemplate.opsForSet().randomMember(RedisKeys.companies);
         if (StringUtils.isEmpty(company)) {
             synchronized (this) {
-                company = (String) redisTemplate.opsForSet().randomMember(RedisKeys.Companies);
+                company = (String) redisTemplate.opsForSet().randomMember(RedisKeys.companies);
                 if (StringUtils.isEmpty(company)) {
                     Set<String> strings = companyService.list().stream().map(Companies::getName).collect(Collectors.toSet());
                     strings.forEach(s -> {
-                        redisTemplate.opsForSet().add(RedisKeys.Companies, s);
+                        redisTemplate.opsForSet().add(RedisKeys.companies, s);
                     });
                     company = strings.stream().findAny().get();
                 }

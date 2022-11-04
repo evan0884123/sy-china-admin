@@ -19,7 +19,7 @@ class SyChinaAdminApplicationTests {
         for (int i = 0 ; i < 100 ; i++){
             Thread thread = new Thread(()->{
 
-                String company = (String) redisTemplate.opsForSet().randomMember(RedisKeys.Companies);
+                String company = (String) redisTemplate.opsForSet().randomMember(RedisKeys.companies);
                 System.out.println(company);
                 Assert.isTrue(StringUtils.isNotBlank(company), "没有公司信息无法配置股权");
             });

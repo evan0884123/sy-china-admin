@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sychina.admin.common.RedisKeys;
 import com.sychina.admin.infra.domain.Debts;
 import com.sychina.admin.infra.mapper.DebtMapper;
 import com.sychina.admin.service.IDebtService;
@@ -15,6 +16,7 @@ import com.sychina.admin.web.pojo.params.DebtParam;
 import com.sychina.admin.web.pojo.params.DebtQuery;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -31,6 +33,8 @@ public class DebtServiceImpl extends ServiceImpl<DebtMapper, Debts> implements I
 
     private ProjectServiceImpl projectService;
 
+    private RedisTemplate redisTemplate;
+
     public ResultModel add(DebtParam debtParam) {
 
         Assert.isTrue(StringUtils.isNotBlank(debtParam.getNumbering()), "编号不能为空");
@@ -43,7 +47,8 @@ public class DebtServiceImpl extends ServiceImpl<DebtMapper, Debts> implements I
                 .setMount(JSON.toJSONString(new ArrayList<Long>()))
                 .setCreate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
 
-        baseMapper.insert(debts);
+        int insert = baseMapper.insert(debts);
+        redisTemplate.opsForHash().put(RedisKeys.debts, debts.getId(), JSON.toJSONString(debts));
 
         return ResultModel.succeed();
     }
@@ -79,6 +84,7 @@ public class DebtServiceImpl extends ServiceImpl<DebtMapper, Debts> implements I
                 .setUpdate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
 
         baseMapper.updateById(debts);
+        redisTemplate.opsForHash().put(RedisKeys.debts, debts.getId(), JSON.toJSONString(debts));
 
         return ResultModel.succeed();
     }
@@ -95,6 +101,8 @@ public class DebtServiceImpl extends ServiceImpl<DebtMapper, Debts> implements I
         });
 
         baseMapper.deleteById(id);
+        redisTemplate.opsForHash().delete(RedisKeys.debts, id);
+
         return ResultModel.succeed();
     }
 
@@ -120,5 +128,10 @@ public class DebtServiceImpl extends ServiceImpl<DebtMapper, Debts> implements I
     @Autowired
     public void setProjectService(ProjectServiceImpl projectService) {
         this.projectService = projectService;
+    }
+
+    @Autowired
+    public void setRedisTemplate(RedisTemplate redisTemplate) {
+        this.redisTemplate = redisTemplate;
     }
 }

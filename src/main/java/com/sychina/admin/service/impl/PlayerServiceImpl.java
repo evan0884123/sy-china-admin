@@ -19,6 +19,7 @@ import com.sychina.admin.web.pojo.SelectOption;
 import com.sychina.admin.web.pojo.models.PlayerTable;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.*;
+import com.sychina.admin.web.pojo.params.page.PageQuery;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -59,6 +60,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
         wrapper.likeRight(StringUtils.isNotBlank(playerQuery.getIdNumber()), "id_number", playerQuery.getIdNumber());
         wrapper.likeRight(StringUtils.isNotBlank(playerQuery.getPhoneNumber()), "phone_number", playerQuery.getPhoneNumber());
         wrapper.eq(playerQuery.getIsVerifyManager() != null, "is_verify_manager", playerQuery.getIsVerifyManager());
+        wrapper.eq(playerQuery.getInviteCode() != null, "invite_code", playerQuery.getInviteCode());
         wrapper.eq(playerQuery.getStatus() != null, "status", playerQuery.getStatus());
         wrapper.between(playerQuery.getTimeType() == 0, "`create`", playerQuery.getStartTime(), playerQuery.getEndTime());
         wrapper.between(playerQuery.getTimeType() == 1, "`update`", playerQuery.getStartTime(), playerQuery.getEndTime());
@@ -88,7 +90,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 
         baseMapper.updateById(players);
         redisTemplate.opsForHash()
-                .put(RedisKeys.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
+                .put(RedisKeys.playersIDMap, players.getId().toString(), JSON.toJSONString(players));
 
         return ResultModel.succeed();
     }
@@ -100,7 +102,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
         players.setStatus(0);
 
         updateById(players);
-        redisTemplate.opsForHash().delete(RedisKeys.PlayersIDMap, id.toString());
+        redisTemplate.opsForHash().delete(RedisKeys.playersIDMap, id.toString());
 
         return ResultModel.succeed();
     }
@@ -147,7 +149,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
                         break;
                 }
                 redisTemplate.opsForHash()
-                        .put(RedisKeys.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
+                        .put(RedisKeys.playersIDMap, players.getId().toString(), JSON.toJSONString(players));
             } catch (Exception e) {
                 log.error("[WITHDRAW_APPLY][ERROR] action amount error", e);
             } finally {
@@ -168,7 +170,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
         players.setPassword(DigestUtils.md5DigestAsHex(password.getBytes(StandardCharsets.UTF_8)));
 
         updateById(players);
-        redisTemplate.opsForHash().put(RedisKeys.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
+        redisTemplate.opsForHash().put(RedisKeys.playersIDMap, players.getId().toString(), JSON.toJSONString(players));
 
         return ResultModel.succeed(password);
     }
@@ -182,6 +184,26 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
         update(wrapper);
 
         return ResultModel.succeed();
+    }
+
+    public ResultModel loadCheckTable(PageQuery pageQuery) {
+
+        QueryWrapper<Players> wrapper = new QueryWrapper<>();
+        wrapper.eq("is_verify_manager", 1);
+        wrapper.eq("status", 1);
+        wrapper.orderByDesc("`create`");
+        wrapper.select("id", "account", "is_verify_manager", "id_front_img", "id_back_img", "people_img", "people_with_id_img");
+
+        IPage page = baseMapper.selectPage(pageQuery.page(), wrapper);
+
+        List<PlayerTable> tables = new ArrayList<>();
+        List<Players> records = page.getRecords();
+        records.forEach(record -> {
+            tables.add(new PlayerTable(record));
+        });
+        page.setRecords(tables);
+
+        return ResultModel.succeed(page);
     }
 
     public void updateUseBalance(Players players, TopOrLowerScoreParam scoreParam) {
@@ -236,7 +258,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
         equitiesService.saveOrUpdate(equities);
 
         playersList.forEach(players1 -> {
-            redisTemplate.opsForHash().put(RedisKeys.PlayersIDMap, players1.getId().toString(), JSON.toJSONString(players1));
+            redisTemplate.opsForHash().put(RedisKeys.playersIDMap, players1.getId().toString(), JSON.toJSONString(players1));
         });
     }
 
@@ -253,7 +275,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 
         saveOrUpdate(players);
         accountChangeService.saveOrUpdate(accountChanges);
-        redisTemplate.opsForHash().put(RedisKeys.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
+        redisTemplate.opsForHash().put(RedisKeys.playersIDMap, players.getId().toString(), JSON.toJSONString(players));
     }
 
     public void updatePromoteBalance(Players players, TopOrLowerScoreParam scoreParam) {
@@ -269,7 +291,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 
         saveOrUpdate(players);
         accountChangeService.saveOrUpdate(accountChanges);
-        redisTemplate.opsForHash().put(RedisKeys.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
+        redisTemplate.opsForHash().put(RedisKeys.playersIDMap, players.getId().toString(), JSON.toJSONString(players));
     }
 
     public void updateProjectBalance(Players players, TopOrLowerScoreParam scoreParam) {
@@ -288,7 +310,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 
         saveOrUpdate(players);
         accountChangeService.saveOrUpdate(accountChanges);
-        redisTemplate.opsForHash().put(RedisKeys.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
+        redisTemplate.opsForHash().put(RedisKeys.playersIDMap, players.getId().toString(), JSON.toJSONString(players));
     }
 
     public void updateShareMoneyProfit(Players players, TopOrLowerScoreParam scoreParam) {
@@ -304,7 +326,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 
         saveOrUpdate(players);
         accountChangeService.saveOrUpdate(accountChanges);
-        redisTemplate.opsForHash().put(RedisKeys.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
+        redisTemplate.opsForHash().put(RedisKeys.playersIDMap, players.getId().toString(), JSON.toJSONString(players));
     }
 
     private AccountChanges convert(Players players, TopOrLowerScoreParam scoreParam, BigDecimal bcBalance, BigDecimal acBalance) {

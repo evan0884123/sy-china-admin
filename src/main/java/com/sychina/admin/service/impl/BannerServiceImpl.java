@@ -1,8 +1,10 @@
 package com.sychina.admin.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sychina.admin.common.RedisKeys;
 import com.sychina.admin.infra.domain.Banners;
 import com.sychina.admin.infra.mapper.BannerMapper;
 import com.sychina.admin.service.IBannerService;
@@ -11,6 +13,8 @@ import com.sychina.admin.web.pojo.models.BannerTable;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.BannerParam;
 import com.sychina.admin.web.pojo.params.BannerQuery;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -23,11 +27,15 @@ import java.util.List;
 @Service
 public class BannerServiceImpl extends ServiceImpl<BannerMapper, Banners> implements IBannerService {
 
+    private RedisTemplate redisTemplate;
+
     public ResultModel add(BannerParam bannerParam) {
 
         Banners banner = bannerParam.convert()
                 .setCreate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
-        baseMapper.insert(banner);
+
+        int insert = baseMapper.insert(banner);
+        redisTemplate.opsForHash().put(RedisKeys.banner, banner.getId(), JSON.toJSONString(banner));
 
         return ResultModel.succeed();
     }
@@ -60,6 +68,8 @@ public class BannerServiceImpl extends ServiceImpl<BannerMapper, Banners> implem
 
         baseMapper.updateById(banner);
 
+        redisTemplate.opsForHash().put(RedisKeys.banner, banner.getId(), JSON.toJSONString(banner));
+
         return ResultModel.succeed();
     }
 
@@ -67,6 +77,13 @@ public class BannerServiceImpl extends ServiceImpl<BannerMapper, Banners> implem
 
         baseMapper.deleteById(id);
 
+        redisTemplate.opsForHash().delete(RedisKeys.banner, id);
+
         return ResultModel.succeed();
+    }
+
+    @Autowired
+    public void setRedisTemplate(RedisTemplate redisTemplate) {
+        this.redisTemplate = redisTemplate;
     }
 }

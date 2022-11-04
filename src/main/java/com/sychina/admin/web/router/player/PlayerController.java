@@ -5,6 +5,7 @@ import com.sychina.admin.service.impl.PlayerServiceImpl;
 import com.sychina.admin.web.pojo.SelectOption;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.*;
+import com.sychina.admin.web.pojo.params.page.PageQuery;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +73,13 @@ public class PlayerController {
     @Access(recordLog = true)
     public ResultModel batchAudit(@Validated PlayerBatchAuditParam param) {
         return playerService.batchAudit(param);
+    }
+
+    @PostMapping("/loadCheckTable")
+    @ApiOperation("需要审核")
+    @Access(recordLog = true)
+    public ResultModel loadCheckTable(@Validated PageQuery pageQuery) {
+        return playerService.loadCheckTable(pageQuery);
     }
 
     @Autowired

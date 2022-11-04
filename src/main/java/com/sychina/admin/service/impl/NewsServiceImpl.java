@@ -1,8 +1,10 @@
 package com.sychina.admin.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sychina.admin.common.RedisKeys;
 import com.sychina.admin.infra.domain.News;
 import com.sychina.admin.infra.mapper.NewsMapper;
 import com.sychina.admin.service.INewsService;
@@ -11,6 +13,8 @@ import com.sychina.admin.web.pojo.models.NewsTable;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.NewsParam;
 import com.sychina.admin.web.pojo.params.NewsQuery;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -23,11 +27,15 @@ import java.util.List;
 @Service
 public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements INewsService {
 
+    private RedisTemplate redisTemplate;
+
     public ResultModel add(NewsParam newsParam) {
 
         News news = newsParam.convert()
                 .setCreate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
-        baseMapper.insert(news);
+
+        int insert = baseMapper.insert(news);
+        redisTemplate.opsForHash().put(RedisKeys.news, news.getId(), JSON.toJSONString(news));
 
         return ResultModel.succeed();
     }
@@ -60,6 +68,7 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements IN
                 .setId(newsParam.getId());
 
         baseMapper.updateById(news);
+        redisTemplate.opsForHash().put(RedisKeys.news, news.getId(), JSON.toJSONString(news));
 
         return ResultModel.succeed();
     }
@@ -68,6 +77,13 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements IN
 
         baseMapper.deleteById(id);
 
+        redisTemplate.opsForHash().delete(RedisKeys.news, id);
+
         return ResultModel.succeed();
+    }
+
+    @Autowired
+    public void setRedisTemplate(RedisTemplate redisTemplate) {
+        this.redisTemplate = redisTemplate;
     }
 }

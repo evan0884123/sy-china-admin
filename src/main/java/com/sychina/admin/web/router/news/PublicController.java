@@ -22,21 +22,21 @@ public class PublicController {
     private PublicServiceImpl publicService;
 
     @PostMapping("/add")
-    @ApiOperation("新增资讯")
+    @ApiOperation("新增公告")
     @Access(recordLog = true)
     public ResultModel add(@RequestParam String content) {
         return publicService.add(content);
     }
 
     @PostMapping("/loadTable")
-    @ApiOperation("获取资讯")
+    @ApiOperation("获取公告")
     @Access
     public ResultModel loadTable() {
         return publicService.loadTable();
     }
 
     @PostMapping("/delete")
-    @ApiOperation("删除资讯")
+    @ApiOperation("删除公告")
     @Access(recordLog = true)
     public ResultModel delete(@RequestParam Long id) {
         return publicService.delete(id);

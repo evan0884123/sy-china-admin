@@ -1,7 +1,8 @@
 package com.sychina.admin.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sychina.admin.common.RedisKeys;
 import com.sychina.admin.infra.domain.Config;
 import com.sychina.admin.infra.mapper.ConfigMapper;
 import com.sychina.admin.service.IConfigService;
@@ -10,6 +11,7 @@ import com.sychina.admin.web.pojo.models.ConfigTable;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.ConfigParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +26,8 @@ import java.util.List;
 public class ConfigServiceImpl extends ServiceImpl<ConfigMapper, Config> implements IConfigService {
 
     private ProjectRecordServiceImpl projectRecordService;
+
+    private RedisTemplate redisTemplate;
 
     public ResultModel loadTable() {
 
@@ -41,8 +45,9 @@ public class ConfigServiceImpl extends ServiceImpl<ConfigMapper, Config> impleme
         Config config = configParam.convert()
                 .setUpdate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
 
-        projectRecordService.update().set(config.getSmSwitch() == 1,"status", 1);
+        projectRecordService.update().set(config.getSmSwitch() == 1, "status", 1);
         baseMapper.updateById(config);
+        redisTemplate.opsForValue().set(RedisKeys.config, JSON.toJSONString(config));
 
         return ResultModel.succeed();
     }
@@ -50,5 +55,10 @@ public class ConfigServiceImpl extends ServiceImpl<ConfigMapper, Config> impleme
     @Autowired
     public void setProjectRecordService(ProjectRecordServiceImpl projectRecordService) {
         this.projectRecordService = projectRecordService;
+    }
+
+    @Autowired
+    public void setRedisTemplate(RedisTemplate redisTemplate) {
+        this.redisTemplate = redisTemplate;
     }
 }

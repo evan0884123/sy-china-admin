@@ -170,7 +170,7 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
         playerService.saveOrUpdateBatch(playersList);
 
         playersList.forEach(players1 -> {
-            redisTemplate.opsForHash().put(RedisKeys.PlayersIDMap, players1.getId().toString(), JSON.toJSONString(players1));
+            redisTemplate.opsForHash().put(RedisKeys.playersIDMap, players1.getId().toString(), JSON.toJSONString(players1));
         });
     }
 
@@ -231,7 +231,7 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
         }
         accountChangeService.saveOrUpdate(accountChanges);
         playerService.saveOrUpdate(players);
-        redisTemplate.opsForHash().put(RedisKeys.PlayersIDMap, players.getId().toString(), JSON.toJSONString(players));
+        redisTemplate.opsForHash().put(RedisKeys.playersIDMap, players.getId().toString(), JSON.toJSONString(players));
     }
 
     private AccountChanges convert(Players players, WithdrawApply withdrawApply, BigDecimal bcBalance, BigDecimal balance,

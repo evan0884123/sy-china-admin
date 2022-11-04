@@ -31,7 +31,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Companies> im
                 .setCreate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
 
         baseMapper.insert(companies);
-        redisTemplate.opsForSet().add(RedisKeys.Companies, content);
+        redisTemplate.opsForSet().add(RedisKeys.companies, content);
 
         return ResultModel.succeed();
     }
@@ -54,7 +54,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Companies> im
         Assert.notNull(companies, "未找到该公司信息");
 
         baseMapper.deleteById(id);
-        redisTemplate.opsForSet().remove(RedisKeys.Companies, companies.getName());
+        redisTemplate.opsForSet().remove(RedisKeys.companies, companies.getName());
 
         return ResultModel.succeed();
     }
