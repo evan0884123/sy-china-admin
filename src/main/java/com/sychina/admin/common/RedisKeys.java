@@ -42,7 +42,7 @@ public interface RedisKeys {
     String banner = "BANNER";
 
     /**
-     * hash
+     * String
      * 公告 信息
      */
     String aPublic = "PUBLIC";

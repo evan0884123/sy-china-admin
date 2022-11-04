@@ -31,7 +31,7 @@ public class PublicServiceImpl extends ServiceImpl<PublicMapper, Public> impleme
                 .setCreate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
 
         int insert = baseMapper.insert(aPublic);
-        redisTemplate.opsForHash().put(RedisKeys.aPublic, aPublic.getId(), JSON.toJSONString(aPublic));
+        redisTemplate.opsForValue().set(RedisKeys.aPublic, JSON.toJSONString(aPublic));
 
         return ResultModel.succeed();
     }
@@ -51,9 +51,6 @@ public class PublicServiceImpl extends ServiceImpl<PublicMapper, Public> impleme
     public ResultModel delete(Long id) {
 
         baseMapper.deleteById(id);
-
-        redisTemplate.opsForHash().delete(RedisKeys.aPublic, id);
-
         return ResultModel.succeed();
     }
 
