@@ -15,6 +15,15 @@ public interface RedisKeys {
      */
     String playersIDMap = "PlayersIDMap";
 
+    /**
+     * 用户信息的缓存
+     */
+    String playersAccountMap = "PlayersAccountMap";
+
+    /**
+     * 用户密码 的缓存
+     */
+    String playersAccPassMap = "PlayersAccPassMap";
 
     /**
      * hash

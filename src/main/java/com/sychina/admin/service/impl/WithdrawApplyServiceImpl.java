@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sychina.admin.cache.CompanyCache;
+import com.sychina.admin.cache.PlayerCache;
 import com.sychina.admin.common.RedisKeys;
 import com.sychina.admin.infra.domain.AccountChanges;
 import com.sychina.admin.infra.domain.Equities;
@@ -44,6 +45,8 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
     private EquitiesServiceImpl equitiesService;
 
     private RedisTemplate redisTemplate;
+
+    private PlayerCache playerCache;
 
     private CompanyCache companyCache;
 
@@ -170,7 +173,7 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
         playerService.saveOrUpdateBatch(playersList);
 
         playersList.forEach(players1 -> {
-            redisTemplate.opsForHash().put(RedisKeys.playersIDMap, players1.getId().toString(), JSON.toJSONString(players1));
+            playerCache.setPlayerCache(players1);
         });
     }
 
@@ -231,7 +234,7 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
         }
         accountChangeService.saveOrUpdate(accountChanges);
         playerService.saveOrUpdate(players);
-        redisTemplate.opsForHash().put(RedisKeys.playersIDMap, players.getId().toString(), JSON.toJSONString(players));
+        playerCache.setPlayerCache(players);
     }
 
     private AccountChanges convert(Players players, WithdrawApply withdrawApply, BigDecimal bcBalance, BigDecimal balance,
@@ -314,5 +317,10 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
     @Autowired
     public void setCompanyCache(CompanyCache companyCache) {
         this.companyCache = companyCache;
+    }
+
+    @Autowired
+    public void setPlayerCache(PlayerCache playerCache) {
+        this.playerCache = playerCache;
     }
 }

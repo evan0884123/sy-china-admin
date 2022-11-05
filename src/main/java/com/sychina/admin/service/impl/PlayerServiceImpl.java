@@ -1,11 +1,11 @@
 package com.sychina.admin.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sychina.admin.cache.CompanyCache;
+import com.sychina.admin.cache.PlayerCache;
 import com.sychina.admin.common.RedisKeys;
 import com.sychina.admin.infra.domain.AccountChanges;
 import com.sychina.admin.infra.domain.Equities;
@@ -22,7 +22,6 @@ import com.sychina.admin.web.pojo.params.*;
 import com.sychina.admin.web.pojo.params.page.PageQuery;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -44,7 +43,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 
     private EquitiesServiceImpl equitiesService;
 
-    private RedisTemplate redisTemplate;
+    private PlayerCache playerCache;
 
     private CompanyCache companyCache;
 
@@ -89,8 +88,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
                 .setUpdate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
 
         baseMapper.updateById(players);
-        redisTemplate.opsForHash()
-                .put(RedisKeys.playersIDMap, players.getId().toString(), JSON.toJSONString(players));
+        playerCache.setPlayerCache(players);
 
         return ResultModel.succeed();
     }
@@ -102,7 +100,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
         players.setStatus(0);
 
         updateById(players);
-        redisTemplate.opsForHash().delete(RedisKeys.playersIDMap, id.toString());
+        playerCache.delPlayerCache(players);
 
         return ResultModel.succeed();
     }
@@ -148,8 +146,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
                         updateShareMoneyProfit(players, scoreParam);
                         break;
                 }
-                redisTemplate.opsForHash()
-                        .put(RedisKeys.playersIDMap, players.getId().toString(), JSON.toJSONString(players));
+                playerCache.setPlayerCache(players);
             } catch (Exception e) {
                 log.error("[WITHDRAW_APPLY][ERROR] action amount error", e);
             } finally {
@@ -170,7 +167,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
         players.setPassword(DigestUtils.md5DigestAsHex(password.getBytes(StandardCharsets.UTF_8)));
 
         updateById(players);
-        redisTemplate.opsForHash().put(RedisKeys.playersIDMap, players.getId().toString(), JSON.toJSONString(players));
+        playerCache.setPlayerCache(players);
 
         return ResultModel.succeed(password);
     }
@@ -258,7 +255,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
         equitiesService.saveOrUpdate(equities);
 
         playersList.forEach(players1 -> {
-            redisTemplate.opsForHash().put(RedisKeys.playersIDMap, players1.getId().toString(), JSON.toJSONString(players1));
+            playerCache.setPlayerCache(players1);
         });
     }
 
@@ -275,7 +272,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 
         saveOrUpdate(players);
         accountChangeService.saveOrUpdate(accountChanges);
-        redisTemplate.opsForHash().put(RedisKeys.playersIDMap, players.getId().toString(), JSON.toJSONString(players));
+        playerCache.setPlayerCache(players);
     }
 
     public void updatePromoteBalance(Players players, TopOrLowerScoreParam scoreParam) {
@@ -291,7 +288,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 
         saveOrUpdate(players);
         accountChangeService.saveOrUpdate(accountChanges);
-        redisTemplate.opsForHash().put(RedisKeys.playersIDMap, players.getId().toString(), JSON.toJSONString(players));
+        playerCache.setPlayerCache(players);
     }
 
     public void updateProjectBalance(Players players, TopOrLowerScoreParam scoreParam) {
@@ -310,7 +307,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 
         saveOrUpdate(players);
         accountChangeService.saveOrUpdate(accountChanges);
-        redisTemplate.opsForHash().put(RedisKeys.playersIDMap, players.getId().toString(), JSON.toJSONString(players));
+        playerCache.setPlayerCache(players);
     }
 
     public void updateShareMoneyProfit(Players players, TopOrLowerScoreParam scoreParam) {
@@ -326,7 +323,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 
         saveOrUpdate(players);
         accountChangeService.saveOrUpdate(accountChanges);
-        redisTemplate.opsForHash().put(RedisKeys.playersIDMap, players.getId().toString(), JSON.toJSONString(players));
+        playerCache.setPlayerCache(players);
     }
 
     private AccountChanges convert(Players players, TopOrLowerScoreParam scoreParam, BigDecimal bcBalance, BigDecimal acBalance) {
@@ -391,11 +388,6 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
     }
 
     @Autowired
-    public void setRedisTemplate(RedisTemplate redisTemplate) {
-        this.redisTemplate = redisTemplate;
-    }
-
-    @Autowired
     public void setEquitiesService(EquitiesServiceImpl equitiesService) {
         this.equitiesService = equitiesService;
     }
@@ -403,5 +395,10 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
     @Autowired
     public void setCompanyCache(CompanyCache companyCache) {
         this.companyCache = companyCache;
+    }
+
+    @Autowired
+    public void setPlayerCache(PlayerCache playerCache) {
+        this.playerCache = playerCache;
     }
 }
