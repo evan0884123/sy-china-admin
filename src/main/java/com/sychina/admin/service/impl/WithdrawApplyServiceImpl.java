@@ -59,8 +59,10 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
         wrapper.eq(recordQuery.getChargeChannel() != null, "charge_channel", recordQuery.getChargeChannel());
         wrapper.eq(recordQuery.getWdType() != null, "wd_type", recordQuery.getWdType());
         wrapper.eq(recordQuery.getStatus() != null, "status", recordQuery.getStatus());
-        wrapper.between(recordQuery.getTimeType() == 0, "`create`", recordQuery.getStartTime(), recordQuery.getEndTime());
-        wrapper.between(recordQuery.getTimeType() == 1, "`update`", recordQuery.getStartTime(), recordQuery.getEndTime());
+        wrapper.between(recordQuery.getTimeType() == 0 && recordQuery.getStartTime() != null && recordQuery.getEndTime() != null,
+                "`create`", recordQuery.getStartTime(), recordQuery.getEndTime());
+        wrapper.between(recordQuery.getTimeType() == 1 && recordQuery.getStartTime() != null && recordQuery.getEndTime() != null,
+                "`update`", recordQuery.getStartTime(), recordQuery.getEndTime());
         wrapper.orderByAsc("`status`").orderByDesc("`create`");
 
         IPage page = baseMapper.selectPage(recordQuery.page(), wrapper);

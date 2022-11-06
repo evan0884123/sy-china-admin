@@ -24,6 +24,5 @@ public class ChickenQuery extends PageQuery {
     private Integer egg;
 
     @ApiModelProperty(value = "0-创建时间, 1-修改时间",required = true)
-    @NotNull
     private Integer timeType;
 }

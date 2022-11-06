@@ -64,9 +64,12 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
         wrapper.eq(playerQuery.getIsVerifyManager() != null, "is_verify_manager", playerQuery.getIsVerifyManager());
         wrapper.eq(playerQuery.getInviteCode() != null, "invite_code", playerQuery.getInviteCode());
         wrapper.eq(playerQuery.getStatus() != null, "status", playerQuery.getStatus());
-        wrapper.between(playerQuery.getTimeType() == 0, "`create`", playerQuery.getStartTime(), playerQuery.getEndTime());
-        wrapper.between(playerQuery.getTimeType() == 1, "`update`", playerQuery.getStartTime(), playerQuery.getEndTime());
-        wrapper.between(playerQuery.getTimeType() == 2, "`last_login_time`", playerQuery.getStartTime(), playerQuery.getEndTime());
+        wrapper.between(playerQuery.getTimeType() == 0 && playerQuery.getStartTime() != null && playerQuery.getEndTime() != null,
+                "`create`", playerQuery.getStartTime(), playerQuery.getEndTime());
+        wrapper.between(playerQuery.getTimeType() == 1 && playerQuery.getStartTime() != null && playerQuery.getEndTime() != null,
+                "`update`", playerQuery.getStartTime(), playerQuery.getEndTime());
+        wrapper.between(playerQuery.getTimeType() == 2 && playerQuery.getStartTime() != null && playerQuery.getEndTime() != null,
+                "`last_login_time`", playerQuery.getStartTime(), playerQuery.getEndTime());
         wrapper.orderByAsc("is_verify_manager").orderByDesc("status").orderByDesc("`create`");
 
         IPage page = baseMapper.selectPage(playerQuery.page(), wrapper);

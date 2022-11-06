@@ -60,8 +60,10 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Projects> imp
         wrapper.likeRight(StringUtils.isNotBlank(projectQuery.getDebtName()), "`debt_name`", projectQuery.getDebtName());
         wrapper.likeRight(StringUtils.isNotBlank(projectQuery.getDebtNumbering()), "`debt_numbering`", projectQuery.getDebtNumbering());
         wrapper.eq(projectQuery.getStatus() != null, "`status`", projectQuery.getStatus());
-        wrapper.between(projectQuery.getTimeType() == 0, "`create`", projectQuery.getStartTime(), projectQuery.getEndTime());
-        wrapper.between(projectQuery.getTimeType() == 1, "`update`", projectQuery.getStartTime(), projectQuery.getEndTime());
+        wrapper.between(projectQuery.getTimeType() == 0 && projectQuery.getStartTime() != null && projectQuery.getEndTime() != null,
+                "`create`", projectQuery.getStartTime(), projectQuery.getEndTime());
+        wrapper.between(projectQuery.getTimeType() == 1 && projectQuery.getStartTime() != null && projectQuery.getEndTime() != null,
+                "`update`", projectQuery.getStartTime(), projectQuery.getEndTime());
         wrapper.orderByDesc("`create`");
 
         IPage page = baseMapper.selectPage(projectQuery.page(), wrapper);

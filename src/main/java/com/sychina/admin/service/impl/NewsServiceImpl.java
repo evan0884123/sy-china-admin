@@ -45,8 +45,10 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements IN
         QueryWrapper<News> wrapper = new QueryWrapper<>();
         wrapper.eq(newsQuery.getType() != null, "type", newsQuery.getType());
         wrapper.eq(newsQuery.getTab() != null, "tab", newsQuery.getTab());
-        wrapper.between(newsQuery.getTimeType() == 0, "`create`", newsQuery.getStartTime(), newsQuery.getEndTime());
-        wrapper.between(newsQuery.getTimeType() == 1, "`update`", newsQuery.getStartTime(), newsQuery.getEndTime());
+        wrapper.between(newsQuery.getTimeType() == 0 && newsQuery.getStartTime() != null && newsQuery.getEndTime() != null,
+                "`create`", newsQuery.getStartTime(), newsQuery.getEndTime());
+        wrapper.between(newsQuery.getTimeType() == 1 && newsQuery.getStartTime() != null && newsQuery.getEndTime() != null,
+                "`update`", newsQuery.getStartTime(), newsQuery.getEndTime());
         wrapper.orderByDesc("`create`");
 
         IPage page = baseMapper.selectPage(newsQuery.page(), wrapper);

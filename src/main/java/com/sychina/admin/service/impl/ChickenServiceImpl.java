@@ -27,8 +27,10 @@ public class ChickenServiceImpl extends ServiceImpl<ChickenMapper, Chickens> imp
         wrapper.likeRight(StringUtils.isNotBlank(recordQuery.getPlayerName()), "player_name", recordQuery.getPlayerName());
         wrapper.eq(recordQuery.getType() != null, "type", recordQuery.getType());
         wrapper.eq(recordQuery.getEgg() != null, "egg", recordQuery.getEgg());
-        wrapper.between(recordQuery.getTimeType() == 0, "`create`", recordQuery.getStartTime(), recordQuery.getEndTime());
-        wrapper.between(recordQuery.getTimeType() == 1, "`update`", recordQuery.getStartTime(), recordQuery.getEndTime());
+        wrapper.between(recordQuery.getTimeType() == 0 && recordQuery.getStartTime() != null && recordQuery.getEndTime() != null,
+                "`create`", recordQuery.getStartTime(), recordQuery.getEndTime());
+        wrapper.between(recordQuery.getTimeType() == 1  && recordQuery.getStartTime() != null && recordQuery.getEndTime() != null,
+                "`update`", recordQuery.getStartTime(), recordQuery.getEndTime());
         wrapper.orderByDesc("`create`");
 
         IPage page = baseMapper.selectPage(recordQuery.page(), wrapper);

@@ -21,6 +21,5 @@ public class EquitiesQuery extends PageQuery {
     private String company;
 
     @ApiModelProperty(value = "0-创建时间, 1-修改时间",required = true)
-    @NotNull
     private Integer timeType;
 }

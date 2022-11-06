@@ -18,6 +18,5 @@ public class AccessLogQuery extends PageQuery {
     private String adminUserName;
 
     @ApiModelProperty(value = "0-操作时间",required = true)
-    @NotNull
     private Integer timeType;
 }

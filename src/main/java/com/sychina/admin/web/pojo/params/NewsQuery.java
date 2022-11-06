@@ -21,6 +21,5 @@ public class NewsQuery extends PageQuery {
     private Integer tab;
 
     @ApiModelProperty(value = "0-创建时间, 1-修改时间",required = true)
-    @NotNull
     private Integer timeType;
 }

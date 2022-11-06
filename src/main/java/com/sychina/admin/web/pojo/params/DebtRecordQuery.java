@@ -27,6 +27,5 @@ public class DebtRecordQuery extends PageQuery {
     private Integer invest;
 
     @ApiModelProperty(value = "0-创建时间, 1-修改时间",required = true)
-    @NotNull
     private Integer timeType;
 }

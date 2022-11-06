@@ -28,8 +28,10 @@ public class AccountChangeServiceImpl extends ServiceImpl<AccountChangeMapper, A
         wrapper.eq(recordQuery.getAmountType() != null, "amount_type", recordQuery.getAmountType());
         wrapper.eq(recordQuery.getChangeType() != null, "change_type", recordQuery.getChangeType());
         wrapper.eq(StringUtils.isNotBlank(recordQuery.getConnId()), "conn_id", recordQuery.getConnId());
-        wrapper.between(recordQuery.getTimeType() == 0, "`create`", recordQuery.getStartTime(), recordQuery.getEndTime());
-        wrapper.between(recordQuery.getTimeType() == 1, "`update`", recordQuery.getStartTime(), recordQuery.getEndTime());
+        wrapper.between(recordQuery.getTimeType() == 0 && recordQuery.getStartTime() != null && recordQuery.getEndTime() != null,
+                "`create`", recordQuery.getStartTime(), recordQuery.getEndTime());
+        wrapper.between(recordQuery.getTimeType() == 1 && recordQuery.getStartTime() != null && recordQuery.getEndTime() != null,
+                "`update`", recordQuery.getStartTime(), recordQuery.getEndTime());
         wrapper.orderByDesc("`create`");
 
         IPage page = baseMapper.selectPage(recordQuery.page(), wrapper);

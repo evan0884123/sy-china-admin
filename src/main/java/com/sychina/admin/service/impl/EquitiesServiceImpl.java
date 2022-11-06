@@ -26,8 +26,10 @@ public class EquitiesServiceImpl extends ServiceImpl<EquitiesMapper, Equities> i
         QueryWrapper<Equities> wrapper = new QueryWrapper<>();
         wrapper.likeRight(StringUtils.isNotBlank(recordQuery.getPlayerName()), "player_name", recordQuery.getPlayerName());
         wrapper.likeRight(StringUtils.isNotBlank(recordQuery.getCompany()), "company", recordQuery.getCompany());
-        wrapper.between(recordQuery.getTimeType() == 0, "`create`", recordQuery.getStartTime(), recordQuery.getEndTime());
-        wrapper.between(recordQuery.getTimeType() == 1, "`update`", recordQuery.getStartTime(), recordQuery.getEndTime());
+        wrapper.between(recordQuery.getTimeType() == 0 && recordQuery.getStartTime() != null && recordQuery.getEndTime() != null,
+                "`create`", recordQuery.getStartTime(), recordQuery.getEndTime());
+        wrapper.between(recordQuery.getTimeType() == 1 && recordQuery.getStartTime() != null && recordQuery.getEndTime() != null,
+                "`update`", recordQuery.getStartTime(), recordQuery.getEndTime());
         wrapper.orderByDesc("`create`");
 
         IPage page = baseMapper.selectPage(recordQuery.page(), wrapper);

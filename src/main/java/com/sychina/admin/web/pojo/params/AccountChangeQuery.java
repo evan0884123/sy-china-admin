@@ -28,6 +28,5 @@ public class AccountChangeQuery extends PageQuery {
     private String connId;
 
     @ApiModelProperty(value = "0-创建时间, 1-修改时间", required = true)
-    @NotNull
     private Integer timeType;
 }
