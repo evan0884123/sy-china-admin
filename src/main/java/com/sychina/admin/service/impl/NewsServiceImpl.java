@@ -35,7 +35,7 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements IN
                 .setCreate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
 
         int insert = baseMapper.insert(news);
-        redisTemplate.opsForHash().put(RedisKeys.news, news.getId(), JSON.toJSONString(news));
+        redisTemplate.opsForHash().put(RedisKeys.news, news.getId().toString(), JSON.toJSONString(news));
 
         return ResultModel.succeed();
     }
@@ -68,7 +68,7 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements IN
                 .setId(newsParam.getId());
 
         baseMapper.updateById(news);
-        redisTemplate.opsForHash().put(RedisKeys.news, news.getId(), JSON.toJSONString(news));
+        redisTemplate.opsForHash().put(RedisKeys.news, news.getId().toString(), JSON.toJSONString(news));
 
         return ResultModel.succeed();
     }

@@ -35,7 +35,7 @@ public class BannerServiceImpl extends ServiceImpl<BannerMapper, Banners> implem
                 .setCreate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
 
         int insert = baseMapper.insert(banner);
-        redisTemplate.opsForHash().put(RedisKeys.banner, banner.getId(), JSON.toJSONString(banner));
+        redisTemplate.opsForHash().put(RedisKeys.banner, banner.getId().toString(), JSON.toJSONString(banner));
 
         return ResultModel.succeed();
     }
@@ -68,7 +68,7 @@ public class BannerServiceImpl extends ServiceImpl<BannerMapper, Banners> implem
 
         baseMapper.updateById(banner);
 
-        redisTemplate.opsForHash().put(RedisKeys.banner, banner.getId(), JSON.toJSONString(banner));
+        redisTemplate.opsForHash().put(RedisKeys.banner, banner.getId().toString(), JSON.toJSONString(banner));
 
         return ResultModel.succeed();
     }

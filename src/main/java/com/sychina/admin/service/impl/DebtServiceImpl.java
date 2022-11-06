@@ -48,7 +48,7 @@ public class DebtServiceImpl extends ServiceImpl<DebtMapper, Debts> implements I
                 .setCreate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
 
         int insert = baseMapper.insert(debts);
-        redisTemplate.opsForHash().put(RedisKeys.debts, debts.getId(), JSON.toJSONString(debts));
+        redisTemplate.opsForHash().put(RedisKeys.debts, debts.getId().toString(), JSON.toJSONString(debts));
 
         return ResultModel.succeed();
     }
@@ -84,7 +84,7 @@ public class DebtServiceImpl extends ServiceImpl<DebtMapper, Debts> implements I
                 .setUpdate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
 
         baseMapper.updateById(debts);
-        redisTemplate.opsForHash().put(RedisKeys.debts, debts.getId(), JSON.toJSONString(debts));
+        redisTemplate.opsForHash().put(RedisKeys.debts, debts.getId().toString(), JSON.toJSONString(debts));
 
         return ResultModel.succeed();
     }
