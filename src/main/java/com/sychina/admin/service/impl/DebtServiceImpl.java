@@ -101,7 +101,7 @@ public class DebtServiceImpl extends ServiceImpl<DebtMapper, Debts> implements I
         });
 
         baseMapper.deleteById(id);
-        redisTemplate.opsForHash().delete(RedisKeys.debts, id);
+        redisTemplate.opsForHash().delete(RedisKeys.debts, id.toString());
 
         return ResultModel.succeed();
     }

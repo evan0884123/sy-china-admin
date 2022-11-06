@@ -1,19 +1,19 @@
 package com.sychina.admin.web.pojo.params;
 
-import com.sychina.admin.infra.domain.Banners;
 import com.sychina.admin.infra.domain.News;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
  * Description:
+ *
  * @author Administrator
  */
 @Data
 public class NewsParam {
 
     @ApiModelProperty(value = "id")
-    private String id;
+    private Long id;
 
     @ApiModelProperty(value = "title")
     private String title;

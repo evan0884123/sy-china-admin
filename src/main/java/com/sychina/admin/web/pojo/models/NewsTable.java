@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 public class NewsTable {
 
     @ApiModelProperty(value = "id")
-    private String id;
+    private Long id;
 
     @ApiModelProperty(value = "id")
     private String title;

@@ -77,7 +77,7 @@ public class BannerServiceImpl extends ServiceImpl<BannerMapper, Banners> implem
 
         baseMapper.deleteById(id);
 
-        redisTemplate.opsForHash().delete(RedisKeys.banner, id);
+        redisTemplate.opsForHash().delete(RedisKeys.banner, id.toString());
 
         return ResultModel.succeed();
     }

@@ -77,7 +77,7 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements IN
 
         baseMapper.deleteById(id);
 
-        redisTemplate.opsForHash().delete(RedisKeys.news, id);
+        redisTemplate.opsForHash().delete(RedisKeys.news, id.toString());
 
         return ResultModel.succeed();
     }

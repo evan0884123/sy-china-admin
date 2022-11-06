@@ -42,16 +42,16 @@ public class ConfigParam {
     private String video;
 
     @ApiModelProperty(value = "共享金补贴比例")
-    private String smScale;
+    private BigDecimal smScale;
 
     @ApiModelProperty(value = "共享金年利率")
-    private String smYearRate;
+    private BigDecimal smYearRate;
 
     @ApiModelProperty(value = "共享金提现门槛")
-    private String smWithdrawThreshold;
+    private BigDecimal smWithdrawThreshold;
 
     @ApiModelProperty(value = "共享金提现生命周期(单位:月)")
-    private String smWithdrawLifeCycle;
+    private Long smWithdrawLifeCycle;
 
     @ApiModelProperty(value = "共享金提现比例")
     private BigDecimal smWithdrawRate;

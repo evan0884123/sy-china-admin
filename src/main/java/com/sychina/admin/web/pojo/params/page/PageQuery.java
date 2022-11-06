@@ -32,11 +32,11 @@ public class PageQuery {
     }
 
     public void setStartTime(Long startTime) {
-        this.startTime = startTime == null ? LocalDateTimeHelper.toLong(LocalDateTime.now().minusDays(7)) : startTime;
+        this.startTime = startTime == null || startTime == 0? null : startTime;
     }
 
     public void setEndTime(Long endTime) {
-        this.endTime = endTime == null ? LocalDateTimeHelper.toLong(LocalDateTime.now().plusDays(1)) : endTime;
+        this.endTime = endTime == null  || endTime == 0? null : endTime;
     }
 
     public void setCurrent(Integer current) {
