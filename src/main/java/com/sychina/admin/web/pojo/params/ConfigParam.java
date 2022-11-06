@@ -68,6 +68,18 @@ public class ConfigParam {
     @ApiModelProperty(value = "推广邀请认购奖励规则")
     private String promoteBuyRule;
 
+    @ApiModelProperty(value = "开盘活动开始时间")
+    private Long ceStartTime;
+
+    @ApiModelProperty(value = "开盘活动结束时间")
+    private Long ceStopTime;
+
+    @ApiModelProperty(value = "登录赠送开始时间")
+    private Long lgStartTime;
+
+    @ApiModelProperty(value = "登录赠送结束时间")
+    private Long lgStopTime;
+
     public Config convert() {
 
         Config config = new Config();
@@ -88,7 +100,11 @@ public class ConfigParam {
                 .setSmSwitch(this.getSmSwitch())
                 .setDownloadQrCodeImg(this.getDownloadQrCodeImg())
                 .setPromoteRegisterRule(this.getPromoteRegisterRule())
-                .setPromoteBuyRule(this.getPromoteBuyRule());
+                .setPromoteBuyRule(this.getPromoteBuyRule())
+                .setCeStartTime(this.getCeStartTime())
+                .setCeStopTime(this.getCeStopTime())
+                .setLgStartTime(this.getLgStartTime())
+                .setLgStopTime(this.getLgStopTime());
 
         return config;
     }

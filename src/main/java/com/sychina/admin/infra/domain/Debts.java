@@ -74,6 +74,11 @@ public class Debts {
     private Integer status;
 
     /**
+     * 是否售罄(0-否 1-是)
+     */
+    private Integer soldOut;
+
+    /**
      * '创建时间'
      */
     @TableField("`create`")

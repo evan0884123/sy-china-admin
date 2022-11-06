@@ -6,6 +6,11 @@ package com.sychina.admin.common;
 public interface RedisKeys {
 
     /**
+     * google验证器 的锁名
+     */
+    String adminUser = "ADMIN_USER";
+
+    /**
      * redisLock 的锁名
      */
     String playBalanceChange = "PLAYER_BALANCE_CHANGE_";

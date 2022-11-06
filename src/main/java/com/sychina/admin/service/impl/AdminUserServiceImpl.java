@@ -1,15 +1,19 @@
 package com.sychina.admin.service.impl;
 
+import com.aliyun.oss.OSS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sychina.admin.common.RedisKeys;
 import com.sychina.admin.common.RequestContext;
+import com.sychina.admin.config.AliyunConfig;
 import com.sychina.admin.infra.domain.AdminMenu;
 import com.sychina.admin.infra.domain.AdminRole;
 import com.sychina.admin.infra.domain.AdminUser;
 import com.sychina.admin.infra.mapper.AdminMenuMapper;
 import com.sychina.admin.infra.mapper.AdminUserMapper;
 import com.sychina.admin.service.IAdminUserService;
+import com.sychina.admin.utils.GoogleAuthenticator;
 import com.sychina.admin.utils.StringGenerator;
 import com.sychina.admin.web.pojo.SelectOption;
 import com.sychina.admin.web.pojo.models.AdminMenuModel;
@@ -17,12 +21,18 @@ import com.sychina.admin.web.pojo.models.AdminUserTable;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import com.sychina.admin.web.pojo.params.AdminUserParam;
 import com.sychina.admin.web.pojo.params.AdminUserQuery;
+import lombok.SneakyThrows;
+import org.apache.commons.lang3.StringUtils;
+import org.iherus.codegen.qrcode.SimpleQrcodeGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -38,6 +48,12 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
     private AdminRoleServiceImpl adminRoleService;
 
     private AdminMenuMapper adminMenuMapper;
+
+    private RedisTemplate redisTemplate;
+
+    private OSS ossClient;
+
+    private AliyunConfig aliyunConfig;
 
     private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(4);
 
@@ -212,6 +228,34 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
         return ResultModel.succeed(userSelect);
     }
 
+    @SneakyThrows
+    public ResultModel getQrcode(String loginName) {
+        Assert.isTrue(StringUtils.isNotBlank(loginName), "用户名不能为空");
+        String secretKey = GoogleAuthenticator.getSecretKey();
+        redisTemplate.opsForHash().put(RedisKeys.adminUser, loginName, secretKey);
+        // 生成二维码内容
+        String qrCodeText = GoogleAuthenticator.getQrCodeText(secretKey, loginName, "");
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        new SimpleQrcodeGenerator().generate(qrCodeText).toStream(out);
+        ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
+
+        String filePath = loginName + ".png";
+        ossClient.putObject(aliyunConfig.getBucketName(), filePath, in);
+
+        return ResultModel.succeed(this.aliyunConfig.getUrlPrefix() + filePath);
+    }
+
+    public ResultModel confirmBind(String loginName) {
+
+        AdminUser adminUser = getOne(new QueryWrapper<AdminUser>().eq("login_name", loginName));
+        Assert.notNull(adminUser, "未找到该用户");
+        String secretKey = (String) redisTemplate.opsForHash().get(RedisKeys.adminUser, loginName);
+        adminUser.setGoogleSecret(secretKey);
+        updateById(adminUser);
+
+        return ResultModel.succeed();
+    }
+
     @Autowired
     public void setRequestContext(RequestContext requestContext) {
         this.requestContext = requestContext;
@@ -230,5 +274,20 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
     @Autowired
     public void setAdminMenuMapper(AdminMenuMapper adminMenuMapper) {
         this.adminMenuMapper = adminMenuMapper;
+    }
+
+    @Autowired
+    public void setRedisTemplate(RedisTemplate redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
+
+    @Autowired
+    public void setOssClient(OSS ossClient) {
+        this.ossClient = ossClient;
+    }
+
+    @Autowired
+    public void setAliyunConfig(AliyunConfig aliyunConfig) {
+        this.aliyunConfig = aliyunConfig;
     }
 }

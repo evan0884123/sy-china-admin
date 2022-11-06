@@ -20,6 +20,7 @@ public class AdminLoginController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "username", value = "用户名", required = true, dataType = "String"),
             @ApiImplicitParam(name = "password", value = "密码", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "code", value = "验证码", required = true, dataType = "code"),
     })
     public ResultModel login(String username, String password) {
         return ResultModel.succeed();

@@ -39,6 +39,9 @@ public class DebtParam {
     @ApiModelProperty(value = "状态(0-关闭 1-启用)")
     private Integer status;
 
+    @ApiModelProperty(value = "是否售罄(0-否 1-是)")
+    private Integer soldOut;
+
     public Debts convert() {
 
         Debts debts = new Debts();
@@ -47,7 +50,8 @@ public class DebtParam {
                 .setApr(this.getApr())
                 .setTerm(this.getTerm())
                 .setTotal(this.getTotal())
-                .setStatus(this.getStatus());
+                .setStatus(this.getStatus())
+                .setSoldOut(this.getSoldOut());
 
         return debts;
     }

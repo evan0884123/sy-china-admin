@@ -6,6 +6,9 @@ package com.sychina.admin.web.pojo.models.response;
 public enum ResponseStatus {
 
     UNAUTHORIZED("unauthorized", 401),
+    UNBIND_GOOGLE("unbind_google", 402),
+    BIND_GOOGLE("bind_google", 403),
+    GOOGLE_CODE_ERROR("google_code_error", 406),
     EXISTS("exists", 100),
     SUCCESS("success", 200),
     FAILURE("failure", 500),

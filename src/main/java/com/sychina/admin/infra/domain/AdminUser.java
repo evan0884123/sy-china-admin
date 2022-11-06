@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.sychina.admin.utils.UUIDGenerator;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -63,6 +62,11 @@ public class AdminUser {
      * 用户类型
      */
     private String type;
+
+    /**
+     * 谷歌验证器的 验证码
+     */
+    private String googleSecret;
 
     /**
      * '创建时间'

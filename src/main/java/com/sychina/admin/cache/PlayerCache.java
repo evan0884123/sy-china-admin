@@ -3,6 +3,7 @@ package com.sychina.admin.cache;
 import com.alibaba.fastjson.JSON;
 import com.sychina.admin.common.RedisKeys;
 import com.sychina.admin.infra.domain.Players;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -38,6 +39,7 @@ public class PlayerCache {
 
     }
 
+    @Autowired
     public void setRedisTemplate(RedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
     }

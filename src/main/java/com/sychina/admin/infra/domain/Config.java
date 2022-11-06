@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import io.swagger.models.auth.In;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -110,6 +109,26 @@ public class Config {
      * 推广邀请认购奖励规则
      */
     private String promoteBuyRule;
+
+    /**
+     * 开盘活动开始时间
+     */
+    private Long ceStartTime;
+
+    /**
+     * 开盘活动结束时间
+     */
+    private Long ceStopTime;
+
+    /**
+     * 登录赠送开始时间
+     */
+    private Long lgStartTime;
+
+    /**
+     * 登录赠送结束时间
+     */
+    private Long lgStopTime;
 
     /**
      * '创建时间'

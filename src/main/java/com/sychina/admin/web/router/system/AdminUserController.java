@@ -93,6 +93,27 @@ public class AdminUserController {
         return userServiceImpl.fetchUserOptions();
     }
 
+    /**
+     * 生成二维码，APP直接扫描绑定，两种方式任选一种
+     */
+    @PostMapping("getQrcode")
+    @ApiOperation("获取谷歌二维码")
+    public ResultModel getQrcode(@RequestParam String loginName) {
+
+        // 生成二维码内容
+        return userServiceImpl.getQrcode(loginName);
+    }
+
+    /**
+     * 确定绑定二维码
+     */
+    @PostMapping("confirmBind")
+    @ApiOperation("确定绑定二维码")
+    public ResultModel confirmBind(@RequestParam String loginName) {
+
+        // 确认绑定
+        return userServiceImpl.confirmBind(loginName);
+    }
 
     @Autowired
     public void setUserService(AdminUserServiceImpl userServiceImpl) {

@@ -8,6 +8,7 @@ import com.sychina.admin.cache.CompanyCache;
 import com.sychina.admin.cache.PlayerCache;
 import com.sychina.admin.common.RedisKeys;
 import com.sychina.admin.infra.domain.AccountChanges;
+import com.sychina.admin.infra.domain.Config;
 import com.sychina.admin.infra.domain.Equities;
 import com.sychina.admin.infra.domain.Players;
 import com.sychina.admin.infra.mapper.PlayerMapper;
@@ -42,6 +43,8 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
     private AccountChangeServiceImpl accountChangeService;
 
     private EquitiesServiceImpl equitiesService;
+
+    private ConfigServiceImpl configService;
 
     private PlayerCache playerCache;
 
@@ -367,6 +370,13 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 
         String company = companyCache.getCompanyInfo();
         Assert.isTrue(StringUtils.isNotEmpty(company), "没有公司信息无法配置股权");
+
+        Config config = configService.getById(1L);
+        long millis = System.currentTimeMillis();
+        if (millis >= config.getCeStartTime() && millis <= config.getCeStopTime()){
+            amount = amount.multiply(new BigDecimal("2"));
+        }
+
         Equities equities = new Equities()
                 .setPlayer(players.getId())
                 .setPlayerName(players.getAccount())
@@ -400,5 +410,10 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
     @Autowired
     public void setPlayerCache(PlayerCache playerCache) {
         this.playerCache = playerCache;
+    }
+
+    @Autowired
+    public void setConfigService(ConfigServiceImpl configService) {
+        this.configService = configService;
     }
 }

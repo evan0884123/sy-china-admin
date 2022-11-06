@@ -70,6 +70,18 @@ public class ConfigTable {
     @ApiModelProperty(value = "推广邀请认购奖励规则")
     private String promoteBuyRule;
 
+    @ApiModelProperty(value = "开盘活动开始时间")
+    private Long ceStartTime;
+
+    @ApiModelProperty(value = "开盘活动结束时间")
+    private Long ceStopTime;
+
+    @ApiModelProperty(value = "登录赠送开始时间")
+    private Long lgStartTime;
+
+    @ApiModelProperty(value = "登录赠送结束时间")
+    private Long lgStopTime;
+
     @ApiModelProperty(value = "创建时间")
     private Long create;
 
@@ -97,6 +109,10 @@ public class ConfigTable {
                 .setDownloadQrCodeImg(record.getDownloadQrCodeImg())
                 .setPromoteRegisterRule(record.getPromoteRegisterRule())
                 .setPromoteBuyRule(record.getPromoteBuyRule())
+                .setCeStartTime(record.getCeStartTime())
+                .setCeStopTime(record.getCeStopTime())
+                .setLgStartTime(record.getLgStartTime())
+                .setLgStopTime(record.getLgStopTime())
                 .setCreate(record.getCreate())
                 .setUpdate(record.getUpdate());
     }

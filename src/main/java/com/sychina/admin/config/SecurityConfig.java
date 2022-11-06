@@ -6,6 +6,7 @@ import com.sychina.admin.auth.WhaleAuthenticationProvider;
 import com.sychina.admin.auth.jwt.JwtAuthenticationConfig;
 import com.sychina.admin.auth.jwt.JwtTokenAuthenticationFilter;
 import com.sychina.admin.auth.jwt.JwtUsernamePasswordAuthenticationFilter;
+import com.sychina.admin.service.impl.AdminUserServiceImpl;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -27,6 +28,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private JwtAuthenticationConfig config;
+
+    private AdminUserServiceImpl adminUserService;
 
     @Autowired
     @Qualifier("userDetailsServiceImpl")
@@ -57,11 +60,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilterAfter(new JwtTokenAuthenticationFilter(config),
                         UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(new JwtUsernamePasswordAuthenticationFilter(config, authenticationManager()),
+                .addFilterAfter(new JwtUsernamePasswordAuthenticationFilter(config, authenticationManager(), adminUserService),
                         UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests().antMatchers(config.getUrl()).permitAll()
                 // 放行swagger
-                .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/webjars/**", "/v3/**", "/api/**", "/doc.html").permitAll()
+                .antMatchers("/adminUser/confirmBind", "/adminUser/getQrcode", "/swagger-ui.html", "/swagger-resources/**", "/webjars/**", "/v3/**", "/api/**", "/doc.html").permitAll()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .anyRequest().authenticated();
     }
@@ -69,5 +72,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public void setConfig(JwtAuthenticationConfig config) {
         this.config = config;
+    }
+
+    @Autowired
+    public void setAdminUserService(AdminUserServiceImpl adminUserService) {
+        this.adminUserService = adminUserService;
     }
 }

@@ -33,6 +33,32 @@ public class ResultModel<T> {
      *
      * @return
      */
+    public static <T> ResultModel<T> unbindGoogle() {
+        return new ResultModel<T>(ResponseStatus.UNBIND_GOOGLE);
+    }
+
+    public static <T> ResultModel<T> unbindGoogle(T data) {
+        return new ResultModel<T>(ResponseStatus.UNBIND_GOOGLE, data);
+    }
+
+    /**
+     * token 失效
+     *
+     * @return
+     */
+    public static <T> ResultModel<T> bindGoogle() {
+        return new ResultModel<T>(ResponseStatus.UNBIND_GOOGLE);
+    }
+
+    public static <T> ResultModel<T> bindGoogle(T data) {
+        return new ResultModel<T>(ResponseStatus.BIND_GOOGLE, data);
+    }
+
+    /**
+     * token 失效
+     *
+     * @return
+     */
     public static <T> ResultModel<T> unauthorized() {
         return new ResultModel<T>(ResponseStatus.UNAUTHORIZED);
     }
@@ -67,15 +93,15 @@ public class ResultModel<T> {
         return new ResultModel<T>(ResponseStatus.FAILURE, data);
     }
 
-    protected ResultModel() {
+    public ResultModel() {
     }
 
-    protected ResultModel(ResponseStatus status) {
+    public ResultModel(ResponseStatus status) {
         this.code = status.code();
         this.msg = status.status();
     }
 
-    protected ResultModel(ResponseStatus status, T data) {
+    public ResultModel(ResponseStatus status, T data) {
         this.code = status.code();
         this.msg = status.status();
         this.data = data;

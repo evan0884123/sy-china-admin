@@ -44,6 +44,9 @@ public class DebtTable {
     @ApiModelProperty(value = "状态(0-关闭 1-启用)")
     private Integer status;
 
+    @ApiModelProperty(value = "是否售罄(0-否 1-是)")
+    private Integer soldOut;
+
     @ApiModelProperty(value = "创建时间")
     private Long create;
 
@@ -62,6 +65,7 @@ public class DebtTable {
                 .setTotal(record.getTotal())
                 .setMount(record.getMount() != null ? record.getMount().substring(1, record.getMount().length() - 1) : "")
                 .setStatus(record.getStatus())
+                .setSoldOut(record.getSoldOut())
                 .setCreate(record.getCreate())
                 .setUpdate(record.getUpdate());
     }
