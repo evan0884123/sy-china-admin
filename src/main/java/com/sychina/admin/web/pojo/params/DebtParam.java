@@ -42,9 +42,8 @@ public class DebtParam {
     @ApiModelProperty(value = "是否售罄(0-否 1-是)")
     private Integer soldOut;
 
-    public Debts convert() {
+    public Debts convert(Debts debts) {
 
-        Debts debts = new Debts();
         debts.setSlogan(this.getSlogan())
                 .setPrice(this.getPrice())
                 .setApr(this.getApr())

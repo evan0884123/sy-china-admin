@@ -41,7 +41,8 @@ public class DebtServiceImpl extends ServiceImpl<DebtMapper, Debts> implements I
         Debts selectOne = baseMapper.selectOne(new QueryWrapper<Debts>().eq("numbering", debtParam.getNumbering()));
         Assert.isNull(selectOne, "编号重复");
 
-        Debts debts = debtParam.convert()
+        Debts debts = new Debts();
+        debtParam.convert(debts)
                 .setName(debtParam.getName())
                 .setNumbering(debtParam.getNumbering())
                 .setMount(JSON.toJSONString(new ArrayList<Long>()))
@@ -79,9 +80,10 @@ public class DebtServiceImpl extends ServiceImpl<DebtMapper, Debts> implements I
 
     public ResultModel edit(DebtParam debtParam) {
 
-        Assert.notNull(debtParam.getId(), "id不能为空");
+        Debts debts = getById(debtParam.getId());
+        Assert.notNull(debts, "没有这个国债信息");
 
-        Debts debts = debtParam.convert()
+        debtParam.convert(debts)
                 .setId(debtParam.getId())
                 .setUpdate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
 

@@ -36,9 +36,8 @@ public class NewsParam {
     @ApiModelProperty(value = "标签(0-首页 1-资讯)")
     private Integer tab;
 
-    public News convert() {
+    public News convert(News news) {
 
-        News news = new News();
         news.setTitle(this.getTitle())
                 .setThumbnail(this.getThumbnail())
                 .setType(this.getType())

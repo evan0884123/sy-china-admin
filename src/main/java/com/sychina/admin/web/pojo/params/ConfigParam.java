@@ -80,9 +80,8 @@ public class ConfigParam {
     @ApiModelProperty(value = "登录赠送结束时间")
     private Long lgStopTime;
 
-    public Config convert() {
+    public Config convert(Config config) {
 
-        Config config = new Config();
         config.setId(this.getId())
                 .setIcon(this.getIcon())
                 .setAbout(this.getAbout())

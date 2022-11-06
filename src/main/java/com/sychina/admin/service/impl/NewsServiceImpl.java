@@ -16,6 +16,7 @@ import com.sychina.admin.web.pojo.params.NewsQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -31,7 +32,8 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements IN
 
     public ResultModel add(NewsParam newsParam) {
 
-        News news = newsParam.convert()
+        News news = new News();
+        newsParam.convert(news)
                 .setCreate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
 
         int insert = baseMapper.insert(news);
@@ -65,7 +67,9 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements IN
 
     public ResultModel edit(NewsParam newsParam) {
 
-        News news = newsParam.convert()
+        News news = getById(newsParam.getId());
+        Assert.notNull(news, "没有这个咨询信息");
+        newsParam.convert(news)
                 .setUpdate(LocalDateTimeHelper.toLong(LocalDateTime.now()))
                 .setId(newsParam.getId());
 

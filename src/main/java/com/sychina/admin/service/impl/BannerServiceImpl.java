@@ -16,6 +16,7 @@ import com.sychina.admin.web.pojo.params.BannerQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -31,7 +32,8 @@ public class BannerServiceImpl extends ServiceImpl<BannerMapper, Banners> implem
 
     public ResultModel add(BannerParam bannerParam) {
 
-        Banners banner = bannerParam.convert()
+        Banners banner = new Banners();
+        bannerParam.convert(banner)
                 .setCreate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
 
         int insert = baseMapper.insert(banner);
@@ -64,7 +66,9 @@ public class BannerServiceImpl extends ServiceImpl<BannerMapper, Banners> implem
 
     public ResultModel edit(BannerParam bannerParam) {
 
-        Banners banner = bannerParam.convert()
+        Banners banner = getById(bannerParam.getId());
+        Assert.notNull(banner, "没有这个banner信息");
+        bannerParam.convert(banner)
                 .setUpdate(LocalDateTimeHelper.toLong(LocalDateTime.now()))
                 .setId(bannerParam.getId());
 

@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -42,7 +43,9 @@ public class ConfigServiceImpl extends ServiceImpl<ConfigMapper, Config> impleme
     @Transactional(rollbackFor = Exception.class)
     public ResultModel edit(ConfigParam configParam) {
 
-        Config config = configParam.convert()
+        Config config = getById(configParam.getId());
+        Assert.notNull(config, "没有这个配置信息");
+        configParam.convert(config)
                 .setUpdate(LocalDateTimeHelper.toLong(LocalDateTime.now()));
 
         projectRecordService.update().set(config.getSmSwitch() == 1, "status", 1);

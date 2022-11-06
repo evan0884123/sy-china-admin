@@ -27,9 +27,8 @@ public class BannerParam {
     @ApiModelProperty(value = "状态(0-关闭 1-开启)")
     private Integer status;
 
-    public Banners convert() {
+    public Banners convert(Banners banner) {
 
-        Banners banner = new Banners();
         banner.setTab(this.getTab())
                 .setImg(this.getImg())
                 .setContent(this.getContent())
