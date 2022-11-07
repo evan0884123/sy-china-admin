@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.math.BigDecimal;
+
 /**
  * 公司信息
  *
@@ -48,27 +50,27 @@ public class Debts {
      * '项目金额'
      */
     @JSONField(name = "price")
-    private String price;
+    private BigDecimal price;
 
 
     /**
      * '国债年利率'
      */
     @JSONField(name = "apr")
-    private String apr;
+    private BigDecimal apr;
 
 
     /**
      * '年限'
      */
     @JSONField(name = "term")
-    private String term;
+    private Long term;
 
     /**
      * '总计金额'
      */
     @JSONField(name = "total")
-    private String total;
+    private BigDecimal total;
 
 
     /**

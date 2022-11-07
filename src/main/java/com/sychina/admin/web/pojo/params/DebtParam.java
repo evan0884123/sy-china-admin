@@ -4,6 +4,8 @@ import com.sychina.admin.infra.domain.Debts;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 /**
  * Description:
  *
@@ -25,16 +27,16 @@ public class DebtParam {
     private String slogan;
 
     @ApiModelProperty(value = "项目金额")
-    private String price;
+    private BigDecimal price;
 
     @ApiModelProperty(value = "国债年利率")
-    private String apr;
+    private BigDecimal apr;
 
     @ApiModelProperty(value = "年限")
-    private String term;
+    private Long term;
 
     @ApiModelProperty(value = "总计金额")
-    private String total;
+    private BigDecimal total;
 
     @ApiModelProperty(value = "状态(0-关闭 1-启用)")
     private Integer status;

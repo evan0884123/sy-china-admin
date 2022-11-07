@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.math.BigDecimal;
+
 /**
  * Description:
  *
@@ -27,16 +29,16 @@ public class DebtTable {
     private String slogan;
 
     @ApiModelProperty(value = "项目金额")
-    private String price;
+    private BigDecimal price;
 
     @ApiModelProperty(value = "国债年利率")
-    private String apr;
+    private BigDecimal apr;
 
     @ApiModelProperty(value = "年限")
-    private String term;
+    private Long term;
 
     @ApiModelProperty(value = "总计金额")
-    private String total;
+    private BigDecimal total;
 
     @ApiModelProperty(value = "挂载项目")
     private String mount;
