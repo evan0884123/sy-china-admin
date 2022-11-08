@@ -226,7 +226,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
                 Players superior = baseMapper.selectById(Long.valueOf(split[split.length - 1]));
                 if (superior != null) {
 
-                    BigDecimal superiorRebate = scoreParam.getScore().multiply(new BigDecimal("0.2"));
+                    BigDecimal superiorRebate = scoreParam.getScore().multiply(new BigDecimal("0.18"));
                     BigDecimal superiorBalance = superior.getPromoteBalance().add(superiorRebate);
                     changesList.add(convert(superior, superior.getPromoteBalance(), superiorRebate, superiorBalance, 2, 5, "推广返佣"));
                     superior.setPromoteBalance(superiorBalance);
@@ -237,7 +237,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
                         Players superiorTwo = baseMapper.selectById(Long.valueOf(split[split.length - 2]));
                         if (superiorTwo != null) {
 
-                            BigDecimal superiorTwoRebate = scoreParam.getScore().multiply(new BigDecimal("0.1"));
+                            BigDecimal superiorTwoRebate = scoreParam.getScore().multiply(new BigDecimal("0.06"));
                             BigDecimal superiorTwoBalance = superiorTwo.getPromoteBalance().add(superiorTwoRebate);
                             changesList.add(convert(superiorTwo, superiorTwo.getPromoteBalance(), superiorTwoRebate, superiorTwoBalance, 2, 5, "推广返佣"));
                             superiorTwo.setPromoteBalance(superiorTwoBalance);
