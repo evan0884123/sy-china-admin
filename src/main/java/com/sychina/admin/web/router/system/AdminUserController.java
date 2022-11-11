@@ -30,7 +30,6 @@ public class AdminUserController {
 
     @PostMapping("/info")
     @ApiOperation("获取个人信息")
-    @Access
     public ResultModel<AdminUserTable> info() {
 
         return userServiceImpl.buildUserInfo();

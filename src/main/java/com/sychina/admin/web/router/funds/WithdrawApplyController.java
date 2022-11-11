@@ -39,7 +39,6 @@ public class WithdrawApplyController {
 
     @PostMapping("/notice")
     @ApiOperation("申请提醒")
-    @Access
     public ResultModel applicationNotice() {
         return withdrawApplyService.applicationNotice();
     }

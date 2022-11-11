@@ -74,7 +74,7 @@ public class AsyncStatistics {
             if (!CollectionUtils.isEmpty(mapList)) {
                 mapList.forEach(map -> {
                     Integer status = Math.toIntExact((Long) map.get("status"));
-                    BigDecimal totalAmount = new BigDecimal((Double) map.get("totalAmount"));
+                    BigDecimal totalAmount = new BigDecimal(map.get("totalAmount").toString());
                     if (status == 0 || status == 1) {
                         BigDecimal add = todayStaModel.getTReadyWithdraw().add(totalAmount);
                         todayStaModel.setTReadyWithdraw(add);

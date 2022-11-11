@@ -78,8 +78,8 @@ public class JwtUsernamePasswordAuthenticationFilter extends AbstractAuthenticat
             if (code == null) {
                 resultModel = ResultModel.bindGoogle("请先绑定谷歌验证器");
             } else {
-                boolean b = GoogleAuthenticator.checkCode(adminUser.getGoogleSecret(), Long.parseLong(code), System.currentTimeMillis());
-                if (b) {
+//                boolean b = GoogleAuthenticator.checkCode(adminUser.getGoogleSecret(), Long.parseLong(code), System.currentTimeMillis());
+//                if (b) {
                     Instant now = Instant.now();
                     String token = Jwts
                             .builder()
@@ -93,9 +93,9 @@ public class JwtUsernamePasswordAuthenticationFilter extends AbstractAuthenticat
                     res.addHeader(config.getHeader(), config.getPrefix() + token);
 
                     resultModel = ResultModel.succeed(config.getPrefix() + token);
-                } else {
-                    resultModel = new ResultModel(ResponseStatus.GOOGLE_CODE_ERROR, "google验证码错误");
-                }
+//                } else {
+//                    resultModel = new ResultModel(ResponseStatus.GOOGLE_CODE_ERROR, "google验证码错误");
+//                }
             }
 
         }

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sychina.admin.common.RedisKeys;
 import com.sychina.admin.infra.domain.Debts;
 import com.sychina.admin.infra.domain.Projects;
 import com.sychina.admin.infra.mapper.ProjectMapper;
@@ -16,6 +17,7 @@ import com.sychina.admin.web.pojo.params.ProjectParam;
 import com.sychina.admin.web.pojo.params.ProjectQuery;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -31,6 +33,8 @@ import java.util.List;
 public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Projects> implements IProjectService {
 
     private DebtServiceImpl debtService;
+
+    private RedisTemplate redisTemplate;
 
     @Transactional(rollbackFor = Exception.class)
     public ResultModel add(ProjectParam projectParam) {
@@ -49,6 +53,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Projects> imp
         mountList.add(projects.getId());
         debts.setMount(JSON.toJSONString(mountList));
         debtService.updateById(debts);
+        redisTemplate.opsForHash().put(RedisKeys.debts, debts.getId().toString(), JSON.toJSONString(debts));
 
         return ResultModel.succeed();
     }
@@ -95,7 +100,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Projects> imp
     public ResultModel delete(Long id) {
 
         Projects projects = baseMapper.selectById(id);
-        Assert.notNull(projects, "未找到该国债信息");
+        Assert.notNull(projects, "未找到该项目信息");
 
         Debts debts = debtService.getOne(new QueryWrapper<Debts>().eq("numbering", projects.getDebtNumbering()));
         Assert.notNull(debts, "未找到该国债信息");
@@ -105,6 +110,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Projects> imp
 
         debtService.saveOrUpdate(debts.setMount(JSON.toJSONString(mountList)));
         baseMapper.deleteById(id);
+        redisTemplate.opsForHash().put(RedisKeys.debts, debts.getId().toString(), JSON.toJSONString(debts));
 
         return ResultModel.succeed();
     }
@@ -127,5 +133,10 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Projects> imp
     @Autowired
     public void setDebtService(DebtServiceImpl debtService) {
         this.debtService = debtService;
+    }
+
+    @Autowired
+    public void setRedisTemplate(RedisTemplate redisTemplate) {
+        this.redisTemplate = redisTemplate;
     }
 }
