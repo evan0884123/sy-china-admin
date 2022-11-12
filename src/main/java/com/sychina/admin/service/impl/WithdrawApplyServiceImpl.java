@@ -87,15 +87,17 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
                 return;
             }
             String lockKey = RedisKeys.playBalanceChange + withdrawApply.getPlayer();
-            lockUtil.tryLock(lockKey, 15);
-            try {
-                actionAmount(withdrawApply, withdrawApplyParam);
-            } finally {
-                lockUtil.unlock(lockKey);
+            boolean tryLock = lockUtil.tryLock(lockKey, 15);
+            if (tryLock){
+                try {
+                    actionAmount(withdrawApply, withdrawApplyParam);
+                } finally {
+                    lockUtil.unlock(lockKey);
+                }
             }
         });
 
-        return ResultModel.succeed();
+        return ResultModel.succeed("执行中，请再次确认是否成功");
     }
 
     public ResultModel applicationNotice() {

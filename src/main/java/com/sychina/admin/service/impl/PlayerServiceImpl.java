@@ -133,12 +133,13 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
         playersList.forEach(players -> {
 
             String lockKey = RedisKeys.playBalanceChange + players.getId();
-            lockUtil.tryLock(lockKey, 15);
-            try {
-                switch (scoreParam.getType()) {
-                    case 0:
-                        updateUseBalance(players, scoreParam);
-                        break;
+            boolean tryLock = lockUtil.tryLock(lockKey, 15);
+            if (tryLock){
+                try {
+                    switch (scoreParam.getType()) {
+                        case 0:
+                            updateUseBalance(players, scoreParam);
+                            break;
 //                    case 1:
 //                        updateWithdrawBalance(players, scoreParam);
 //                        break;
@@ -151,16 +152,16 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 //                    case 4:
 //                        updateShareMoneyProfit(players, scoreParam);
 //                        break;
+                    }
+                    playerCache.setPlayerCache(players);
+                } finally {
+                    lockUtil.unlock(lockKey);
                 }
-                playerCache.setPlayerCache(players);
-            } catch (Exception e) {
-                log.error("[WITHDRAW_APPLY][ERROR] action amount error", e);
-            } finally {
-                lockUtil.unlock(lockKey);
             }
+
         });
 
-        return ResultModel.succeed();
+        return ResultModel.succeed("执行中，请再次确认是否成功");
     }
 
     public ResultModel resetPassword(ResetPasswordParam param) {
