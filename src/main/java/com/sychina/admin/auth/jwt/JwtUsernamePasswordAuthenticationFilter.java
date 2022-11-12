@@ -2,6 +2,7 @@ package com.sychina.admin.auth.jwt;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.sychina.admin.common.RedisKeys;
 import com.sychina.admin.infra.domain.AdminUser;
 import com.sychina.admin.service.impl.AdminUserServiceImpl;
 import com.sychina.admin.utils.GoogleAuthenticator;
@@ -10,6 +11,7 @@ import com.sychina.admin.web.pojo.models.response.ResultModel;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,6 +28,7 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -39,13 +42,17 @@ public class JwtUsernamePasswordAuthenticationFilter extends AbstractAuthenticat
 
     private final AdminUserServiceImpl adminUserService;
 
+    private final RedisTemplate redisTemplate;
+
     public JwtUsernamePasswordAuthenticationFilter(JwtAuthenticationConfig config,
                                                    AuthenticationManager authManager,
-                                                   AdminUserServiceImpl adminUserService) {
+                                                   AdminUserServiceImpl adminUserService,
+                                                   RedisTemplate redisTemplate) {
         super(new AntPathRequestMatcher(config.getUrl(), "POST"));
         setAuthenticationManager(authManager);
         this.config = config;
         this.adminUserService = adminUserService;
+        this.redisTemplate = redisTemplate;
     }
 
     @Override
@@ -60,7 +67,8 @@ public class JwtUsernamePasswordAuthenticationFilter extends AbstractAuthenticat
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
 
-        response.getWriter().println(JSON.toJSONString(ResultModel.failed(failed.getMessage())));
+        response.setCharacterEncoding("utf-8");
+        response.getWriter().println(JSON.toJSONString(ResultModel.failed("账号或密码错误")));
         response.getWriter().flush();
     }
 
@@ -69,6 +77,7 @@ public class JwtUsernamePasswordAuthenticationFilter extends AbstractAuthenticat
                                             FilterChain chain, Authentication auth) throws IOException {
 
         ResultModel resultModel;
+        res.setCharacterEncoding("utf-8");
         QueryWrapper<AdminUser> queryWrapper = new QueryWrapper<>();
         AdminUser adminUser = adminUserService.getOne(queryWrapper.eq("id", auth.getName()));
         if (StringUtils.isBlank(adminUser.getGoogleSecret())) {
@@ -78,8 +87,8 @@ public class JwtUsernamePasswordAuthenticationFilter extends AbstractAuthenticat
             if (code == null) {
                 resultModel = ResultModel.bindGoogle("请先绑定谷歌验证器");
             } else {
-//                boolean b = GoogleAuthenticator.checkCode(adminUser.getGoogleSecret(), Long.parseLong(code), System.currentTimeMillis());
-//                if (b) {
+                boolean b = GoogleAuthenticator.checkCode(adminUser.getGoogleSecret(), Long.parseLong(code), System.currentTimeMillis());
+                if (b) {
                     Instant now = Instant.now();
                     String token = Jwts
                             .builder()
@@ -92,10 +101,12 @@ public class JwtUsernamePasswordAuthenticationFilter extends AbstractAuthenticat
                             .signWith(SignatureAlgorithm.HS256, config.getSecret().getBytes()).compact();
                     res.addHeader(config.getHeader(), config.getPrefix() + token);
 
+                    redisTemplate.opsForValue().set(RedisKeys.adminUserToken + auth.getName(),token,
+                            config.getExpiration(), TimeUnit.SECONDS);
                     resultModel = ResultModel.succeed(config.getPrefix() + token);
-//                } else {
-//                    resultModel = new ResultModel(ResponseStatus.GOOGLE_CODE_ERROR, "google验证码错误");
-//                }
+                } else {
+                    resultModel = new ResultModel(ResponseStatus.GOOGLE_CODE_ERROR, "google验证码错误");
+                }
             }
 
         }

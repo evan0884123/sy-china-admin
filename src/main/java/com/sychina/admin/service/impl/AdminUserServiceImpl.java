@@ -14,7 +14,6 @@ import com.sychina.admin.infra.mapper.AdminMenuMapper;
 import com.sychina.admin.infra.mapper.AdminUserMapper;
 import com.sychina.admin.service.IAdminUserService;
 import com.sychina.admin.utils.GoogleAuthenticator;
-import com.sychina.admin.utils.StringGenerator;
 import com.sychina.admin.web.pojo.SelectOption;
 import com.sychina.admin.web.pojo.models.AdminMenuModel;
 import com.sychina.admin.web.pojo.models.AdminUserTable;
@@ -136,7 +135,7 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
         adminUser.setMobile(adminUserParam.getMobile());
         adminUser.setEmail(adminUserParam.getEmail());
         adminUser.setType(adminUserParam.getType());
-        String password = StringGenerator.genRandom(8);
+        String password = "123456";
         adminUser.setPassword(bCryptPasswordEncoder.encode(password));
 
         baseMapper.insert(adminUser);
@@ -205,7 +204,7 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
         AdminUser adminUser = baseMapper.selectById(id);
         Assert.notNull(adminUser, "未找到该用户");
 
-        String password = StringGenerator.genRandom(8);
+        String password = "123456";
         adminUser.setPassword(bCryptPasswordEncoder.encode(password));
 
         baseMapper.updateById(adminUser);

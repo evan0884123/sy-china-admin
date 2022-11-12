@@ -1,6 +1,7 @@
 package com.sychina.admin.aop;
 
 import com.alibaba.fastjson.JSON;
+import com.sychina.admin.utils.IPUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -30,6 +31,7 @@ public class PrintFilter implements Filter {
         Map<String, String[]> parameterMap = requ.getParameterMap();
         StringBuilder sb = new StringBuilder();
         sb.append("--本次请求");
+        sb.append(", [请求 IP]: ").append(IPUtil.getIpAddr(requ));
         sb.append(", [URL]: ").append(requ.getRequestURI());
         sb.append(", [参数]: ").append(JSON.toJSONString(parameterMap));
         log.info(sb.toString());

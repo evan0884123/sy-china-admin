@@ -10,7 +10,9 @@ import com.sychina.admin.service.impl.AdminUserServiceImpl;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,6 +21,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.util.List;
 
 
 /**
@@ -30,6 +34,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtAuthenticationConfig config;
 
     private AdminUserServiceImpl adminUserService;
+
+    private RedisTemplate redisTemplate;
+
+    private String[] whiteLists;
 
     @Autowired
     @Qualifier("userDetailsServiceImpl")
@@ -54,17 +62,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.cors().and().csrf().disable().logout().disable().formLogin().disable().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().exceptionHandling()
                 .authenticationEntryPoint((req, rsp, e) -> {
-                    rsp.getWriter().println(JSON.toJSONString(ResultModel.unauthorized("token invalidation")));
+                    rsp.setCharacterEncoding("utf-8");
+                    rsp.getWriter().println(JSON.toJSONString(ResultModel.unauthorized("token失效,请重新登录")));
                     rsp.getWriter().flush();
                 })
                 .and()
-                .addFilterAfter(new JwtTokenAuthenticationFilter(config),
+                .addFilterAfter(new JwtTokenAuthenticationFilter(config,redisTemplate),
                         UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(new JwtUsernamePasswordAuthenticationFilter(config, authenticationManager(), adminUserService),
+                .addFilterAfter(new JwtUsernamePasswordAuthenticationFilter(config, authenticationManager(), adminUserService, redisTemplate),
                         UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests().antMatchers(config.getUrl()).permitAll()
-                // 放行swagger
-                .antMatchers("/adminUser/confirmBind", "/adminUser/getQrcode", "/swagger-ui.html", "/swagger-resources/**", "/webjars/**", "/v3/**", "/api/**", "/doc.html").permitAll()
+                // 需要放行的路径
+                .antMatchers(whiteLists).permitAll()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .anyRequest().authenticated();
     }
@@ -77,5 +86,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public void setAdminUserService(AdminUserServiceImpl adminUserService) {
         this.adminUserService = adminUserService;
+    }
+
+    @Autowired
+    public void setRedisTemplate(RedisTemplate redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
+
+    @Value("${security.white-list}")
+    public void setWhiteLists(String whiteListStr) {
+        this.whiteLists = whiteListStr.split(",");
     }
 }

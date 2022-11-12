@@ -3,6 +3,11 @@ jwt:
   prefix: sychina
   # 60 * 60
   expiration: 43200
+#
+security:
+  white-list: /adminUser/confirmBind,/adminUser/getQrcode,/swagger-ui.html,/swagger-resources/**,/webjars/**,/v3/**,/api/**,/doc.html
+
+#
 server:
   shutdown: graceful
   port: 7004

@@ -11,6 +11,11 @@ public interface RedisKeys {
     String adminUser = "ADMIN_USER";
 
     /**
+     * adminuser token 信息
+     */
+    String adminUserToken = "ADMIN_USER_TOKEN_";
+
+    /**
      * redisLock 的锁名
      */
     String playBalanceChange = "PLAYER_BALANCE_CHANGE_";

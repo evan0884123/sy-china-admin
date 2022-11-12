@@ -21,6 +21,11 @@ public class ActionLog {
     private Long id;
 
     /**
+     * 请求ip
+     */
+    private String ip;
+
+    /**
      * 操作人员 id
      */
     private String userId;

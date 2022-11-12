@@ -180,23 +180,22 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
 
     public void withdrawApproved(Players players, WithdrawApply withdrawApply) {
         AccountChanges accountChanges = null;
-        BigDecimal balance;
+        AccountChanges lastAChanges = accountChangeService.getOne(new QueryWrapper<AccountChanges>()
+                .eq("conn_id", withdrawApply.getId().toString())
+                .orderByDesc("`create`").last("limit 1"));
+
         switch (withdrawApply.getWdType()) {
             case 0:
-                balance = players.getProjectBalance().add(withdrawApply.getAmount());
-                accountChanges = convert(players, withdrawApply, balance, players.getProjectBalance(), 3, 1, "收益提现");
+                accountChanges = convert(players, withdrawApply, lastAChanges.getBcBalance(), lastAChanges.getAcBalance(), 3, 1, "收益提现");
                 break;
             case 1:
-                balance = players.getPromoteBalance().add(withdrawApply.getAmount());
-                accountChanges = convert(players, withdrawApply, balance, players.getPromoteBalance(), 2, 1, "推广金提现");
+                accountChanges = convert(players, withdrawApply, lastAChanges.getBcBalance(), lastAChanges.getAcBalance(), 2, 1, "推广金提现");
                 break;
             case 2:
-                balance = players.getWithdrawBalance().add(withdrawApply.getAmount());
-                accountChanges = convert(players, withdrawApply, balance, players.getWithdrawBalance(), 1, 1, "返现金额提现");
+                accountChanges = convert(players, withdrawApply, lastAChanges.getBcBalance(), lastAChanges.getAcBalance(), 1, 1, "返现金额提现");
                 break;
             case 3:
-                balance = players.getShareMoneyProfit().add(withdrawApply.getAmount());
-                accountChanges = convert(players, withdrawApply, balance, players.getShareMoneyProfit(), 0, 1, "共享金提现");
+                accountChanges = convert(players, withdrawApply, lastAChanges.getBcBalance(), lastAChanges.getAcBalance(), 0, 1, "共享金提现");
                 break;
         }
         accountChangeService.saveOrUpdate(accountChanges);
@@ -229,7 +228,7 @@ public class WithdrawApplyServiceImpl extends ServiceImpl<WithdrawApplyMapper, W
             case 3:
                 balance = players.getShareMoneyProfit().add(withdrawApply.getAmount());
                 amountType = 1;
-                accountChanges = convert(players, withdrawApply, players.getShareMoneyProfit(), balance, amountType, 1, "共享金提现");
+                accountChanges = convert(players, withdrawApply, players.getShareMoneyProfit(), balance, amountType, 15, "共享金提现");
                 players.setShareMoneyProfit(balance);
                 break;
         }

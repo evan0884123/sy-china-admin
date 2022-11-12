@@ -7,6 +7,7 @@ import com.sychina.admin.infra.domain.ActionLog;
 import com.sychina.admin.infra.domain.AdminMenu;
 import com.sychina.admin.infra.domain.AdminUser;
 import com.sychina.admin.service.impl.ActionLogServiceImpl;
+import com.sychina.admin.utils.IPUtil;
 import com.sychina.admin.utils.LocalDateTimeHelper;
 import com.sychina.admin.web.pojo.models.response.ResponseStatus;
 import com.sychina.admin.web.pojo.models.response.ResultModel;
@@ -22,10 +23,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.StringJoiner;
 
 /**
@@ -87,7 +92,8 @@ public class AccessAspect {
         ActionLog actionLog = new ActionLog();
         ResultModel resultModel;
         try {
-
+            HttpServletRequest requ = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+            actionLog.setIp(IPUtil.getIpAddr(requ));
             actionLog.setUserId(adminUser.getId());
             actionLog.setAdminUserName(adminUser.getLoginName());
 

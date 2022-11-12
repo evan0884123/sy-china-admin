@@ -139,18 +139,18 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
                     case 0:
                         updateUseBalance(players, scoreParam);
                         break;
-                    case 1:
-                        updateWithdrawBalance(players, scoreParam);
-                        break;
-                    case 2:
-                        updatePromoteBalance(players, scoreParam);
-                        break;
-                    case 3:
-                        updateProjectBalance(players, scoreParam);
-                        break;
-                    case 4:
-                        updateShareMoneyProfit(players, scoreParam);
-                        break;
+//                    case 1:
+//                        updateWithdrawBalance(players, scoreParam);
+//                        break;
+//                    case 2:
+//                        updatePromoteBalance(players, scoreParam);
+//                        break;
+//                    case 3:
+//                        updateProjectBalance(players, scoreParam);
+//                        break;
+//                    case 4:
+//                        updateShareMoneyProfit(players, scoreParam);
+//                        break;
                 }
                 playerCache.setPlayerCache(players);
             } catch (Exception e) {

@@ -3,6 +3,11 @@ jwt:
   prefix: sychina
   # 60 * 60
   expiration: 43200
+#
+security:
+  white-list: /adminUser/confirmBind,/adminUser/getQrcode
+
+#
 server:
   shutdown: graceful
   port: 7004
