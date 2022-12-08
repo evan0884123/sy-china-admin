@@ -134,7 +134,7 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 
             String lockKey = RedisKeys.playBalanceChange + players.getId();
             boolean tryLock = lockUtil.tryLock(lockKey, 15);
-            if (tryLock){
+            if (tryLock) {
                 try {
                     switch (scoreParam.getType()) {
                         case 0:
@@ -143,9 +143,9 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 //                    case 1:
 //                        updateWithdrawBalance(players, scoreParam);
 //                        break;
-//                    case 2:
-//                        updatePromoteBalance(players, scoreParam);
-//                        break;
+                        case 2:
+                            updatePromoteBalance(players, scoreParam);
+                            break;
 //                    case 3:
 //                        updateProjectBalance(players, scoreParam);
 //                        break;
@@ -285,11 +285,11 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
     public void updatePromoteBalance(Players players, TopOrLowerScoreParam scoreParam) {
 
         BigDecimal acBalance;
-        if (scoreParam.getOperationType() == 0) {
-            acBalance = players.getPromoteBalance().add(scoreParam.getScore());
-        } else {
-            acBalance = players.getPromoteBalance().subtract(scoreParam.getScore());
-        }
+//        if (scoreParam.getOperationType() == 0) {
+//            acBalance = players.getPromoteBalance().add(scoreParam.getScore());
+//        } else {
+        acBalance = players.getPromoteBalance().subtract(scoreParam.getScore());
+//        }
         AccountChanges accountChanges = convert(players, scoreParam, players.getPromoteBalance(), acBalance);
         players.setPromoteBalance(acBalance);
 
@@ -377,8 +377,8 @@ public class PlayerServiceImpl extends ServiceImpl<PlayerMapper, Players> implem
 
         Config config = configService.getById(1L);
         long millis = System.currentTimeMillis();
-        if (millis >= config.getCeStartTime() && millis <= config.getCeStopTime()){
-            amount = amount.multiply(new BigDecimal("2"));
+        if (millis >= config.getCeStartTime() && millis <= config.getCeStopTime()) {
+            amount = amount.multiply(new BigDecimal("3"));
         }
 
         Equities equities = new Equities()

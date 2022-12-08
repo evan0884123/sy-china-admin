@@ -65,6 +65,20 @@ public class RecordController {
         return accountChangeService.loadTable(recordQuery);
     }
 
+    @PostMapping("/editEquities")
+    @ApiOperation("编辑股权信息")
+    @Access(recordLog = true)
+    public ResultModel editEquities(@Validated EquitiesParam param) {
+        return equitiesService.edit(param);
+    }
+
+    @PostMapping("/addEquities")
+    @ApiOperation("新增股权信息")
+    @Access(recordLog = true)
+    public ResultModel addEquities(@Validated EquitiesParam param) {
+        return equitiesService.add(param);
+    }
+
 
     @Autowired
     public void setProjectRecordService(ProjectRecordServiceImpl projectRecordService) {
