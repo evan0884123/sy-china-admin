@@ -20,6 +20,9 @@ public class BankQuery extends PageQuery {
     @ApiModelProperty(value = "开户银行")
     private String bank;
 
+    @ApiModelProperty(value = "银行卡号")
+    private String cardNumber;
+
     @ApiModelProperty(value = "核实(0-未 1-已)")
     private Integer verified;
 

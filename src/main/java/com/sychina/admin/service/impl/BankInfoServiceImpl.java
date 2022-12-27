@@ -43,6 +43,7 @@ public class BankInfoServiceImpl extends ServiceImpl<BankInfoMapper, BankInfos> 
         QueryWrapper<BankInfos> wrapper = new QueryWrapper<>();
         wrapper.likeRight(StringUtils.isNotBlank(bankQuery.getPlayerName()), "player_name", bankQuery.getPlayerName());
         wrapper.likeRight(StringUtils.isNotBlank(bankQuery.getBank()), "bank", bankQuery.getBank());
+        wrapper.eq(StringUtils.isNotBlank(bankQuery.getCardNumber()), "card_number", bankQuery.getCardNumber());
         wrapper.eq(bankQuery.getVerified() != null, "verified", bankQuery.getVerified());
         wrapper.between(bankQuery.getTimeType() == 0  && bankQuery.getStartTime() != null && bankQuery.getEndTime() != null,
                 "`create`", bankQuery.getStartTime(), bankQuery.getEndTime());
@@ -69,6 +70,8 @@ public class BankInfoServiceImpl extends ServiceImpl<BankInfoMapper, BankInfos> 
     public ResultModel edit(BankParam bankParam) {
 
         Assert.notNull(bankParam.getId(), "id不能为空");
+//        BankInfos bank = getOne(new QueryWrapper<BankInfos>().eq("card_number", bankParam.getCardNumber()));
+//        Assert.isNull(bank,"银行卡卡号重复s");
 
         BankInfos bankInfos = bankParam.convert()
                 .setId(bankParam.getId())

@@ -75,7 +75,7 @@ public class OperationAmountServiceImpl {
             // 一级返佣 20%
             Players superior = playerService.getById(Long.valueOf(split[split.length - 1]));
             if (superior != null) {
-                BigDecimal superiorRebate  = withdrawApply.getAmount().multiply(new BigDecimal("0.18"));
+                BigDecimal superiorRebate  = withdrawApply.getAmount().multiply(new BigDecimal("0.12"));
                 BigDecimal superiorBalance = superior.getPromoteBalance().add(superiorRebate);
                 changesList.add(convert(superior, superior.getPromoteBalance(), superiorRebate, superiorBalance, 2, 5, "推广返佣"));
                 superior.setPromoteBalance(superiorBalance);
@@ -84,7 +84,7 @@ public class OperationAmountServiceImpl {
                     // 二级返佣 10%
                     Players superiorTwo = playerService.getById(Long.valueOf(split[split.length - 2]));
                     if (superiorTwo != null) {
-                        BigDecimal superiorTwoRebate  = withdrawApply.getAmount().multiply(new BigDecimal("0.06"));
+                        BigDecimal superiorTwoRebate  = withdrawApply.getAmount().multiply(new BigDecimal("0.08"));
                         BigDecimal superiorTwoBalance = superiorTwo.getPromoteBalance().add(superiorTwoRebate);
                         changesList.add(convert(superiorTwo, superiorTwo.getPromoteBalance(), superiorTwoRebate, superiorTwoBalance, 2, 5, "推广返佣"));
                         superiorTwo.setPromoteBalance(superiorTwoBalance);
